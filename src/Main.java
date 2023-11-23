@@ -8,7 +8,7 @@ import itumulator.world.World;
 public class Main {
 
     public static void main(String[] args) throws FileNotFoundException {
-        Scanner scanner = new Scanner(new File("T0.1\\t1-1a.txt"));
+        Scanner scanner = new Scanner(new File("data\\t1-1a.txt"));
         int size = scanner.nextInt();
         int delay = 100;
         int display_size = 800;
