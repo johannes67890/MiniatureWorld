@@ -16,8 +16,12 @@ import testReader.TestReader;
 public class Main {
 
     public static void main(String[] args) throws IOException {
-        Distributer distributior = Distributer.t1_1a;
+        Distributer distributior = Distributer.test;
         TestReader reader = new TestReader(distributior.getUrl());
+        for (int i = 0; i < 100; i++) {
+        
+            System.out.println(reader.getRandomIntervalNumber("TestType0"));
+        }
         int size = reader.getWorldSize();
         int delay = 100;
         int display_size = 800;
@@ -26,6 +30,8 @@ public class Main {
         Location place = new Location(size/2, size/2);
         world.setTile(place, new Grass());
         program.show();
+
+
     }
 }
 

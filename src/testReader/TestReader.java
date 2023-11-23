@@ -60,7 +60,7 @@ public class TestReader extends BufferedReader {
      * This method returns a HashMap with the types as keys and the values as values.
      * @return HashMap<String, ArrayList<Integer>
      */
-    public HashMap<String, ArrayList<Integer>> getValues(){
+    public HashMap<String, ArrayList<Integer>> getMap(){
         HashMap<String, ArrayList<Integer>> types = new HashMap<>();
 
         String key = null;
@@ -87,6 +87,25 @@ public class TestReader extends BufferedReader {
     }
 
     /**
+     * This method returns a random interval number for a given type.
+     * 
+     * @throws IllegalArgumentException If the type does not exist.
+     * @param type - The type of the interval.
+     * @return int - The random interval number.
+     */
+    public int getRandomIntervalNumber(String type){
+        if(!this.getMap().containsKey(type)) throw new IllegalArgumentException("The type " + type + " does not exist.");
+        if(this.getMap().get(type).size() == 1){
+            return this.getMap().get(type).get(0);
+        } else {
+            int min = this.getMap().get(type).get(0);
+            int max = this.getMap().get(type).get(1);
+            return getRandomNumber(min, max + 1);
+        }
+    
+    }
+
+    /**
      * This method returns the size of the world.
      * @return int
      */
@@ -110,5 +129,9 @@ public class TestReader extends BufferedReader {
             return false;
         }
         return true;
+    }
+    
+    public int getRandomNumber(int min, int max) {
+        return (int) ((Math.random() * (max - min)) + min);
     }
 }

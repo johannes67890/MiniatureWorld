@@ -32,8 +32,8 @@ public class TestReaderTest {
     }
     @Test
     public void testGetValues() {
-       Assert.assertEquals(type0Val, testReader.getValues().get("TestType0"));
-       Assert.assertEquals(type1Val, testReader.getValues().get("TestType1"));
+       Assert.assertEquals(type0Val, testReader.getMap().get("TestType0"));
+       Assert.assertEquals(type1Val, testReader.getMap().get("TestType1"));
     }
 }
 

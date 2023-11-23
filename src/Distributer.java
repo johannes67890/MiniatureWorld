@@ -3,6 +3,7 @@
  */
 public enum Distributer {
     // Theme test files (Week 1.)
+    test("src\\test\\test.txt"),
     t1_1a("data\\T0.1\\t1-1a.txt"),
     t1_1b("data\\T0.1\\t1-1b.txt"),
     t1_1c("data\\T0.1\\t1-1c.txt"),
