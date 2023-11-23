@@ -1,5 +1,6 @@
 import static org.junit.Assert.assertEquals;
 
+import data.Distributer;
 import itumulator.executable.Program;
 import testReader.TestReader;
 
@@ -7,8 +8,14 @@ public class Main {
 
     public static void main(String[] args) throws Exception {
         System.out.println("Hello World!");
-        TestReader testReader = new TestReader("data\\T0.1\\t1-1a.txt");
-        System.out.println(testReader.readAllLines());
+        TestReader testReader = new TestReader(Distributer.t1_2cde.getUrl());
+       
+      
+
+        testReader.getValues().forEach((k,v) -> {
+
+            System.out.println(k + " " + v);
+        });
     }
 }
 

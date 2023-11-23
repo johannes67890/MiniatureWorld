@@ -1,61 +1,114 @@
 package testReader;
 import java.io.*;
-/*
+import java.util.ArrayList;
+import java.util.HashMap;
+/**
  * This class is used to read the file and return the content of the file.
  * 
- * @param fileName
- * @return fileContent
+ * @param filePath - The path to the file.
+ * @param fileContent - The content of the file as a char array.
+ * @param fileContentString - The content of the file as a string.
+ * 
  * @throws IOException
  * @throws FileNotFoundException
  */
-
 public class TestReader extends BufferedReader {
     private String filePath;
     private char[] fileContent;
+    private String[] fileContentString;
 
+    /**
+     * Constructor for the TestReader class.
+     * @param filePath - The path to the file.
+     * @throws IOException
+     * @throws FileNotFoundException
+     */
     public TestReader(String filePath) throws IOException, FileNotFoundException {
         super(new FileReader(filePath));
         this.filePath = filePath;
         char[] array = new char[100];
         this.read(array);
-        this.fileContent = array;   
+        this.fileContent = array;  
+        this.fileContentString = new String(array).split("\\W+"); 
     }
 
+    /**
+     * Method that returns the path of the file.
+     * @return String
+     */
     public String getFilePath() {
         return this.filePath;
     }
 
+    /**
+     * Method that returns the content of the file as a char array.
+     * @return char[]
+     */
     public char[] getFileContent() {
         return this.fileContent;
     }
-    
+
     /**
-     * 
-     * @param <T>
-     * @return
+     * Method that returns the content of the file as a string.
+     * @return String
      */
-    public <T> String getType() throws IOException {
-        LineNumberReader lnr = new LineNumberReader(this);
-        String line = "";
-        while(line != null){
-            line = lnr.readLine();
-            if(line==null){break;}
-            /* do stuff */
-            return line;
-        }
-        return line;
+    public String getFileContentString(){
+        return new String(this.fileContent);
     }
 
-    public String readAllLines() throws IOException {
-        StringBuilder content = new StringBuilder();
-        String line;
+    /**
+     * This method returns a HashMap with the types as keys and the values as values.
+     * @return HashMap<String, ArrayList<Integer>
+     */
+    public HashMap<String, ArrayList<Integer>> getValues(){
+        HashMap<String, ArrayList<Integer>> types = new HashMap<>();
 
-        while ((line = this.readLine()) != null) {
-            content.append(line);
-            content.append(System.lineSeparator());
+        String key = null;
+        int value;
+        ArrayList<Integer> values = new ArrayList<>(); // This is the list of values for each type.
+
+        for (String str : this.fileContentString) {
+            if(isNumeric(str) && key != null){
+                // add the value to the key.
+                value = Integer.parseInt(str);
+                values.add(value);
+                types.put(key, values);
+            } else if(isNumeric(str) && key == null){ // If the key is null, then we have not found a type yet.
+                continue;
+            } else if(!isNumeric(str) && key != null){ // If the key is not null, then we have found a new type.
+                key = str;
+                values = new ArrayList<>(); 
+            }
+            else {
+                key = str;
+            }
         }
-    
-        return content.toString();
+        return types;
     }
 
+    /**
+     * This method returns the size of the world.
+     * @return int
+     */
+    public int getWorldSize(){
+        return Integer.parseInt(this.fileContentString[0]);
+    }
+
+    /**
+     * Method to check if a string is numeric.
+     * 
+     * @param strNum - String to check if it is numeric.
+     * @return Boolean - True if the string is numeric, false otherwise.
+     */
+    boolean isNumeric(String strNum) {
+        if (strNum == null) {
+            return false;
+        }
+        try {
+            double d = Double.parseDouble(strNum);
+        } catch (NumberFormatException nfe) {
+            return false;
+        }
+        return true;
+    }
 }
