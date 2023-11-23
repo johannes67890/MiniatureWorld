@@ -1,4 +1,5 @@
 import java.util.ArrayList;
+import java.util.HashSet;
 import java.util.List;
 import java.util.Random;
 import java.util.Set;
@@ -14,10 +15,10 @@ public class Grass implements Actor, DynamicDisplayInformationProvider, NonBlock
 
     public void act(World world) {
         if (world.isDay() && r.nextInt(0, 9) == 0) {
-                Set<Location> neighbours = world.getSurroundingTiles();
-                for (Location l : neighbours) {
-                    if (world.getTile(l) instanceof Grass) {
-                        neighbours.remove(l);
+                Set<Location> neighbours = new HashSet<Location>();
+                for (Location l : world.getSurroundingTiles()) {
+                    if (!(world.getTile(l) instanceof Grass)) {
+                        neighbours.add(l);
                     }
                 }
                 List<Location> list = new ArrayList<>(neighbours);
