@@ -1,5 +1,3 @@
-package data;
-
 /*
  * This enum is used to store the paths to the test files.
  */
