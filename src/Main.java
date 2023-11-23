@@ -1,3 +1,15 @@
+
+import static org.junit.Assert.assertEquals;
+
+import data.Distributer;
+import itumulator.executable.Program;
+import testReader.TestReader;
+
+public class Main {
+
+    public static void main(String[] args) throws Exception {
+        System.out.println("Hello World!");
+        TestReader testReader = new TestReader(Distributer.t1_2cde.getUrl());
 import itumulator.executable.DisplayInformation;
 import itumulator.executable.Program;
 import java.util.Scanner;
@@ -20,6 +32,7 @@ public class Main {
         Location place = new Location(0, 0);
         world.setTile(place, new Grass());
         program.show();
-      
     }
 }
+
+
