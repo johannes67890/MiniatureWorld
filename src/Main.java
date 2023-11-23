@@ -1,14 +1,21 @@
+
+import static org.junit.Assert.assertEquals;
+import itumulator.executable.Program;
+
+import itumulator.executable.DisplayInformation;
 import itumulator.executable.Program;
 import java.util.Scanner;
 import java.io.File;
 import java.io.FileNotFoundException;
+import java.time.LocalDate;
+
 import itumulator.world.Location;
 import itumulator.world.World;
 
 public class Main {
 
     public static void main(String[] args) throws FileNotFoundException {
-        Scanner scanner = new Scanner(new File("data\\t1-1a.txt"));
+        Scanner scanner = new Scanner(new File("data\\T0.1\\t1-1a.txt"));
         int size = scanner.nextInt();
         int delay = 100;
         int display_size = 800;
@@ -19,3 +26,5 @@ public class Main {
         program.show();
     }
 }
+
+
