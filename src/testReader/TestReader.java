@@ -58,6 +58,8 @@ public class TestReader extends BufferedReader {
 
     /**
      * This method returns a HashMap with the types as keys and the values as values.
+     * 
+     * The hashmap does not contain the size of the world. (See {@link getWorldSize} method)
      * @return HashMap<String, ArrayList<Integer>
      */
     public HashMap<String, ArrayList<Integer>> getMap(){

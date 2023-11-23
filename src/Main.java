@@ -1,14 +1,9 @@
 
-import static org.junit.Assert.assertEquals;
 import itumulator.executable.Program;
-import itumulator.executable.DisplayInformation;
-import itumulator.executable.Program;
-import java.util.Scanner;
-import java.io.File;
-import java.io.FileNotFoundException;
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.Random;
 import java.io.IOException;
-import java.time.LocalDate;
-
 import itumulator.world.Location;
 import itumulator.world.World;
 import testReader.TestReader;
@@ -16,19 +11,27 @@ import testReader.TestReader;
 public class Main {
 
     public static void main(String[] args) throws IOException {
-        Distributer distributior = Distributer.test;
+        Distributer distributior = Distributer.t1_1d;
         TestReader reader = new TestReader(distributior.getUrl());
-        for (int i = 0; i < 100; i++) {
-        
-            System.out.println(reader.getRandomIntervalNumber("TestType0"));
-        }
         int size = reader.getWorldSize();
         int delay = 100;
         int display_size = 800;
         Program program = new Program(size, display_size, delay);
         World world = program.getWorld();
-        Location place = new Location(size/2, size/2);
-        world.setTile(place, new Grass());
+
+        HashMap<String, ArrayList<Integer>> map = reader.getMap();
+        for(String key : map.keySet()) {
+            if(key.equals("grass")){
+                int amount = reader.getRandomIntervalNumber(key);
+                for(int i = 0; i < amount; i++){
+                    Location place = new Location(new Random().nextInt(size), new Random().nextInt(size));
+                    while(world.getTile(place) instanceof Grass){
+                        place = new Location(new Random().nextInt(size), new Random().nextInt(size));
+                    }
+                    world.setTile(place, new Grass());
+                }
+            }
+        }
         program.show();
 
 
