@@ -32,6 +32,10 @@ public class Main {
                 }
             }
         }
+
+        Rabbit rab = new Rabbit(new Location(2, 0), world);
+        rab.digHole();
+
         program.show();
 
 
