@@ -27,7 +27,7 @@ public class Grass implements Actor, DynamicDisplayInformationProvider, NonBlock
      * 
      */
     void spread(World world) {
-         if (world.isDay() && r.nextInt(0, 9) == 0) {
+         if (world.isDay() && r.nextInt(10) == 0) {
                 Set<Location> neighbours = new HashSet<Location>();
                 for (Location l : world.getEmptySurroundingTiles()) {
                     if (!(world.getTile(l) instanceof Grass)) {
