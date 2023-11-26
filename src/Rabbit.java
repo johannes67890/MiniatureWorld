@@ -1,7 +1,6 @@
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Random;
-import java.util.Set;
 import itumulator.executable.DisplayInformation;
 import itumulator.executable.DynamicDisplayInformationProvider;
 import itumulator.simulator.Actor;
@@ -9,14 +8,6 @@ import itumulator.world.Location;
 import itumulator.world.World;
 
 public class Rabbit implements Actor, DynamicDisplayInformationProvider {
-    public Location location;
-    public World world;
-
-    public Rabbit(Location location, World world) {
-        this.location = location;
-        this.world = world;
-        world.setTile(location, this);
-    }
 
 
     public void act(World world) {
@@ -24,8 +15,17 @@ public class Rabbit implements Actor, DynamicDisplayInformationProvider {
         world.move(this, list.get(new Random().nextInt(list.size())));
     }
 
-    public void digHole() {
-        new Hole(this.location, this.world);
+    public void digHole(World world, Location location) {
+        if(world.getTile(location) instanceof Grass) {
+            world.remove(location);
+            world.setTile(location, new Hole());
+        }
+        new Hole();
+    }
+
+    public void move(World world, Location location) {
+        if(world.getTile(location) instanceof Hole) throw new RuntimeException("Rabbit cannot move to a hole");
+        world.move(this, location);
     }
 
     @Override
