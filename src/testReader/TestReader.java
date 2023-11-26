@@ -89,10 +89,10 @@ public class TestReader extends BufferedReader {
     }
 
     /**
-     * This method returns a random interval number for a given type.
+     * This method returns a random interval or a static number for a given type.
      * 
      * @throws IllegalArgumentException If the type does not exist.
-     * @param type - The type of the interval.
+     * @param type - The type of the interval or static number.
      * @return int - The random interval number.
      */
     public int getRandomIntervalNumber(String type){

@@ -5,13 +5,14 @@ import java.util.HashMap;
 import java.util.Random;
 import java.io.IOException;
 import itumulator.world.Location;
+import itumulator.world.NonBlocking;
 import itumulator.world.World;
 import testReader.TestReader;
 
 public class Main {
 
     public static void main(String[] args) throws IOException {
-        Distributer distributior = Distributer.t1_1d;
+        Distributer distributior = Distributer.t1_2cde;
         TestReader reader = new TestReader(distributior.getUrl());
         int size = reader.getWorldSize();
         int delay = 100;
@@ -20,22 +21,62 @@ public class Main {
         World world = program.getWorld();
 
         HashMap<String, ArrayList<Integer>> map = reader.getMap();
+        
         for(String key : map.keySet()) {
-            if(key.equals("grass")){
-                int amount = reader.getRandomIntervalNumber(key);
-                for(int i = 0; i < amount; i++){
-                    Location place = new Location(new Random().nextInt(size), new Random().nextInt(size));
-                    while(world.getTile(place) instanceof Grass){
-                        place = new Location(new Random().nextInt(size), new Random().nextInt(size));
-                    }
-                    world.setTile(place, new Grass());
+            for (int i = 0; i < reader.getRandomIntervalNumber(key); i++) {
+                Object object = null;
+                switch (key) {
+                    case "grass":
+                        object = new Grass();
+                        break;
+                    case "rabbit":
+                        object = new Rabbit();
+                        break;
+                    case "hole":
+                        object = new Hole();
+                        break;
+                    default:
+                        break;
                 }
+                spawnRandomObj(world, object);
             }
         }
+
         program.show();
 
 
     }
+    /**
+     * Spawns a random object in the world.
+     * 
+     * @param world - The world to spawn the object in.
+     * @param object - The object to spawn.
+     */
+    public static void spawnRandomObj(World world, Object object){
+        if(isWorldFull(world)) throw new IllegalArgumentException("The world is full.");
+            Location location = new Location(new Random().nextInt(world.getSize()), new Random().nextInt(world.getSize()));
+            
+            if(world.getTile(location) == null || (world.getTile(location) instanceof NonBlocking) == !(object instanceof NonBlocking)){ // if the tile 
+                world.setTile(location, object);   
+            }
+    }
+    /**
+     * This method checks if the world is full.
+     * @param world - The world to check.
+     * @return boolean - True if the world is full, false otherwise.
+     */
+    public static boolean isWorldFull(World world) {
+        if(world.getSize() == 0) return true;
+        for (int i = 0; i < world.getSize(); i++) {
+            for (int j = 0; j < world.getSize(); j++) {
+                if(world.isTileEmpty(new Location(i, j))) {
+                    return false;
+                }
+            }
+        }
+        return true;
+    }
+
 }
 
 
