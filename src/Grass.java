@@ -11,10 +11,23 @@ import itumulator.world.NonBlocking;
 import itumulator.world.World;
 
 public class Grass implements Actor, DynamicDisplayInformationProvider, NonBlocking {
-    Random r = new Random();
+    Random r = new Random(); // Random number generator
 
+    /**
+     * Makes the grass spread 
+     * 
+     * @param world - The world to act in.
+     * 
+     */
     public void act(World world) {
-        if (world.isDay() && r.nextInt(0, 9) == 0) {
+       spread(world);
+    }
+    
+    /**
+     * 
+     */
+    void spread(World world) {
+         if (world.isDay() && r.nextInt(0, 9) == 0) {
                 Set<Location> neighbours = new HashSet<Location>();
                 for (Location l : world.getSurroundingTiles()) {
                     if (!(world.getTile(l) instanceof Grass)) {

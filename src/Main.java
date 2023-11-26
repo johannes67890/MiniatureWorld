@@ -46,7 +46,12 @@ public class Main {
 
 
     }
-
+    /**
+     * Spawns a random object in the world.
+     * 
+     * @param world - The world to spawn the object in.
+     * @param object - The object to spawn.
+     */
     public static void spawnRandomObj(World world, Object object){
         if(isWorldFull(world)) throw new IllegalArgumentException("The world is full.");
             Location location = new Location(new Random().nextInt(world.getSize()), new Random().nextInt(world.getSize()));
