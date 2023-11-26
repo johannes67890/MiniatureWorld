@@ -2,7 +2,7 @@ import itumulator.executable.DisplayInformation;
 import itumulator.executable.DynamicDisplayInformationProvider;
 import itumulator.world.NonBlocking;
 
-public class Hole implements NonBlocking, DynamicDisplayInformationProvider {
+public class Burrow implements NonBlocking, DynamicDisplayInformationProvider {
 
 
     @Override

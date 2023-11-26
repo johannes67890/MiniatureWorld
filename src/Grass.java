@@ -28,15 +28,14 @@ public class Grass implements Actor, DynamicDisplayInformationProvider, NonBlock
      */
     void spread(World world) {
          if (world.isDay() && r.nextInt(10) == 0) {
-                Set<Location> neighbours = new HashSet<Location>();
+                List<Location> availableTiles = new ArrayList<>();
                 for (Location l : world.getEmptySurroundingTiles()) {
-                    if (!(world.getTile(l) instanceof Grass)) {
-                        neighbours.add(l);
+                    if (!(world.getTile(l) instanceof NonBlocking)) {
+                        availableTiles.add(l);
                     }
                 }
-                List<Location> list = new ArrayList<>(neighbours);
-                if (list.size() > 0) {
-                    Location place = list.get(r.nextInt(list.size()));
+                if (availableTiles.size() > 0) {
+                    Location place = availableTiles.get(r.nextInt(availableTiles.size()));
                     world.setTile(place, new Grass());
                 }
         }
