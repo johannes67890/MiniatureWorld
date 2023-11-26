@@ -12,7 +12,7 @@ public class Rabbit implements Actor, DynamicDisplayInformationProvider {
 
 
     public void act(World world) {
-        List<Location> list = new ArrayList<>(world.getSurroundingTiles());
+        List<Location> list = new ArrayList<>(world.getEmptySurroundingTiles());
         world.move(this, list.get(new Random().nextInt(list.size())));
         // if(hp <= 0) die(world);
         // if(world.getTile(world.getLocation(this)) instanceof Grass) eat(world, world.getLocation(this));

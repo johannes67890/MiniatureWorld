@@ -57,7 +57,9 @@ public class Main {
             Location location = new Location(new Random().nextInt(world.getSize()), new Random().nextInt(world.getSize()));
             
             if(world.getTile(location) == null || (world.getTile(location) instanceof NonBlocking) == !(object instanceof NonBlocking)){ // if the tile 
-                world.setTile(location, object);   
+                if(!world.isTileEmpty(location)) {
+                    spawnRandomObj(world, object);
+                } else world.setTile(location, object);   
             }
     }
     /**
