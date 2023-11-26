@@ -12,7 +12,7 @@ import testReader.TestReader;
 public class Main {
 
     public static void main(String[] args) throws IOException {
-        Distributer distributior = Distributer.t1_2cde;
+        Distributer distributior = Distributer.t1_3b;
         TestReader reader = new TestReader(distributior.getUrl());
         int size = reader.getWorldSize();
         int delay = 100;
@@ -32,8 +32,8 @@ public class Main {
                     case "rabbit":
                         object = new Rabbit();
                         break;
-                    case "hole":
-                        object = new Hole();
+                    case "burrow":
+                        object = new Burrow();
                         break;
                     default:
                         break;
