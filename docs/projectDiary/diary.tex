@@ -1,7 +1,7 @@
 % !TeX root = diary.tex
 
 
-\documentclass[12pt]{article}
+\documentclass[11pt]{article}
 \usepackage{lingmacros}
 \usepackage{tree-dvips}
 \usepackage[utf8]{inputenc}
@@ -68,9 +68,57 @@ top=20mm,
   morestring=[b]',
   morestring=[b]"
 }
+\usepackage[]{mdframed}
 
 %%%%%%% Document begin %%%%%%%%%%%
 \begin{document}
-    \section{Introduction}
-    test
+    \title{Peergrade assignment 1}
+    \author{Author anonymous} % Do not include your name, as Peergrading is anonymous 
+    \date{\today}
+
+    \section*{Week 1. }
+    This week we have implemented the following features:
+    \begin{itemize}
+        \item \textbf{TestReader} - reads test files for information
+        \item \textbf{Distributer} - distributes testfile paths
+        \item \textbf{Borrow} - Rabbit holes
+        \item \textbf{Grass} - Sweat green grass for the simulation
+        \item \textbf{Rabbit} - A cute rabbit with various functions
+    \end{itemize}
+
+    \subsection*{TestReader}
+    The TestReader reads the test files for information out the types and amount of entities in the simulation. The TestReader is being used along side the \textbf{Distributer}, to distribute the test files to the simulation.
+    There are numores functions in the TestReader, so it is easy to get the information out of the test files. 
+    The TestReaders main function is \textbf{getMap} function, that returns a map of the test file with the corrusponting entity type and thier amount. 
+    TestReader also has a corrusponting test file, that is used to test the TestReader.
+    \\
+    \textbf{TestReader} has the following functions:
+    \begin{mdframed}
+        getFilePath(); getFileContent(); getFileContentString(); getMap(); getRandomIntervalNumber(); getWorldSize(); isNumeric();
+    \end{mdframed}
+    \subsection*{Distributer}
+    The Distributer distributes the test files path for easy use in the simulation. The Distributer is a simple enum that stores all the test file paths and has some functions to get the test file paths.
+    \\
+    \textbf{Distributer} has the following functions:
+    \begin{mdframed}
+        getUrl();
+    \end{mdframed}
+    \subsection*{Borrow}
+    The Borrow is a simple class that is used to create rabbit holes in the simulation. The does don't have a constructor and is only used to create and dispay rabit holes. This could be interface 
+    \\
+    \textbf{Borrow} has the following functions:
+    \begin{mdframed}
+        \textit{none}
+    \end{mdframed}
+    \subsection*{Grass}
+    Grass is a class with diffrent functions that is used for the behavior of the grass object. One of the functions is the \textbf{spread} function. The function is used to spread the grass object to the surrounding tiles with a 10$\%$ chance of the grass spreading. 
+    \\
+    \textbf{Grass} has the following functions:
+    \begin{mdframed}
+        act($World$ world); spread($World$ world)
+    \end{mdframed}
+    \newpage
+    \subsection*{Rabbit}
+
+    
 \end{document}
