@@ -84,6 +84,7 @@ top=20mm,
         \item \textbf{Borrow} - Rabbit holes
         \item \textbf{Grass} - Sweat green grass for the simulation
         \item \textbf{Rabbit} - A cute rabbit with various functions
+        \item \textbf{BabyRabbit} - A cute baby rabbit (inherets from Rabbit)
     \end{itemize}
 
     \subsection*{TestReader}
@@ -120,8 +121,19 @@ top=20mm,
     \newpage
     \subsection*{Rabbit}
     The Rabbit class constructs cute rabbits to the simulation with normal rabbit behaviors. Rabbits can move and eat grass, but unfortunately die of starvation as well. 
+    Most of the development time was spend on the Rabbit class. all requirements has not been fully developed this week, but the Rabbit class is somewhat functional. 
+    There has also been made a baby rabbit class, that is used to create baby rabbits for the reproduction function.
+    \\
     \textbf{Rabbit} has the following functions:
     \begin{mdframed}
-        act($World$ world); digBorrow($World$ world); move($World$ world); die($World$ world); eat($World$ world);
+        act($World$ world); digBorrow($World$ world); move($World$ world); die($World$ world); eat($World$ world); reproduce($World$ world); getRandomSurroundingTile($World$ world); 
     \end{mdframed}
+    \subsection*{Baby Rabbit}
+    The Baby Rabbit class is a class that is used to create baby rabbits for the reproduction function. The baby rabbit class is a simple class that is used to create baby rabbits. This class is not fully functional after this week, but will be worked on.
+    \\
+    \textbf{Baby Rabbit} has the following functions:
+    \begin{mdframed}
+        @override act($World$ world); 
+    \end{mdframed}
+
 \end{document}
