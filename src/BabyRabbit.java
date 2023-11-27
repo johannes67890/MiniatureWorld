@@ -4,9 +4,9 @@ import itumulator.simulator.Actor;
 import itumulator.world.World;
 
 public class BabyRabbit extends Rabbit implements  Actor, DynamicDisplayInformationProvider  {
+    private int age = 0;
     BabyRabbit() {
         super();
-        this.age = 0;
     }
 
     @Override

@@ -11,6 +11,7 @@ import itumulator.world.NonBlocking;
 import itumulator.world.World;
 
 public class Grass implements Actor, DynamicDisplayInformationProvider, NonBlocking {
+    private int hp = 100;
     Random r = new Random(); // Random number generator
 
     /**

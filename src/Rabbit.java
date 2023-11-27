@@ -1,26 +1,18 @@
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Random;
-import java.util.Set;
 
 import itumulator.executable.DisplayInformation;
 import itumulator.executable.DynamicDisplayInformationProvider;
 import itumulator.simulator.Actor;
 import itumulator.world.Location;
-import itumulator.world.NonBlocking;
 import itumulator.world.World;
 
 public class Rabbit implements Actor, DynamicDisplayInformationProvider {
     private int hp = 10;
-    private int age = 0;
+    public int age = 0;
     private Burrow home = null;
     private Location location;
-
-    /*
-     * Rabbit(Location location){
-     * this.location = location;
-     * }
-     */
 
     public Rabbit() {
         this.age = 3;
@@ -37,9 +29,10 @@ public class Rabbit implements Actor, DynamicDisplayInformationProvider {
         else if (r < 50) //40% chance to eat
             eat(world);
         else{ //50% chance to move
+            if(world.getEmptySurroundingTiles() == null) return;
             if(new Random().nextInt(age+1) < 4 ) move(world); //less chance to move the older it is
         }
-
+        reproduce(world);
         //if(world.isNight() && home==null) die(world);
 
         //if(world.isNight()) hp--;
