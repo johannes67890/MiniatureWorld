@@ -39,12 +39,12 @@ public class Rabbit implements Actor, DynamicDisplayInformationProvider {
         else{ //50% chance to move
             if(new Random().nextInt(age+1) < 4 ) move(world); //less chance to move the older it is
         }
+        reproduce(world);
+        if(world.isNight() && home==null && r < 20) die(world);
 
-        //if(world.isNight() && home==null) die(world);
+        if(world.isNight() && world.getCurrentTime() == 19) hp--;
 
-        //if(world.isNight()) hp--;
-
-        if(hp <= 0 || age>20) die(world);
+        if(hp <= 0 || age>7) die(world);
 
         if(world.getCurrentTime()==19) age++;
     }
@@ -63,20 +63,18 @@ public class Rabbit implements Actor, DynamicDisplayInformationProvider {
     }
 
     public void die(World world) {
+        Location thisLocation = world.getLocation(this);
         world.delete(this);
+        world.setTile(thisLocation, new Gravestone());
     }
 
 
     private void reproduce (World world) {
         int r = new Random().nextInt(8);
         for (Location tile : world.getSurroundingTiles()) {
-            if(world.getTile(tile) instanceof Rabbit && world.getTile(tile) != this && r == 0 && !(world.getTile(tile) instanceof BabyRabbit)) {
-                System.out.println("Rabbit is reproducing");
-                    
-                    world.setTile(getRandomSurroundingTile(world), new BabyRabbit());
-                
-
-            } else continue;
+            // if(world.getTile(tile) instanceof Rabbit && world.getTile(tile) != this && r == 0 && !(world.getTile(tile) instanceof BabyRabbit)) {                    
+            //         world.setTile(getRandomSurroundingTile(world), new BabyRabbit());
+            // } else continue;
         }
     }
 
@@ -97,7 +95,6 @@ public class Rabbit implements Actor, DynamicDisplayInformationProvider {
 
     @Override
     public DisplayInformation getInformation() {
-        if(age<3) return new DisplayInformation(java.awt.Color.black, "rabbit-small");
-        return new DisplayInformation(java.awt.Color.black, "rabbit-large");
+         return new DisplayInformation(java.awt.Color.black, "rabbit-large");
     }
 }
