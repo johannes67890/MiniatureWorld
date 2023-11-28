@@ -2,6 +2,8 @@ package testReader;
 import java.io.*;
 import java.util.ArrayList;
 import java.util.HashMap;
+
+import itumulator.world.Location;
 /**
  * This class is used to read the file and return the content of the file.
  * 
@@ -17,6 +19,10 @@ public class TestReader extends BufferedReader {
     private char[] fileContent;
     private String[] fileContentString;
 
+    private Location location;
+    private HashMap<String, ArrayList<Object>> map;
+
+
     /**
      * Constructor for the TestReader class.
      * @param filePath - The path to the file.
@@ -29,7 +35,7 @@ public class TestReader extends BufferedReader {
         char[] array = new char[100];
         this.read(array);
         this.fileContent = array;  
-        this.fileContentString = new String(array).split("\\W+"); 
+        this.fileContentString = new String(array).split("\\s+");
     }
 
     /**
@@ -62,14 +68,24 @@ public class TestReader extends BufferedReader {
      * The hashmap does not contain the size of the world. (See {@link getWorldSize} method)
      * @return HashMap<String, ArrayList<Integer>
      */
-    public HashMap<String, ArrayList<Integer>> getMap(){
-        HashMap<String, ArrayList<Integer>> types = new HashMap<>();
+    public HashMap<String, ArrayList<Object>> getMap(){
+        HashMap<String, ArrayList<Object>> types = new HashMap<>();
 
         String key = null;
-        int value;
-        ArrayList<Integer> values = new ArrayList<>(); // This is the list of values for each type.
+        Object value;
+        ArrayList<Object> values = new ArrayList<>(); // This is the list of values for each type.
 
         for (String str : this.fileContentString) {
+            if(str.matches("\\((.*?)\\)")){
+                value = this.setCoordinates(str);
+                this.location = (Location) value;
+                values.add(value);
+                types.put(key, values);
+            }
+            if(str.contains("-")){
+                values.add(str);
+                types.put(key, values);
+            }
             if(isNumeric(str) && key != null){
                 // add the value to the key.
                 value = Integer.parseInt(str);
@@ -95,16 +111,28 @@ public class TestReader extends BufferedReader {
      * @param type - The type of the interval or static number.
      * @return int - The random interval number.
      */
-    public int getRandomIntervalNumber(String type){
+    public Object getRandomIntervalNumber(String type){
         if(!this.getMap().containsKey(type)) throw new IllegalArgumentException("The type " + type + " does not exist.");
         if(this.getMap().get(type).size() == 1){
             return this.getMap().get(type).get(0);
-        } else {
-            int min = this.getMap().get(type).get(0);
-            int max = this.getMap().get(type).get(1);
-            return getRandomNumber(min, max + 1);
-        }
+        } else if(this.getMap().get(type).contains("-")) {
+            String[] interval = this.getMap().get(type).toString().split("-");
+            int min = Integer.parseInt(interval[0]);
+            int max = Integer.parseInt(interval[1]);
+            return (Object) getRandomNumber(min, max  + 1);
+        } else throw new IllegalArgumentException("The type " + type + " does not have a valid interval.");
     
+    }
+
+    public Location setCoordinates(String str){
+        String[] coordinates = str.replaceAll("[()]", "").split(",");
+        int x  = Integer.parseInt(coordinates[0]);
+        int y = Integer.parseInt(coordinates[1]);
+        return new Location(x, y);
+    }
+
+    public Location getLocation(){
+        return this.location;
     }
 
     /**

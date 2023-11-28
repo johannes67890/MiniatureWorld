@@ -9,10 +9,10 @@ import itumulator.world.NonBlocking;
 import itumulator.world.World;
 import testReader.TestReader;
 
-public class Main {
 
+public class Main {
     public static void main(String[] args) throws IOException {
-        Distributer distributior = Distributer.t1_3b;
+        Distributer distributior = Distributer.t2_5a;
         TestReader reader = new TestReader(distributior.getUrl());
         int size = reader.getWorldSize();
         int delay = 100;
@@ -20,27 +20,11 @@ public class Main {
         Program program = new Program(size, display_size, delay);
         World world = program.getWorld();
 
-        HashMap<String, ArrayList<Integer>> map = reader.getMap();
-        
-        for(String key : map.keySet()) {
-            for (int i = 0; i < reader.getRandomIntervalNumber(key); i++) {
-                Object object = null;
-                switch (key) {
-                    case "grass":
-                        object = new Grass();
-                        break;
-                    case "rabbit":
-                        object = new Rabbit();
-                        break;
-                    case "burrow":
-                        object = new Burrow();
-                        break;
-                    default:
-                        break;
-                }
-                spawnRandomObj(world, object);
-            }
-        }
+        HashMap<String, ArrayList<Object>> map = reader.getMap();
+
+        System.out.println("Map: " + map);
+        System.out.println("Location: " + reader.getLocation());
+        System.out.println("Size: " + reader.getWorldSize());
 
         program.show();
 
