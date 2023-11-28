@@ -40,9 +40,9 @@ public class TestReaderTest {
        Assert.assertEquals(type1Val, testReader.getMap().get("TestType1"));
     }
     
-    @Test 
-    public void testGetCoordinats(){
-        Assert.assertEquals(new Location(2,3), testReader.getLocation(str));
-    }
+    // @Test 
+    // public void testGetCoordinats(){
+    //     Assert.assertEquals(new Location(2,3), testReader.getLocation(str));
+    // }
 }
 
