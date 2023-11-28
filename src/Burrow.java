@@ -16,16 +16,18 @@ public class Burrow implements Actor, NonBlocking, DynamicDisplayInformationProv
     }
 
     public void addRabbit(Rabbit rabbit, World world){
+        rabbit.setInBurrow(true);
         rabbits.add(rabbit);
         world.remove(rabbit);
+        System.out.println("Im in burrow");
     }
 
     public void removeRabbits(World world){
         if(rabbits.size() > 0 && world.isTileEmpty(world.getLocation(this))) {
             world.setTile(world.getLocation(this), rabbits.get(0));
-            rabbits.get(0).setInBurrowFalse();
-            System.out.println("out of burrow");
+            rabbits.get(0).setInBurrow(false);
             rabbits.remove(0);
+            System.out.println("Im out of burrow");
         }
     }
 

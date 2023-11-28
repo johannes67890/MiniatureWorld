@@ -1,8 +1,6 @@
 import java.util.ArrayList;
-import java.util.HashSet;
 import java.util.List;
 import java.util.Random;
-import java.util.Set;
 import itumulator.executable.DisplayInformation;
 import itumulator.executable.DynamicDisplayInformationProvider;
 import itumulator.simulator.Actor;
@@ -11,7 +9,6 @@ import itumulator.world.NonBlocking;
 import itumulator.world.World;
 
 public class Grass implements Actor, DynamicDisplayInformationProvider, NonBlocking {
-    private int hp = 100;
     Random r = new Random(); // Random number generator
 
     /**
