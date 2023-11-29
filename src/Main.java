@@ -12,7 +12,7 @@ import testReader.TestReader;
 
 public class Main {
     public static void main(String[] args) throws IOException {
-        Distributer distributior = Distributer.t2_5a;
+        Distributer distributior = Distributer.t1_1d;
         TestReader reader = new TestReader(distributior.getUrl());
         int size = reader.getWorldSize();
         int delay = 100;
@@ -21,14 +21,31 @@ public class Main {
         World world = program.getWorld();
 
         HashMap<String, ArrayList<Object>> map = reader.getMap();
-
-        System.out.println("Map: " + map);
-        System.out.println("Location: " + reader.getLocation());
-        System.out.println("Size: " + reader.getWorldSize());
+        
+        for(String key : map.keySet()) {
+            for (int i = 0; i < reader.getRandomNumber(key); i++) {
+                Object object = null;
+                switch (key) {
+                    case "grass":
+                        object = new Grass();
+                        break;
+                    case "rabbit":
+                        object = new Rabbit(10);
+                        break;
+                    case "burrow":
+                        object = new Burrow();
+                        break;
+                    case "wolf":
+                        object = new Wolf(20);
+                        break;
+                    default:
+                        throw new RuntimeException("Not on list");
+                }
+                spawnRandomObj(world, object);
+            }
+        }
 
         program.show();
-
-
     }
     /**
      * Spawns a random object in the world.
