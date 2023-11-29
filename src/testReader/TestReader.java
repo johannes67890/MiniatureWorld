@@ -80,7 +80,7 @@ public class TestReader extends BufferedReader {
                     values.add(str);
                     types.put(key, values);
                 } else if(isNumeric(str) && key != null){ // If the key is not null, then we have found a type.
-                    values.add(str);
+                    values.add(Integer.parseInt(str));
                     types.put(key, values);
                 } else if(isNumeric(str) && key == null){ // If the key is null, then we have not found a type yet.
                     continue;
@@ -107,8 +107,9 @@ public class TestReader extends BufferedReader {
         if(!this.getMap().containsKey(type)) throw new IllegalArgumentException("The type " + type + " does not exist.");
         Object value = this.getMap().get(type).get(0);
 
-        if(this.getMap().size() == 1 && value instanceof Integer){
-            return IntStream.range((int) value, (int) value);
+        if(value instanceof Integer){
+            int val = Integer.parseInt(value.toString());
+            return IntStream.range(val, val + 1);
         } else if(value instanceof String) {
             String[] interval = ((String) value).split("-");
             int min = Integer.parseInt(interval[0]);
@@ -126,9 +127,9 @@ public class TestReader extends BufferedReader {
      * @param type - The type of the location.
      * @return int - The random number.
      */
-    public int getRandomNumber(String type){
+    public int getRandomNumberFromType(String type){
         IntStream stream = this.getTypeRange(type);
-        return stream.findAny().getAsInt();
+        return stream.findFirst().getAsInt();
     }
 
     /**

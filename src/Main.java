@@ -23,7 +23,7 @@ public class Main {
         HashMap<String, ArrayList<Object>> map = reader.getMap();
         
         for(String key : map.keySet()) {
-            for (int i = 0; i < reader.getRandomNumber(key); i++) {
+            for (int i = 0; i < reader.getRandomNumberFromType(key); i++) {
                 Object object = null;
                 switch (key) {
                     case "grass":
