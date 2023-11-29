@@ -14,7 +14,7 @@ public enum Distributer {
     t1_2fg("data\\T0.1\\t1-2fg.txt"),
     t1_3a("data\\T0.1\\t1-3a.txt"),
     t1_3b("data\\T0.1\\t1-3b.txt"),
-    tf1_1a("data\\T0.1\\tf1-1.txt"),
+    tf1_1("data\\T0.1\\tf1-1.txt"),
     // Theme test files (Week 2.)
     t2_1ab("data\\T0.2\\t2-1ab.txt"),
     t2_1c("data\\T0.2\\t2-1c.txt"),
