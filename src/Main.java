@@ -12,7 +12,7 @@ import testReader.TestReader;
 public class Main {
 
     public static void main(String[] args) throws IOException {
-        Distributer distributior = Distributer.t1_3b;
+        Distributer distributior = Distributer.t1_1d;
         TestReader reader = new TestReader(distributior.getUrl());
         int size = reader.getWorldSize();
         int delay = 100;
@@ -30,13 +30,16 @@ public class Main {
                         object = new Grass();
                         break;
                     case "rabbit":
-                        object = new Rabbit();
+                        object = new Rabbit(10);
                         break;
                     case "burrow":
                         object = new Burrow();
                         break;
-                    default:
+                    case "wolf":
+                        object = new Wolf(20);
                         break;
+                    default:
+                        throw new RuntimeException("Not on list");
                 }
                 spawnRandomObj(world, object);
             }
