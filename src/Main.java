@@ -9,8 +9,8 @@ import itumulator.world.NonBlocking;
 import itumulator.world.World;
 import testReader.TestReader;
 
-public class Main {
 
+public class Main {
     public static void main(String[] args) throws IOException {
         Distributer distributior = Distributer.t1_1d;
         TestReader reader = new TestReader(distributior.getUrl());
@@ -20,10 +20,10 @@ public class Main {
         Program program = new Program(size, display_size, delay);
         World world = program.getWorld();
 
-        HashMap<String, ArrayList<Integer>> map = reader.getMap();
+        HashMap<String, ArrayList<Object>> map = reader.getMap();
         
         for(String key : map.keySet()) {
-            for (int i = 0; i < reader.getRandomIntervalNumber(key); i++) {
+            for (int i = 0; i < reader.getRandomNumber(key); i++) {
                 Object object = null;
                 switch (key) {
                     case "grass":
@@ -46,8 +46,6 @@ public class Main {
         }
 
         program.show();
-
-
     }
     /**
      * Spawns a random object in the world.

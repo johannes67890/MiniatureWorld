@@ -1,20 +1,14 @@
 package test;
 import java.io.IOException;
-import java.lang.reflect.Array;
-import java.util.ArrayList;
-import java.util.List;
-import java.util.stream.IntStream;
-
 import org.junit.*;
 
+import itumulator.world.Location;
 import testReader.TestReader;
 
 public class TestReaderTest {
     public TestReader testReader;
     public int n = 7;
-    public ArrayList<String> types = new ArrayList<String>(List.of("TestType0", "TestType1"));
-    public ArrayList<Integer> type0Val = new ArrayList<Integer>(List.of(2));
-    public ArrayList<Integer> type1Val = new ArrayList<Integer>(List.of(3, 5));
+    
     @Before
     public void setUp() throws IOException {
         testReader = new TestReader("src\\test\\test.txt");
@@ -32,8 +26,13 @@ public class TestReaderTest {
     }
     @Test
     public void testGetValues() {
-       Assert.assertEquals(type0Val, testReader.getMap().get("TestType0"));
-       Assert.assertEquals(type1Val, testReader.getMap().get("TestType1"));
+      Assert.assertEquals(3, testReader.getTypeRange("TestType1").min().getAsInt());
+      Assert.assertEquals(5, testReader.getTypeRange("TestType1").max().getAsInt());
+    }
+    
+    @Test 
+    public void testGetCoordinats(){
+        Assert.assertEquals(new Location(3,5), testReader.getLocation("TestType1"));
     }
 }
 

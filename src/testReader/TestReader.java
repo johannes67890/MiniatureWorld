@@ -2,6 +2,12 @@ package testReader;
 import java.io.*;
 import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.stream.IntStream;
+import java.lang.Object;
+
+import itumulator.world.Location;
+
+
 /**
  * This class is used to read the file and return the content of the file.
  * 
@@ -14,8 +20,7 @@ import java.util.HashMap;
  */
 public class TestReader extends BufferedReader {
     private String filePath;
-    private char[] fileContent;
-    private String[] fileContentString;
+    private ArrayList<String[]> fileContentString;
 
     /**
      * Constructor for the TestReader class.
@@ -26,10 +31,13 @@ public class TestReader extends BufferedReader {
     public TestReader(String filePath) throws IOException, FileNotFoundException {
         super(new FileReader(filePath));
         this.filePath = filePath;
-        char[] array = new char[100];
-        this.read(array);
-        this.fileContent = array;  
-        this.fileContentString = new String(array).split("\\W+"); 
+        ArrayList<String> wordList = new ArrayList<>();
+        String line = null;
+        while ((line = this.readLine()) != null) {
+            wordList.add(line);
+        }
+        this.fileContentString = wordList.stream().map(s -> s.split(" ")).collect(ArrayList::new, ArrayList::add, ArrayList::addAll);
+        this.close();
     }
 
     /**
@@ -41,78 +49,117 @@ public class TestReader extends BufferedReader {
     }
 
     /**
-     * Method that returns the content of the file as a char array.
-     * @return char[]
-     */
-    public char[] getFileContent() {
-        return this.fileContent;
-    }
-
-    /**
      * Method that returns the content of the file as a string.
      * @return String
      */
     public String getFileContentString(){
-        return new String(this.fileContent);
+        return this.fileContentString.toString();
     }
 
     /**
-     * This method returns a HashMap with the types as keys and the values as values.
+     * Method that returns the content of the file as a HashMap.
      * 
-     * The hashmap does not contain the size of the world. (See {@link getWorldSize} method)
-     * @return HashMap<String, ArrayList<Integer>
+     * The HashMap contains the type as a key (type String) and the values as a list of objects.
+     * 
+     * @return HashMap<String, ArrayList<Object>>
      */
-    public HashMap<String, ArrayList<Integer>> getMap(){
-        HashMap<String, ArrayList<Integer>> types = new HashMap<>();
+    public HashMap<String, ArrayList<Object>> getMap(){
+        HashMap<String, ArrayList<Object>> types = new HashMap<>();
 
         String key = null;
-        int value;
-        ArrayList<Integer> values = new ArrayList<>(); // This is the list of values for each type.
+        ArrayList<Object> values = new ArrayList<>(); // This is the list of values for each type.
 
-        for (String str : this.fileContentString) {
-            if(isNumeric(str) && key != null){
-                // add the value to the key.
-                value = Integer.parseInt(str);
-                values.add(value);
-                types.put(key, values);
-            } else if(isNumeric(str) && key == null){ // If the key is null, then we have not found a type yet.
-                continue;
-            } else if(!isNumeric(str) && key != null){ // If the key is not null, then we have found a new type.
-                key = str;
-                values = new ArrayList<>(); 
-            }
-            else {
-                key = str;
+        for (String[] object : this.fileContentString) {
+            for (String str : object) {
+                if(str.matches("\\((.*?)\\)")){ // If the string contains coordinates.
+                    if(values.stream().anyMatch(c -> c instanceof Location)) throw new IllegalArgumentException("Input contains more than one location. A location has already been set.");
+                    System.out.println(str);
+                    values.add(setCoordinates(str));
+                    types.put(key, values);
+                } else if(str.contains("-")){ // If the string contains an interval.
+                    values.add(str);
+                    types.put(key, values);
+                } else if(isNumeric(str) && key != null){ // If the key is not null, then we have found a type.
+                    values.add(str);
+                    types.put(key, values);
+                } else if(isNumeric(str) && key == null){ // If the key is null, then we have not found a type yet.
+                    continue;
+                } else if(!isNumeric(str) && key != null){ // Reset the key and values. Ready for the next type.
+                    key = str;
+                    values = new ArrayList<>(); 
+                }
+                else { // If the key is null, then we have not found a type.
+                    key = str;
+                }
             }
         }
         return types;
     }
 
     /**
-     * This method returns a random interval or a static number for a given type.
+     * Returns a stream of integers for a given type.
      * 
      * @throws IllegalArgumentException If the type does not exist.
-     * @param type - The type of the interval or static number.
-     * @return int - The random interval number.
+     * @param type - The type of the location.
+     * @return IntStream - The stream of integers.
      */
-    public int getRandomIntervalNumber(String type){
+    public IntStream getTypeRange(String type){
         if(!this.getMap().containsKey(type)) throw new IllegalArgumentException("The type " + type + " does not exist.");
-        if(this.getMap().get(type).size() == 1){
-            return this.getMap().get(type).get(0);
-        } else {
-            int min = this.getMap().get(type).get(0);
-            int max = this.getMap().get(type).get(1);
-            return getRandomNumber(min, max + 1);
-        }
+        Object value = this.getMap().get(type).get(0);
+
+        if(this.getMap().size() == 1 && value instanceof Integer){
+            return IntStream.range((int) value, (int) value);
+        } else if(value instanceof String) {
+            String[] interval = ((String) value).split("-");
+            int min = Integer.parseInt(interval[0]);
+            int max = Integer.parseInt(interval[1]);
+            return IntStream.range(min, max + 1);
+        } else throw new IllegalArgumentException("The type " + type + " does not have a valid interval.");
+    } 
     
+    /**
+     * Returns a random number for a given type. 
+     * 
+     * The random number is in the range of the type. See {@link getTypeRange} for the range.
+     * 
+     * @throws IllegalArgumentException If the type does not exist.
+     * @param type - The type of the location.
+     * @return int - The random number.
+     */
+    public int getRandomNumber(String type){
+        IntStream stream = this.getTypeRange(type);
+        return stream.findAny().getAsInt();
     }
 
     /**
-     * This method returns the size of the world.
+     * Returns a random location for a given type.
+     * 
+     * @throws IllegalArgumentException If the type does not exist.
+     * @param type - The type of the location.
+     * @return Location - The random location.
+     */
+    public Location getLocation(String type){
+        return (Location) this.getMap().get(type).stream().filter(c -> c instanceof Location).findFirst().orElse(null);
+    }
+    
+    /**
+     * Returns the size of the world.
      * @return int
      */
     public int getWorldSize(){
-        return Integer.parseInt(this.fileContentString[0]);
+        return Integer.parseInt(this.fileContentString.get(0)[0]);
+    }
+    
+    /**
+     * Splits the string object and returns a location.
+     * @param str - The string to split.
+     * @return Location
+     */
+    private Location setCoordinates(String str){
+        String[] coordinates = str.replaceAll("[()]", "").split(",");
+        int x  = Integer.parseInt(coordinates[0]);
+        int y = Integer.parseInt(coordinates[1]);
+        return new Location(x, y);
     }
 
     /**
@@ -121,7 +168,7 @@ public class TestReader extends BufferedReader {
      * @param strNum - String to check if it is numeric.
      * @return Boolean - True if the string is numeric, false otherwise.
      */
-    boolean isNumeric(String strNum) {
+    private boolean isNumeric(String strNum) {
         if (strNum == null) {
             return false;
         }
@@ -131,9 +178,5 @@ public class TestReader extends BufferedReader {
             return false;
         }
         return true;
-    }
-    
-    public int getRandomNumber(int min, int max) {
-        return (int) ((Math.random() * (max - min)) + min);
     }
 }
