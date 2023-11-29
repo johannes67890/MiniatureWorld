@@ -4,7 +4,6 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.stream.IntStream;
 import java.lang.Object;
-import org.w3c.dom.ranges.Range;
 
 import itumulator.world.Location;
 
@@ -23,9 +22,6 @@ public class TestReader extends BufferedReader {
     private String filePath;
     private ArrayList<String[]> fileContentString;
 
-    private HashMap<String, ArrayList<Object>> map;
-    private int worldSize;
-
     /**
      * Constructor for the TestReader class.
      * @param filePath - The path to the file.
@@ -41,10 +37,6 @@ public class TestReader extends BufferedReader {
             wordList.add(line);
         }
         this.fileContentString = wordList.stream().map(s -> s.split(" ")).collect(ArrayList::new, ArrayList::add, ArrayList::addAll);
-        
-        this.map = this.getMap();
-        this.worldSize = this.getWorldSize();
-
         this.close();
     }
 
@@ -65,30 +57,29 @@ public class TestReader extends BufferedReader {
     }
 
     /**
-     * This method returns a HashMap with the types as keys and the values as values.
+     * Method that returns the content of the file as a HashMap.
      * 
-     * The hashmap does not contain the size of the world. (See {@link getWorldSize} method)
-     * @return HashMap<String, ArrayList<Integer>
+     * The HashMap contains the type as a key (type String) and the values as a list of objects.
+     * 
+     * @return HashMap<String, ArrayList<Object>>
      */
     public HashMap<String, ArrayList<Object>> getMap(){
         HashMap<String, ArrayList<Object>> types = new HashMap<>();
 
         String key = null;
-        Object value;
         ArrayList<Object> values = new ArrayList<>(); // This is the list of values for each type.
 
         for (String[] object : this.fileContentString) {
             for (String str : object) {
-                if(str.matches("\\((.*?)\\)")){
+                if(str.matches("\\((.*?)\\)")){ // If the string contains coordinates.
                     if(values.stream().anyMatch(c -> c instanceof Location)) throw new IllegalArgumentException("Input contains more than one location. A location has already been set.");
                     System.out.println(str);
                     values.add(setCoordinates(str));
                     types.put(key, values);
-                } else if(str.contains("-")){
+                } else if(str.contains("-")){ // If the string contains an interval.
                     values.add(str);
                     types.put(key, values);
-                } else if(isNumeric(str) && key != null){
-                    value = Integer.parseInt(str);
+                } else if(isNumeric(str) && key != null){ // If the key is not null, then we have found a type.
                     values.add(str);
                     types.put(key, values);
                 } else if(isNumeric(str) && key == null){ // If the key is null, then we have not found a type yet.
@@ -97,7 +88,7 @@ public class TestReader extends BufferedReader {
                     key = str;
                     values = new ArrayList<>(); 
                 }
-                else {
+                else { // If the key is null, then we have not found a type.
                     key = str;
                 }
             }
@@ -106,7 +97,7 @@ public class TestReader extends BufferedReader {
     }
 
     /**
-     * This method returns a stream of integers for a given type.
+     * Returns a stream of integers for a given type.
      * 
      * @throws IllegalArgumentException If the type does not exist.
      * @param type - The type of the location.
@@ -141,7 +132,7 @@ public class TestReader extends BufferedReader {
     }
 
     /**
-     * This method returns a random location for a given type.
+     * Returns a random location for a given type.
      * 
      * @throws IllegalArgumentException If the type does not exist.
      * @param type - The type of the location.
@@ -152,13 +143,18 @@ public class TestReader extends BufferedReader {
     }
     
     /**
-     * This method returns the size of the world.
+     * Returns the size of the world.
      * @return int
      */
     public int getWorldSize(){
         return Integer.parseInt(this.fileContentString.get(0)[0]);
     }
     
+    /**
+     * Splits the string object and returns a location.
+     * @param str - The string to split.
+     * @return Location
+     */
     private Location setCoordinates(String str){
         String[] coordinates = str.replaceAll("[()]", "").split(",");
         int x  = Integer.parseInt(coordinates[0]);
@@ -182,9 +178,5 @@ public class TestReader extends BufferedReader {
             return false;
         }
         return true;
-    }
-    
-    private int getRandomNumber(int min, int max) {
-        return (int) ((Math.random() * (max - min)) + min);
     }
 }
