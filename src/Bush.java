@@ -20,7 +20,10 @@ public class Bush implements Actor, DynamicDisplayInformationProvider {
     public void eatBerries(){
         hasBerries = false;
     }
-
+    
+    public boolean getHasBerries(){
+        return hasBerries;
+    }
     @Override
     public DisplayInformation getInformation() {
         if(hasBerries){

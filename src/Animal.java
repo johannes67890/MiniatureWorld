@@ -11,13 +11,8 @@ import itumulator.world.World;
 public abstract class Animal implements Actor, DynamicDisplayInformationProvider {
 
     protected int hp, maxHp, age, maxAge, vision, hunger;
-    protected boolean moved;
 
-    public void act(World world) {
-        //this might not work
-
-        //TODO FIX ENERGI
-
+    protected void life(World world){
         hunger();
 
         if (world.getCurrentTime() % 19 == 0) {
@@ -26,7 +21,7 @@ public abstract class Animal implements Actor, DynamicDisplayInformationProvider
 
         if (hunger <= 0) {
             hp--;
-        } else if (hunger >= 7) {
+        } else if (hunger >= 7 && hp<maxHp) {
             hp++;
         }
 
@@ -122,19 +117,20 @@ public abstract class Animal implements Actor, DynamicDisplayInformationProvider
     }
 
     protected <T> void eat(T food, Location location, World world) {
-        boolean eat = false;
         if (world.getTile(location).getClass().equals(food.getClass())) {
-            eat = true;
+            hunger += 3;
+            world.delete(world.getTile(location));
+            move(location, world);
         } else if (world.containsNonBlocking(world.getLocation(this))) {
             if (world.getNonBlocking(location).getClass().equals(food.getClass())) {
-                eat = true;
+                hunger += 3;
+                world.delete(world.getNonBlocking(location));
             }
         }
-        if (eat) {
-            world.delete(world.getTile(location));
-            hunger += 3;
-            move(location, world);
-        }
+    }
+
+    protected void takeDamage(int damage){
+        hp-=damage;
     }
 
     @Override

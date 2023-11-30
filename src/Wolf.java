@@ -4,10 +4,10 @@ import itumulator.executable.DisplayInformation;
 import itumulator.world.Location;
 import itumulator.world.World;
 
-public class Wolf extends Animal implements Predator {
+public class Wolf extends Predator {
 
     public Wolf() {
-        super(15, 30, 1);
+        super(15, 30, 1, 4);
     }
 
     public void act(World world) {
@@ -26,6 +26,8 @@ public class Wolf extends Animal implements Predator {
                 }
             }
         }
+
+        life(world);
     }
 
     @Override
