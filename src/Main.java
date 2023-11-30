@@ -12,7 +12,7 @@ import testReader.TestReader;
 
 public class Main {
     public static void main(String[] args) throws IOException {
-        Distributer distributior = Distributer.t2_1c;
+        Distributer distributior = Distributer.t2_7a;
         TestReader reader = new TestReader(distributior.getUrl());
         int size = reader.getWorldSize();
         int delay = 100;
@@ -41,6 +41,9 @@ public class Main {
                     case "bear":
                         object = new Bear();
                         break;
+                    case "berry":
+                        object = new Bush();
+                        break;
                     default:
                         throw new RuntimeException("Not on list");
                 }
@@ -60,10 +63,12 @@ public class Main {
         if(isWorldFull(world)) throw new IllegalArgumentException("The world is full.");
             Location location = new Location(new Random().nextInt(world.getSize()), new Random().nextInt(world.getSize()));
             
-            if(world.getTile(location) == null || (world.getTile(location) instanceof NonBlocking) == !(object instanceof NonBlocking)){ // if the tile 
-                if(!world.isTileEmpty(location)) {
-                    spawnRandomObj(world, object);
-                } else world.setTile(location, object);   
+            if(object instanceof NonBlocking && !world.containsNonBlocking(location)){
+                world.setTile(location, object); 
+            } else if(!(object instanceof NonBlocking) && world.isTileEmpty(location)){
+                world.setTile(location, object); 
+            } else {
+                spawnRandomObj(world, object);
             }
     }
     /**
