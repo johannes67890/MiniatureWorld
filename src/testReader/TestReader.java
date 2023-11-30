@@ -2,6 +2,7 @@ package testReader;
 import java.io.*;
 import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.HashSet;
 import java.util.stream.IntStream;
 import java.lang.Object;
 
@@ -97,6 +98,10 @@ public class TestReader extends BufferedReader {
             }
         }
         return types;
+    }
+
+    public HashSet<String> getAllTypes(){
+        return new HashSet<String>(this.getMap().keySet());
     }
 
     /**
