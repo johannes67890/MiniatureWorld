@@ -71,6 +71,7 @@ public class TestReader extends BufferedReader {
 
         for (String[] object : this.fileContentString) {
             for (String str : object) {
+                int index = 0;
                 if(str.matches("\\((.*?)\\)")){ // If the string contains coordinates.
                     if(values.stream().anyMatch(c -> c instanceof Location)) throw new IllegalArgumentException("Input contains more than one location. A location has already been set.");
                     System.out.println(str);
@@ -85,7 +86,9 @@ public class TestReader extends BufferedReader {
                 } else if(isNumeric(str) && key == null){ // If the key is null, then we have not found a type yet.
                     continue;
                 } else if(!isNumeric(str) && key != null){ // Reset the key and values. Ready for the next type.
-                    key = str;
+                    if(key.equals(str) || types.containsKey(str)) { // if there are mutible of the same type.
+                        key = str.concat("_" + (index + 1));
+                    } else key = str;
                     values = new ArrayList<>(); 
                 }
                 else { // If the key is null, then we have not found a type.
