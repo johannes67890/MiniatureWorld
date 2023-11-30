@@ -1,29 +1,61 @@
 import java.util.Random;
 
 import itumulator.executable.DisplayInformation;
-import itumulator.executable.DynamicDisplayInformationProvider;
-import itumulator.simulator.Actor;
 import itumulator.world.Location;
 import itumulator.world.World;
 
-public class Rabbit extends Animal implements Actor, DynamicDisplayInformationProvider {
+public class Rabbit extends Animal {
     private final int adultAge = 3;
     private Burrow home = null;
     private boolean inBurrow = false;
 
-    public Rabbit(int hp) {
-        super(hp);
+    public Rabbit() {
+        super(10, 15, 2);
     }
 
     public void act(World world) {
-        if (world.getCurrentTime() % 19 == 0) {
-            age++;
-        }
-
+        moved = false;
         if (!inBurrow) {
             // if its night the rabbit will lose health
             if (world.isNight())
                 hp--;
+
+            // move
+            // move towards home
+            if (world.isNight() && home != null) {
+                if (world.getLocation(this).equals(world.getLocation(home))) {
+                    home.addRabbit(this, world);
+                    return;
+                }
+                moveTowards(world.getLocation(home), world);
+                moved = true;
+                System.out.println("I move to home");
+
+            }
+            // move away from predator
+            if (!moved && world.getSurroundingTiles().size()==8) {
+                for (Location location : world.getSurroundingTiles(vision)) {
+                    if (world.getTile(location) instanceof Predator) {
+                        moveAway(location, world);
+                        moved = true;
+                        break;
+                    }
+                }
+            }
+            // move towards food
+            if (!moved && hunger <= 7) {
+                for (Location location : world.getSurroundingTiles(vision)) {
+                    if (world.getTile(location) instanceof Grass) {
+                        moveTowards(location, world);
+                        moved = true;
+                        break;
+                    }
+                }
+            }
+            // 50% for random move 50% for no move
+            if (!moved && new Random().nextBoolean()) {
+                move(getRandomEmptySurroundingTile(world), world);
+            }
 
             // if the rabbit is on a burrow, and doesn't have a home, set the burrow as its
             // home
@@ -32,34 +64,15 @@ public class Rabbit extends Animal implements Actor, DynamicDisplayInformationPr
                     home = (Burrow) world.getNonBlocking(world.getLocation(this));
             }
 
-            if (world.isNight() && home != null) {
-                moveTowardsHome(world);
-                System.out.println("I move to home");
-            } else {
-                System.out.println(inBurrow);
-                // we generate a random number to deside what action the rabbit will take
-                int r = new Random().nextInt(100);
-                if (r < 10 && home == null) { // 10% chance to try to dig burrow
-                    digBurrow(world);
-                    System.out.println("I dug");
-                } else if (r < 40) { // 30% chance to try to eat
-                    eat(new Grass(), world);
-                    System.out.println("I eat");
-                } else if (r < 50) {
-                    reproduce(world); // 10% chance to try to reproduce
-                    System.out.println("I Reproduce");
-                } else { // 50% chance to move
-                    System.out.println("I move random");
-                    if (new Random().nextInt(age + 1) < 4) // less chance to move the older it is
-                        move(getRandomEmptySurroundingTile(world), world);
-                }
+            // Do some action
+            if (home == null && new Random().nextInt(10) == 0) {
+                digBurrow(world);
+            } else if (hunger <= 8) {
+                eat(new Grass(), world.getLocation(this), world);
+            } else if (new Random().nextInt(10) == 0) {
+                reproduce(world);
             }
         }
-
-        if (hp <= 0 || age > 20) {
-            die(world);
-        }
-
     }
 
     private void digBurrow(World world) {
@@ -69,37 +82,11 @@ public class Rabbit extends Animal implements Actor, DynamicDisplayInformationPr
         }
     }
 
-    private void moveTowardsHome(World world) {
-        int homeX = world.getLocation(home).getX();
-        int homeY = world.getLocation(home).getY();
-        int rabbitX = world.getLocation(this).getX();
-        int rabbitY = world.getLocation(this).getY();
-        if (homeX > rabbitX && homeY > rabbitY) {
-            move(new Location(rabbitX + 1, rabbitY + 1), world);
-        } else if (homeX > rabbitX && homeY < rabbitY) {
-            move(new Location(rabbitX + 1, rabbitY - 1), world);
-        } else if (homeX < rabbitX && homeY > rabbitY) {
-            move(new Location(rabbitX - 1, rabbitY + 1), world);
-        } else if (homeX < rabbitX && homeY < rabbitY) {
-            move(new Location(rabbitX - 1, rabbitY - 1), world);
-        } else if (homeX == rabbitX && homeY > rabbitY) {
-            move(new Location(rabbitX, rabbitY + 1), world);
-        } else if (homeX == rabbitX && homeY < rabbitY) {
-            move(new Location(rabbitX, rabbitY - 1), world);
-        } else if (homeX > rabbitX && homeY == rabbitY) {
-            move(new Location(rabbitX + 1, rabbitY), world);
-        } else if (homeX < rabbitX && homeY == rabbitY) {
-            move(new Location(rabbitX - 1, rabbitY), world);
-        } else if (homeX == rabbitX && homeY == rabbitY) {
-            home.addRabbit(this, world);
-        }
-    }
-
     private void reproduce(World world) {
         for (Location tile : world.getSurroundingTiles()) {
             if (world.getTile(tile) instanceof Rabbit && world.getTile(tile) != this
                     && getRandomEmptySurroundingTile(world) != null) {
-                world.setTile(getRandomEmptySurroundingTile(world), new Rabbit(10));
+                world.setTile(getRandomEmptySurroundingTile(world), new Rabbit());
                 break;
             }
         }
@@ -107,6 +94,13 @@ public class Rabbit extends Animal implements Actor, DynamicDisplayInformationPr
 
     public void setInBurrow(Boolean b) {
         inBurrow = b;
+    }
+
+    @Override
+    protected void hunger(){
+        if(!inBurrow){
+            hunger--;
+        }
     }
 
     @Override
