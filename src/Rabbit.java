@@ -15,6 +15,10 @@ public class Rabbit extends Animal {
 
     public void act(World world) {
         System.out.println("Hunger: " + hunger + ", HP: " + hp);
+        
+        if (life(world)){
+            return;
+        }
 
         if (!inBurrow) {
             // if its night the rabbit will lose health
@@ -41,7 +45,7 @@ public class Rabbit extends Animal {
                 System.out.println("Rabbit move to home");
                 return;
             }
-            
+
             // move away from predator
             if (world.getSurroundingTiles().size() == 8) {
                 for (Location location : world.getSurroundingTiles(vision)) {
@@ -97,7 +101,6 @@ public class Rabbit extends Animal {
             }
             System.out.println("Rabbit do nothing");
         }
-        life(world);
     }
 
     private boolean digBurrow(World world) {

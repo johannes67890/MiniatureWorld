@@ -4,12 +4,14 @@ import itumulator.executable.DisplayInformation;
 import itumulator.world.Location;
 import itumulator.world.World;
 
-public class Bear extends Predator {
+public class Bear extends Animal implements Predator {
     private Location territoryC;
     private Set<Location> territory;
 
+    private final int damage = 6;
+
     public Bear(Location territoryC, World world) {
-        super(30, 30, 2, 6);
+        super(30, 30, 2);
         if (territoryC == null) {
             this.territoryC = world.getLocation(this);
         } else {
@@ -19,6 +21,11 @@ public class Bear extends Predator {
     }
 
     public void act(World world) {
+
+        if(life(world)){
+            return;
+        }
+
         // if starving
         if (hunger <= 2) {
             if(food(world)){
@@ -31,7 +38,7 @@ public class Bear extends Predator {
         for (Location location : territory) {
             for (Location view : world.getSurroundingTiles()) {
                 if (location.equals(view) && world.getTile(view) instanceof Animal) {
-                    attack(view, damage, world);
+                    attack(view, world);
                     System.out.println("Bear attack");
                     return;
                 }
@@ -68,22 +75,23 @@ public class Bear extends Predator {
         moveTowards(territoryC, world);
         System.out.println("Bear move towards C");
 
-        life(world);
+        
     }
 
+    //function that first tries to eat else tries to go towards food
     private boolean food(World world) {
         // check around for rabbit and berries
         for (Location location : world.getSurroundingTiles()) {
             if (world.getTile(location) instanceof Rabbit) {
                 eat(world.getTile(location), location, world);
-                System.out.println("I eat Rabbit");
+                System.out.println("Bear eat Rabbit");
                 return true;
             } else if (world.getTile(location) instanceof Bush) {
                 Bush target = (Bush) world.getTile(location);
                 if (target.getHasBerries()) {
                     hunger += 2;
                     target.eatBerries();
-                    System.out.println("I ate berry");
+                    System.out.println("Bear eat berry");
                     return true;
                 }
             }
@@ -103,6 +111,12 @@ public class Bear extends Predator {
             }
         }
         return false;
+    }
+
+
+    public void attack(Location location, World world) {
+        Animal target = (Animal) world.getTile(location);
+        target.takeDamage(damage);
     }
 
     @Override

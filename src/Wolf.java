@@ -4,13 +4,20 @@ import itumulator.executable.DisplayInformation;
 import itumulator.world.Location;
 import itumulator.world.World;
 
-public class Wolf extends Predator {
+public class Wolf extends Animal implements Predator{
+
+    private final int damage = 6;
 
     public Wolf() {
-        super(15, 30, 1, 4);
+        super(15, 30, 1);
     }
 
     public void act(World world) {
+
+        if(life(world)){
+            return;
+        }
+
         // we generate a random number to deside what action the wolf will take
         int r = new Random().nextInt(100);
         if (r < 20) {
@@ -28,6 +35,11 @@ public class Wolf extends Predator {
         }
 
         life(world);
+    }
+
+    public void attack(Location location, World world) {
+        Animal target = (Animal) world.getTile(location);
+        target.takeDamage(damage);
     }
 
     @Override

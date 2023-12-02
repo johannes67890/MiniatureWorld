@@ -12,7 +12,8 @@ public abstract class Animal implements Actor, DynamicDisplayInformationProvider
 
     protected int hp, maxHp, age, maxAge, vision, hunger;
 
-    protected void life(World world){
+    //a function to do all the stuff all animals do
+    protected boolean life(World world){
         hunger();
 
         if (world.getCurrentTime() % 19 == 0) {
@@ -27,7 +28,10 @@ public abstract class Animal implements Actor, DynamicDisplayInformationProvider
 
         if (hp <= 0 || age > maxAge) {
             die(world);
+            return true;
         }
+
+        return false;
     }
 
     protected Animal(int hp, int maxAge, int vision) {
@@ -38,10 +42,6 @@ public abstract class Animal implements Actor, DynamicDisplayInformationProvider
         this.vision = vision;
         this.hunger = 10;
 
-    }
-
-    protected void hunger(){
-        hunger--;
     }
 
     protected void die(World world) {
@@ -127,6 +127,10 @@ public abstract class Animal implements Actor, DynamicDisplayInformationProvider
                 world.delete(world.getNonBlocking(location));
             }
         }
+    }
+
+    protected void hunger(){
+        hunger--;
     }
 
     protected void takeDamage(int damage){
