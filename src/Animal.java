@@ -11,6 +11,7 @@ import itumulator.world.World;
 public abstract class Animal implements Actor, DynamicDisplayInformationProvider {
 
     protected int hp, maxHp, age, maxAge, vision, hunger;
+    protected boolean isInLair = false;
 
     //a function to do all the stuff all animals do
     protected boolean life(World world){
@@ -27,6 +28,7 @@ public abstract class Animal implements Actor, DynamicDisplayInformationProvider
         }
 
         if (hp <= 0 || age > maxAge) {
+            System.out.println("Animal dead");
             die(world);
             return true;
         }
@@ -135,6 +137,11 @@ public abstract class Animal implements Actor, DynamicDisplayInformationProvider
 
     protected void takeDamage(int damage){
         hp-=damage;
+    }
+
+
+    protected void setInLair(Boolean b){
+        isInLair=b;
     }
 
     @Override

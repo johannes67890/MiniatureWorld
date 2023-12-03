@@ -101,11 +101,13 @@ public class Bear extends Animal implements Predator {
         for (Location location : world.getSurroundingTiles(vision)) {
             if (world.getTile(location) instanceof Rabbit) {
                 moveTowards(location, world);
+                System.out.println("Wolf go towards rabbit");
                 return true;
             } else if (world.getTile(location) instanceof Bush) {
                 Bush target = (Bush) world.getTile(location);
                 if (target.getHasBerries()) {
                     moveTowards(location, world);
+                    System.out.println("Wolf go towards berry");
                     return true;
                 }
             }

@@ -22,6 +22,9 @@ public class Main {
 
         HashMap<String, ArrayList<Object>> map = reader.getMap();
         
+        WolfPack test = new WolfPack();
+        world.add(test);
+
         for(String key : map.keySet()) {
             for (int i = 0; i < reader.getRandomNumberFromType(key); i++) {
                 Object object = null;
@@ -33,10 +36,10 @@ public class Main {
                         object = new Rabbit();
                         break;
                     case "burrow":
-                        object = new Burrow();
+                        object = new Lair();
                         break;
                     case "wolf":
-                        object = new Wolf();
+                        object = new Wolf(test);
                         break;
                     case "bear":
                         object = new Bear(reader.getLocation(key), world);

@@ -1,2 +1,3 @@
-5
-wolf 1
+8
+wolf 4
+rabbit 1
