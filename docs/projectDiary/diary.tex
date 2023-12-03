@@ -135,5 +135,43 @@ top=20mm,
     \begin{mdframed}
         @override act($World$ world); 
     \end{mdframed}
-
+    \newpage
+    \section*{Week 2.}
+    \subsection*{Animal class}
+    We've made a lot of changes to the rabbit class, and added other new classes. With 3 animals, we decided to make an Animal superclass.
+    \\
+    We figured it would make sense to make a moveAway and moveTowards function, as a lot of the code was already written for the rabbit class. 
+    This utilizes our already created move function. We implemented a vision varaiable, that is used to determine how far away the animal can see, and a 
+    hunger variable, that is used to determine how hungry the animal is.
+    \subsection*{Rabbit class}
+    We reworked the rabbit class to be more object oriented. We made a lot of the functions of rabbit into functions of the Animal superclass. 
+    We made a kind of behavior tree for rabbits, where they first will move towards their home if it is night, then move away from potential predators,
+    then eat if possible, otherwise move towards grass, dig a burrow if it does not already have a home, a 20\% chance to reproduce if possible, 
+    and finally a 50\% chance move randomly.
+    \subsection*{Predator interface}
+    We made a predator interface, that is implemented by the wolf and bear class. This is to make it easier to check if a class is a predator. 
+    We experimented with making an abstract predator class, but decided against it. The interface could be compared to the NonBlocking interface from the libary. 
+    The only function in predator is the abstract attack function, that the predators can use to attack other animals. This is primarily meant to be used by 
+    the bears if another animal is in their territory, or wolves if they are in a pack strong enough to attack a bear.
+    \subsection*{Bear class}
+    The bear class is supposed to have a territory based on where it was spawned. The bear has different priorities based on some varaiables. 
+    If it is starving (has a hunger level below 3) it will search for food, not nessesarily in its territory. Food sources can be berrybushes or rabbits. 
+    If it is not starving, it will try to protect it territory. If any class that inherets from Animal is in its territory, it will attack it. 
+    if it is instead hungry, (has a hunger level below 8) it will search for food in its territory. We have not yet implemented the behavior of only 
+    finding food in the territory if it is not starving. otherwise it will move towards the center of the territory, or a random tile in the territory if 
+    it is already in the center.
+    \subsubsection*{Bush class}
+    The bush (or berry as it is called in the input files) are a food source for the bear. We decided to not make them spread like grass, as they don't 
+    disappear when eaten. After the bear has eaten from the bush, it will take 5 steps during the day before the berries regrow.
+    \subsection*{Wolf class}
+    The wolf, like the bear, implements the predator interface. It is supposed to hunt rabbits, and eat them. It functions a bit like the bear, except 
+    it does not have a territory. Instead it has a pack, that is a list of wolves.
+    \subsection*{Wolfpack class}
+    The wolfpack is a class that is supposed to make the wolves hunt in packs. The leader of a wolfpack is the first wolf in the list 
+    containing the wolves. This class is responsible for adding the wolves to the lair. 
+    \subsection*{Lair class}
+    We remade the burrow into a lair class, that can also be used by the wolf. 
+    \subsection*{FileReader class}
+    We had to make changes to our FileReader class, as we had to read the input files in a different way. Since the way wolf packs 
+    and bears are defined in the input files, we had to slightly alter the way it reads them. 
 \end{document}
