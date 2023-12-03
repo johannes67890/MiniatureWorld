@@ -147,7 +147,7 @@ top=20mm,
     We reworked the rabbit class to be more object oriented. We made a lot of the functions of rabbit into functions of the Animal superclass. 
     We made a kind of behavior tree for rabbits, where they first will move towards their home if it is night, then move away from potential predators,
     then eat if possible, otherwise move towards grass, dig a burrow if it does not already have a home, a 20\% chance to reproduce if possible, 
-    and finally a 50\% chance move randomly.
+    and finally a 50\% chance move randomly. We also removed the baby rabbit class, as it was not needed.
     \subsection*{Predator interface}
     We made a predator interface, that is implemented by the wolf and bear class. This is to make it easier to check if a class is a predator. 
     We experimented with making an abstract predator class, but decided against it. The interface could be compared to the NonBlocking interface from the libary. 
@@ -174,4 +174,10 @@ top=20mm,
     \subsection*{FileReader class}
     We had to make changes to our FileReader class, as we had to read the input files in a different way. Since the way wolf packs 
     and bears are defined in the input files, we had to slightly alter the way it reads them. 
+    \subsection*{Thouhgs for coming weeks}
+    We still have some things missing from the requirements. When we refactored the animal class, we didn't find a way to incorporate energy. 
+    Although we are missing some things, we feel that we are on track to finish the project in time. We have had a lot of issues with the 
+    itumulator libary not working, sometimes because we were using an outdated version, and sometimes because they hadn't released a fixed version yet. 
+    Most of those problems are fine now, but we still wasted a lot of time on it. We are going to be more aware next week. 
+
 \end{document}
