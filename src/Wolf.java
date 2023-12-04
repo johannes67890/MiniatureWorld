@@ -36,16 +36,16 @@ public class Wolf extends Animal implements Predator {
         }
 
         // If far way from leader, go towards leader
-        if (!myPack.getLeader().equals(this)) {
+        if (!myPack.getLeaderLocation(world).equals(world.getLocation(this))) {
             boolean closeToLeader = false;
             for (Location location : world.getSurroundingTiles(vision)) {
-                if (location.equals(world.getLocation(myPack.getLeader()))) {
+                if (location.equals(myPack.getLeaderLocation(world))) {
                     closeToLeader = true;
                     break;
                 }
             }
             if (!closeToLeader) {
-                moveTowards(world.getLocation(myPack.getLeader()), world);
+                moveTowards(myPack.getLeaderLocation(world), world);
                 System.out.println("Wolf moved closer to leader");
                 return;
             }
@@ -60,7 +60,7 @@ public class Wolf extends Animal implements Predator {
         }
 
         //if leader move
-        if(myPack.getLeader().equals(this)){
+        if(myPack.getLeaderLocation(world).equals(world.getLocation(this))){
             move(getRandomEmptySurroundingTile(world), world);
         }
 
@@ -109,6 +109,10 @@ public class Wolf extends Animal implements Predator {
     @Override
     public DisplayInformation getInformation() {
         return new DisplayInformation(java.awt.Color.black, "wolf");
+    }
+
+    public int getHp(){
+        return hp;
     }
 
 }
