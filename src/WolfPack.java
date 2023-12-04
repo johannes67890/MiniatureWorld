@@ -9,24 +9,24 @@ import itumulator.world.World;
 public class WolfPack implements Actor, DynamicDisplayInformationProvider, NonBlocking {
     private ArrayList<Wolf> pack = new ArrayList<>();
     private Lair home = null;
+    private Wolf leader;
 
     public void act(World world) {
+
         if (home == null) {
-            if (!world.containsNonBlocking(world.getLocation(getLeader()))) {
+            if (!world.containsNonBlocking(getLeaderLocation(world))) {
                 home = new Lair();
-                world.setTile(world.getLocation(getLeader()), home);
+                world.setTile(getLeaderLocation(world), home);
             }
         }
-
-        
     }
 
     public void addWolf(Wolf wolf) {
         pack.add(wolf);
     }
 
-    public Wolf getLeader() {
-        return pack.get(0);
+    public Location getLeaderLocation(World world) {
+        return world.getLocation(leader);
     }
 
     public void addToHome(Wolf wolf, World world) {
