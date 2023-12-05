@@ -24,14 +24,20 @@ public class WolfPack implements Actor, DynamicDisplayInformationProvider, NonBl
         // Set lair
         if (home == null) {
             if (!world.containsNonBlocking(world.getLocation(getLeader()))) {
-                home = new Lair();
+                home = new Lair("wolf");
                 world.setTile(world.getLocation(getLeader()), home);
             }
         }
 
         // Reproduce in lair
         if (home != null) {
-            if (world.getCurrentTime() == 14 && home.getAmountInLair() >= 2) {
+            int adultsInLair = 0;
+            for(Animal wolf : home.getAnimals()){
+                if(wolf.isAdult){
+                    adultsInLair++;
+                }
+            }
+            if (world.getCurrentTime() == 18 && adultsInLair >= 2) {
                 Wolf newWolf = new Wolf(this);
                 world.add(newWolf);
                 home.addAnimal(newWolf, world);
@@ -55,18 +61,23 @@ public class WolfPack implements Actor, DynamicDisplayInformationProvider, NonBl
         home.addAnimal(wolf, world);
     }
 
-    public Location getHomeLocation(World world) {
-        if(home == null){
-            return null;
+    public boolean isInPack(Wolf wolf) {
+        if (pack.contains(wolf)) {
+            return true;
         }
-        return world.getLocation(home);
+        return false;
     }
 
-    public boolean hasHome() {
-        if (home == null) {
-            return false;
+    public void packEat(Wolf mySelf){
+        for(Wolf wolf : pack){
+            if(!wolf.equals(mySelf)){
+                wolf.addHunger(1);
+            }
         }
-        return true;
+    }
+
+    public Lair getHome(World world) {
+        return home;
     }
 
     public DisplayInformation getInformation() {

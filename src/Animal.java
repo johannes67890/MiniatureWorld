@@ -11,30 +11,10 @@ import itumulator.world.World;
 public abstract class Animal implements Actor, DynamicDisplayInformationProvider {
 
     protected int hp, maxHp, age, maxAge, vision, hunger;
+    protected boolean isAdult = false;
     protected boolean isInLair = false;
-
-    //a function to do all the stuff all animals do
-    protected boolean life(World world){
-        hunger();
-
-        if (world.getCurrentTime() % 19 == 0) {
-            age++;
-        }
-
-        if (hunger <= 0) {
-            hp--;
-        } else if (hunger >= 7 && hp<maxHp) {
-            hp++;
-        }
-
-        if (hp <= 0 || age > maxAge) {
-            System.out.println("Animal dead");
-            die(world);
-            return true;
-        }
-
-        return false;
-    }
+    protected boolean starving = false;
+    protected boolean hungry = false;
 
     protected Animal(int hp, int maxAge, int vision) {
         this.age = 0;
@@ -50,6 +30,33 @@ public abstract class Animal implements Actor, DynamicDisplayInformationProvider
         world.delete(this);
     }
 
+    // a function to do all the stuff all animals do
+    protected boolean life(World world) {
+        hunger();
+
+        if (world.getCurrentTime() % 19 == 0) {
+            age++;
+        }
+
+        if (hunger <= 0) {
+            hp--;
+        } else if (hunger >= 7 && hp < maxHp) {
+            hp++;
+        }
+
+        if (hp <= 0 || age > maxAge) {
+            System.out.println("Animal dead");
+            die(world);
+            return true;
+        }
+
+        starving = hunger <= 2;
+        hungry = hunger<=6;
+        if(age>=3) isAdult = true;
+
+        return false;
+    }
+
     protected void move(Location location, World world) {
         if (location != null) {
             if (world.isTileEmpty(location)) {
@@ -58,7 +65,7 @@ public abstract class Animal implements Actor, DynamicDisplayInformationProvider
                 } catch (Exception e) {
                     System.out.println(e.getMessage());
                 }
-                
+
             }
         }
     }
@@ -88,6 +95,9 @@ public abstract class Animal implements Actor, DynamicDisplayInformationProvider
     }
 
     protected void moveAway(Location location, World world) {
+        if (world.getSurroundingTiles().size() != 8) {
+            return;
+        }
         int targetX = location.getX();
         int targetY = location.getY();
         int thisX = world.getLocation(this).getX();
@@ -131,17 +141,18 @@ public abstract class Animal implements Actor, DynamicDisplayInformationProvider
         }
     }
 
-    protected void hunger(){
-        hunger--;
+    protected void hunger() {
+        if (hunger > 0) {
+            hunger--;
+        }
     }
 
-    protected void takeDamage(int damage){
-        hp-=damage;
+    protected void takeDamage(int damage) {
+        hp -= damage;
     }
 
-
-    protected void setInLair(Boolean b){
-        isInLair=b;
+    protected void setInLair(Boolean b) {
+        isInLair = b;
     }
 
     @Override

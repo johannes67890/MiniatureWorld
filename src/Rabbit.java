@@ -5,7 +5,6 @@ import itumulator.world.Location;
 import itumulator.world.World;
 
 public class Rabbit extends Animal {
-    private final int adultAge = 3;
     private Lair home = null;
 
     public Rabbit() {
@@ -13,7 +12,7 @@ public class Rabbit extends Animal {
     }
 
     public void act(World world) {
-        System.out.println("Hunger: " + hunger + ", HP: " + hp);
+        // System.out.println("Hunger: " + hunger + ", HP: " + hp);
 
         if (life(world)) {
             return;
@@ -23,16 +22,21 @@ public class Rabbit extends Animal {
             return;
         }
 
-        // if its night the rabbit will lose health
-        if (world.isNight()) {
-            hp--;
-        }
 
         // if the rabbit is on a burrow, and doesn't have a home, set the burrow as its
         // home
         if (world.containsNonBlocking(world.getLocation(this))) {
-            if (home == null && world.getNonBlocking(world.getLocation(this)) instanceof Lair)
-                home = (Lair) world.getNonBlocking(world.getLocation(this));
+            if (home == null && world.getNonBlocking(world.getLocation(this)) instanceof Lair) {
+                Lair temp = (Lair) world.getNonBlocking(world.getLocation(this));
+                if (temp.getType() == "rabbit") {
+                    home = temp;
+                }
+            }
+        }
+
+        //if old chance to do nothing
+        if(new Random().nextInt(100-age*3) == 0){
+            return;
         }
 
         // if night move towards home
@@ -48,18 +52,16 @@ public class Rabbit extends Animal {
         }
 
         // move away from predator
-        if (world.getSurroundingTiles().size() == 8) {
-            for (Location location : world.getSurroundingTiles(vision)) {
-                if (world.getTile(location) instanceof Predator) {
-                    moveAway(location, world);
-                    System.out.println("Rabbit move from predator");
-                    return;
-                }
+        for (Location location : world.getSurroundingTiles(vision)) {
+            if (world.getTile(location) instanceof Predator) {
+                moveAway(location, world);
+                System.out.println("Rabbit move from predator");
+                return;
             }
         }
 
         // eat
-        if (hunger <= 8 && world.containsNonBlocking(world.getLocation(this))) {
+        if (hungry && world.containsNonBlocking(world.getLocation(this))) {
             if (world.getNonBlocking(world.getLocation(this)) instanceof Grass) {
                 eat(new Grass(), world.getLocation(this), world);
                 System.out.println("Rabit eat");
@@ -68,7 +70,7 @@ public class Rabbit extends Animal {
         }
 
         // move towards food
-        if (hunger < 7) {
+        if (hungry) {
             for (Location location : world.getSurroundingTiles(vision)) {
                 if (world.getTile(location) instanceof Grass) {
                     moveTowards(location, world);
@@ -87,7 +89,7 @@ public class Rabbit extends Animal {
         }
 
         // reproduce
-        if (new Random().nextInt(5) == 0) {
+        if (new Random().nextInt(5) == 0 && isAdult) {
             if (reproduce(world)) {
                 System.out.println("Rabbit repoduce");
                 return;
@@ -106,7 +108,7 @@ public class Rabbit extends Animal {
 
     private boolean digBurrow(World world) {
         if (!world.containsNonBlocking(world.getLocation(this))) {
-            home = new Lair();
+            home = new Lair("rabbit");
             world.setTile(world.getLocation(this), home);
             return true;
         }
@@ -114,11 +116,13 @@ public class Rabbit extends Animal {
     }
 
     private boolean reproduce(World world) {
-        for (Location tile : world.getSurroundingTiles()) {
-            if (world.getTile(tile) instanceof Rabbit && world.getTile(tile) != this
-                    && getRandomEmptySurroundingTile(world) != null) {
-                world.setTile(getRandomEmptySurroundingTile(world), new Rabbit());
-                return true;
+        for (Location location : world.getSurroundingTiles()) {
+            if (world.getTile(location) instanceof Rabbit) {
+                Rabbit temp = (Rabbit) world.getTile(location);
+                if (temp.isAdult) {
+                    world.setTile(getRandomEmptySurroundingTile(world), new Rabbit());
+                    return true;
+                }
             }
         }
         return false;
@@ -126,15 +130,15 @@ public class Rabbit extends Animal {
 
     @Override
     protected void hunger() {
-        if (!isInLair) {
+        if (!isInLair && hunger > 0) {
             hunger--;
         }
     }
 
     @Override
     public DisplayInformation getInformation() {
-        if (age <= adultAge)
-            return new DisplayInformation(java.awt.Color.black, "rabbit-small");
-        return new DisplayInformation(java.awt.Color.black, "rabbit-large");
+        if (isAdult)
+            return new DisplayInformation(java.awt.Color.black, "rabbit-large");
+        return new DisplayInformation(java.awt.Color.black, "rabbit-small");
     }
 }

@@ -16,6 +16,7 @@ public class Wolf extends Animal implements Predator {
     }
 
     public void act(World world) {
+        System.out.println("Hunger: " + hunger + ", HP: " + hp);
         if (life(world)) {
             return;
         }
@@ -26,13 +27,13 @@ public class Wolf extends Animal implements Predator {
         }
 
         // if night move towards home
-        if (world.isNight() && myPack.hasHome()) {
-            if (world.getLocation(this).equals(myPack.getHomeLocation(world))) {
+        if (world.isNight() && myPack.getHome(world) != null) {
+            if (world.getLocation(this).equals(world.getLocation(myPack.getHome(world)))) {
                 myPack.addToHome(this, world);
                 System.out.println("Wolf enters home");
                 return;
             }
-            moveTowards(myPack.getHomeLocation(world), world);
+            moveTowards(world.getLocation(myPack.getHome(world)), world);
             System.out.println("Wolf move to home");
             return;
         }
@@ -56,28 +57,50 @@ public class Wolf extends Animal implements Predator {
         }
 
         // if starving
-        if (hunger <= 2) {
+        if (starving) {
             if (food(world)) {
-                System.out.println("Wolf food");
+                return;
+            } else {
+                move(getRandomEmptySurroundingTile(world), world);
+                System.out.println("Wolf moved random bc starving");
                 return;
             }
         }
 
-        // if leader move
-        if (myPack.getLeader().equals(this)) {
-            move(getRandomEmptySurroundingTile(world), world);
-            System.out.println("Leader move");
-            return;
+        // Attack if wolf is to close
+        for (Location location : world.getSurroundingTiles()) {
+            if (world.getTile(location) instanceof Wolf && !myPack.isInPack((Wolf) world.getTile(location))) {
+                attack(location, world);
+                System.out.println("Wolf attacked wolf");
+                return;
+            }
+        }
+
+        // Move away from other wolfs if in sight
+        for (Location location : world.getSurroundingTiles(vision)) {
+            if (world.getTile(location) instanceof Wolf && !myPack.isInPack((Wolf) world.getTile(location))) {
+                moveAway(location, world);
+                System.out.println("Wolf moved away from other wolf");
+                return;
+            }
+            if (world.containsNonBlocking(location)) {
+                if (world.getNonBlocking(location) instanceof Lair) {
+                    Lair temp = (Lair) world.getNonBlocking(location);
+                    if (temp.getType() == "wolf" && !myPack.getHome(world).equals(temp)) {
+                        moveAway(location, world);
+                        System.out.println("Wolf moved away from other lair");
+                        return;
+                    }
+                }
+            }
         }
 
         // if hungry
-        if (hunger <= 7) {
+        if (hungry) {
             if (food(world)) {
-                System.out.println("Wolf food");
                 return;
             }
         }
-
 
         // 50% for random move 50% for no move
         if (new Random().nextBoolean()) {
@@ -94,6 +117,7 @@ public class Wolf extends Animal implements Predator {
         for (Location location : world.getSurroundingTiles()) {
             if (world.getTile(location) instanceof Rabbit) {
                 eat(world.getTile(location), location, world);
+                myPack.packEat(this);
                 System.out.println("Wolf eat Rabbit");
                 return true;
             }
@@ -111,7 +135,7 @@ public class Wolf extends Animal implements Predator {
 
     @Override
     protected void hunger() {
-        if (!isInLair) {
+        if (!isInLair && hunger > 0) {
             hunger--;
         }
     }
@@ -121,9 +145,15 @@ public class Wolf extends Animal implements Predator {
         target.takeDamage(damage);
     }
 
+    public void addHunger(int x) {
+        hunger += x;
+    }
+
     @Override
     public DisplayInformation getInformation() {
-        return new DisplayInformation(java.awt.Color.black, "wolf");
+        if (isAdult)
+            return new DisplayInformation(java.awt.Color.black, "wolf");
+        return new DisplayInformation(java.awt.Color.black, "wolf-small");
     }
 
     public int getHp() {

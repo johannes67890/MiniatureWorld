@@ -11,7 +11,7 @@ import testReader.TestReader;
 
 public class Main {
     public static void main(String[] args) throws IOException {
-        Distributer distributior = Distributer.tf2_1;
+        Distributer distributior = Distributer.test;
         TestReader reader = new TestReader(distributior.getUrl());
         int size = reader.getWorldSize();
         int delay = 100;
@@ -37,7 +37,7 @@ public class Main {
                         object = new Rabbit();
                         break;
                     case "burrow":
-                        object = new Lair();
+                        object = new Lair("rabbit");
                         break;
                     case "wolf":
                         object = new Wolf(tempPack);

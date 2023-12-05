@@ -1,3 +1,4 @@
+import java.util.Random;
 import java.util.Set;
 
 import itumulator.executable.DisplayInformation;
@@ -13,7 +14,7 @@ public class Bear extends Animal implements Predator {
     public Bear(Location territoryC, World world) {
         super(30, 30, 2);
         if (territoryC == null) {
-            this.territoryC = world.getLocation(this);
+            this.territoryC = new Location(new Random().nextInt(world.getSize()), new Random().nextInt(world.getSize()));
         } else {
             this.territoryC = territoryC;
         }
@@ -27,9 +28,12 @@ public class Bear extends Animal implements Predator {
         }
 
         // if starving
-        if (hunger <= 2) {
+        if (starving) {
             if(food(world)){
-                System.out.println("Bear food");
+                return;
+            } else{
+                move(getRandomEmptySurroundingTile(world), world);
+                System.out.println("Bear moved random bc starving");
                 return;
             }
         }
@@ -57,9 +61,8 @@ public class Bear extends Animal implements Predator {
         }
 
         //if hungry
-        if(hunger<=7){
+        if(hungry){
             if(food(world)){
-                System.out.println("Bear food");
                 return;
             }
         }
@@ -101,13 +104,13 @@ public class Bear extends Animal implements Predator {
         for (Location location : world.getSurroundingTiles(vision)) {
             if (world.getTile(location) instanceof Rabbit) {
                 moveTowards(location, world);
-                System.out.println("Wolf go towards rabbit");
+                System.out.println("bear go towards rabbit");
                 return true;
             } else if (world.getTile(location) instanceof Bush) {
                 Bush target = (Bush) world.getTile(location);
                 if (target.getHasBerries()) {
                     moveTowards(location, world);
-                    System.out.println("Wolf go towards berry");
+                    System.out.println("bear go towards berry");
                     return true;
                 }
             }
@@ -123,7 +126,9 @@ public class Bear extends Animal implements Predator {
 
     @Override
     public DisplayInformation getInformation() {
-        return new DisplayInformation(java.awt.Color.black, "bear");
+        if (isAdult)
+            return new DisplayInformation(java.awt.Color.black, "bear");
+        return new DisplayInformation(java.awt.Color.black, "bear-small");
     }
 
 }
