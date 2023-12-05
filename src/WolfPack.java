@@ -13,6 +13,7 @@ public class WolfPack implements Actor, DynamicDisplayInformationProvider, NonBl
 
     public void act(World world) {
 
+        // find leader
         leader = pack.get(0);
         for (Wolf wolf : pack) {
             if (wolf.getHp() > leader.getHp()) {
@@ -20,10 +21,21 @@ public class WolfPack implements Actor, DynamicDisplayInformationProvider, NonBl
             }
         }
 
+        // Set lair
         if (home == null) {
-            if (!world.containsNonBlocking(getLeaderLocation(world))) {
+            if (!world.containsNonBlocking(world.getLocation(getLeader()))) {
                 home = new Lair();
-                world.setTile(getLeaderLocation(world), home);
+                world.setTile(world.getLocation(getLeader()), home);
+            }
+        }
+
+        // Reproduce in lair
+        if (home != null) {
+            if (world.getCurrentTime() == 14 && home.getAmountInLair() >= 2) {
+                Wolf newWolf = new Wolf(this);
+                world.add(newWolf);
+                home.addAnimal(newWolf, world);
+                System.out.println("Pack reproduced");
             }
         }
     }
@@ -32,11 +44,11 @@ public class WolfPack implements Actor, DynamicDisplayInformationProvider, NonBl
         pack.add(wolf);
     }
 
-    public Location getLeaderLocation(World world) {
-        if(leader==null){
-            return world.getLocation(pack.get(0));
+    public Wolf getLeader() {
+        if (leader == null) {
+            return pack.get(0);
         }
-        return world.getLocation(leader);
+        return leader;
     }
 
     public void addToHome(Wolf wolf, World world) {
@@ -44,6 +56,9 @@ public class WolfPack implements Actor, DynamicDisplayInformationProvider, NonBl
     }
 
     public Location getHomeLocation(World world) {
+        if(home == null){
+            return null;
+        }
         return world.getLocation(home);
     }
 

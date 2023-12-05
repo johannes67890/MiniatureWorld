@@ -1,3 +1,5 @@
+import java.util.Random;
+
 import itumulator.executable.DisplayInformation;
 import itumulator.world.Location;
 import itumulator.world.World;
@@ -18,8 +20,8 @@ public class Wolf extends Animal implements Predator {
             return;
         }
 
-        //if in lair dont do anything
-        if(isInLair){
+        // if in lair dont do anything
+        if (isInLair) {
             return;
         }
 
@@ -36,18 +38,20 @@ public class Wolf extends Animal implements Predator {
         }
 
         // If far way from leader, go towards leader
-        if (!myPack.getLeaderLocation(world).equals(world.getLocation(this))) {
-            boolean closeToLeader = false;
-            for (Location location : world.getSurroundingTiles(vision)) {
-                if (location.equals(myPack.getLeaderLocation(world))) {
-                    closeToLeader = true;
-                    break;
+        if (world.isOnTile(myPack.getLeader())) {
+            if (!world.getLocation(myPack.getLeader()).equals(world.getLocation(this))) {
+                boolean closeToLeader = false;
+                for (Location location : world.getSurroundingTiles(vision)) {
+                    if (location.equals(world.getLocation(myPack.getLeader()))) {
+                        closeToLeader = true;
+                        break;
+                    }
                 }
-            }
-            if (!closeToLeader) {
-                moveTowards(myPack.getLeaderLocation(world), world);
-                System.out.println("Wolf moved closer to leader");
-                return;
+                if (!closeToLeader) {
+                    moveTowards(world.getLocation(myPack.getLeader()), world);
+                    System.out.println("Wolf moved closer to leader");
+                    return;
+                }
             }
         }
 
@@ -59,9 +63,11 @@ public class Wolf extends Animal implements Predator {
             }
         }
 
-        //if leader move
-        if(myPack.getLeaderLocation(world).equals(world.getLocation(this))){
+        // if leader move
+        if (myPack.getLeader().equals(this)) {
             move(getRandomEmptySurroundingTile(world), world);
+            System.out.println("Leader move");
+            return;
         }
 
         // if hungry
@@ -71,6 +77,15 @@ public class Wolf extends Animal implements Predator {
                 return;
             }
         }
+
+
+        // 50% for random move 50% for no move
+        if (new Random().nextBoolean()) {
+            move(getRandomEmptySurroundingTile(world), world);
+            System.out.println("Wolf move Random");
+            return;
+        }
+        System.out.println("Wolf do nothing");
     }
 
     // function that first tries to eat else tries to go towards food
@@ -111,7 +126,7 @@ public class Wolf extends Animal implements Predator {
         return new DisplayInformation(java.awt.Color.black, "wolf");
     }
 
-    public int getHp(){
+    public int getHp() {
         return hp;
     }
 

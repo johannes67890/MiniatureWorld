@@ -17,7 +17,9 @@ public class Lair implements Actor, NonBlocking, DynamicDisplayInformationProvid
     public void addAnimal(Animal animal, World world){
         animal.setInLair(true);
         animals.add(animal);
-        world.remove(animal);
+        if(world.isOnTile(animal)){
+            world.remove(animal);
+        }
     }
 
     public void removeAnimals(World world){
@@ -26,6 +28,10 @@ public class Lair implements Actor, NonBlocking, DynamicDisplayInformationProvid
             animals.get(0).setInLair(false);
             animals.remove(0);
         }
+    }
+
+    public int getAmountInLair(){
+        return animals.size();
     }
 
     @Override
