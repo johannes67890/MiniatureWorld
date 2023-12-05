@@ -11,7 +11,7 @@ import testReader.TestReader;
 
 public class Main {
     public static void main(String[] args) throws IOException {
-        Distributer distributior = Distributer.t2_1ab;
+        Distributer distributior = Distributer.tf2_1;
         TestReader reader = new TestReader(distributior.getUrl());
         int size = reader.getWorldSize();
         int delay = 100;
@@ -20,9 +20,9 @@ public class Main {
         World world = program.getWorld();
 
         HashMap<String, ArrayList<Object>> map = reader.getMap();
-
         WolfPack tempPack = null;
         for (String key : map.keySet()) {
+            key = reader.filterType(key);
             if (key.equals("wolf")) {
                 tempPack = new WolfPack();
                 world.add(tempPack);

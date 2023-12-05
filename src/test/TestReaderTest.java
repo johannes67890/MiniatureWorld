@@ -1,5 +1,11 @@
 package test;
 import java.io.IOException;
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.HashSet;
+import java.util.List;
+import java.util.Set;
+
 import org.junit.*;
 
 import itumulator.world.Location;
@@ -34,5 +40,16 @@ public class TestReaderTest {
     public void testGetCoordinats(){
         Assert.assertEquals(new Location(3,5), testReader.getLocation("TestType1"));
     }
+
+    // @Test
+    // public void testKeySet() {
+    //     List<String> keySet = new ArrayList<String>();
+    //     for (String key : testReader.getMap().keySet()) {
+    //         key = testReader.filterType(key);
+    //         keySet.add(key);
+    //     }
+        
+    //     Assert.assertEquals(expected, keySet.toString());
+    // }
 }
 
