@@ -3,6 +3,7 @@ import java.io.*;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.HashSet;
+import java.util.Set;
 import java.util.stream.IntStream;
 import java.lang.Object;
 
@@ -100,10 +101,6 @@ public class TestReader extends BufferedReader {
         return types;
     }
 
-    public HashSet<String> getAllTypes(){
-        return new HashSet<String>(this.getMap().keySet());
-    }
-
     /**
      * Returns a stream of integers for a given type.
      * 
@@ -126,6 +123,10 @@ public class TestReader extends BufferedReader {
         } else throw new IllegalArgumentException("The type " + type + " does not have a valid interval.");
     } 
     
+    public String filterType(String type){
+        return type.replaceAll("_\\d", "");
+    }
+
     /**
      * Returns a random number for a given type. 
      * 
