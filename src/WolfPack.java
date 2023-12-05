@@ -13,6 +13,13 @@ public class WolfPack implements Actor, DynamicDisplayInformationProvider, NonBl
 
     public void act(World world) {
 
+        leader = pack.get(0);
+        for (Wolf wolf : pack) {
+            if (wolf.getHp() > leader.getHp()) {
+                leader = wolf;
+            }
+        }
+
         if (home == null) {
             if (!world.containsNonBlocking(getLeaderLocation(world))) {
                 home = new Lair();
@@ -26,6 +33,9 @@ public class WolfPack implements Actor, DynamicDisplayInformationProvider, NonBl
     }
 
     public Location getLeaderLocation(World world) {
+        if(leader==null){
+            return world.getLocation(pack.get(0));
+        }
         return world.getLocation(leader);
     }
 
