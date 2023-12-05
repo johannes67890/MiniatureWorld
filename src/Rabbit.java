@@ -1,112 +1,134 @@
 import java.util.Random;
 
 import itumulator.executable.DisplayInformation;
-import itumulator.executable.DynamicDisplayInformationProvider;
-import itumulator.simulator.Actor;
 import itumulator.world.Location;
 import itumulator.world.World;
 
-public class Rabbit extends Animal implements Actor, DynamicDisplayInformationProvider {
+public class Rabbit extends Animal {
     private final int adultAge = 3;
-    private Burrow home = null;
-    private boolean inBurrow = false;
+    private Lair home = null;
 
-    public Rabbit(int hp) {
-        super(hp);
+    public Rabbit() {
+        super(10, 15, 2);
     }
 
     public void act(World world) {
-        if (world.getCurrentTime() % 19 == 0) {
-            age++;
+        System.out.println("Hunger: " + hunger + ", HP: " + hp);
+
+        if (life(world)) {
+            return;
         }
 
-        if (!inBurrow) {
-            // if its night the rabbit will lose health
-            if (world.isNight())
-                hp--;
+        if (isInLair) {
+            return;
+        }
 
-            // if the rabbit is on a burrow, and doesn't have a home, set the burrow as its
-            // home
-            if (world.containsNonBlocking(world.getLocation(this))) {
-                if (home == null && world.getNonBlocking(world.getLocation(this)) instanceof Burrow)
-                    home = (Burrow) world.getNonBlocking(world.getLocation(this));
+        // if its night the rabbit will lose health
+        if (world.isNight()) {
+            hp--;
+        }
+
+        // if the rabbit is on a burrow, and doesn't have a home, set the burrow as its
+        // home
+        if (world.containsNonBlocking(world.getLocation(this))) {
+            if (home == null && world.getNonBlocking(world.getLocation(this)) instanceof Lair)
+                home = (Lair) world.getNonBlocking(world.getLocation(this));
+        }
+
+        // if night move towards home
+        if (world.isNight() && home != null) {
+            if (world.getLocation(this).equals(world.getLocation(home))) {
+                home.addAnimal(this, world);
+                System.out.println("Rabbit enters home");
+                return;
             }
+            moveTowards(world.getLocation(home), world);
+            System.out.println("Rabbit move to home");
+            return;
+        }
 
-            if (world.isNight() && home != null) {
-                moveTowardsHome(world);
-                System.out.println("I move to home");
-            } else {
-                System.out.println(inBurrow);
-                // we generate a random number to deside what action the rabbit will take
-                int r = new Random().nextInt(100);
-                if (r < 10 && home == null) { // 10% chance to try to dig burrow
-                    digBurrow(world);
-                    System.out.println("I dug");
-                } else if (r < 40) { // 30% chance to try to eat
-                    eat(new Grass(), world);
-                    System.out.println("I eat");
-                } else if (r < 50) {
-                    reproduce(world); // 10% chance to try to reproduce
-                    System.out.println("I Reproduce");
-                } else { // 50% chance to move
-                    System.out.println("I move random");
-                    if (new Random().nextInt(age + 1) < 4) // less chance to move the older it is
-                        move(getRandomEmptySurroundingTile(world), world);
+        // move away from predator
+        if (world.getSurroundingTiles().size() == 8) {
+            for (Location location : world.getSurroundingTiles(vision)) {
+                if (world.getTile(location) instanceof Predator) {
+                    moveAway(location, world);
+                    System.out.println("Rabbit move from predator");
+                    return;
                 }
             }
         }
 
-        if (hp <= 0 || age > 20) {
-            die(world);
+        // eat
+        if (hunger <= 8 && world.containsNonBlocking(world.getLocation(this))) {
+            if (world.getNonBlocking(world.getLocation(this)) instanceof Grass) {
+                eat(new Grass(), world.getLocation(this), world);
+                System.out.println("Rabit eat");
+                return;
+            }
         }
+
+        // move towards food
+        if (hunger < 7) {
+            for (Location location : world.getSurroundingTiles(vision)) {
+                if (world.getTile(location) instanceof Grass) {
+                    moveTowards(location, world);
+                    System.out.println("Rabbit move to food");
+                    return;
+                }
+            }
+        }
+
+        // dig burrow
+        if (home == null && new Random().nextBoolean()) {
+            if (digBurrow(world)) {
+                System.out.println("Rabbit dug");
+                return;
+            }
+        }
+
+        // reproduce
+        if (new Random().nextInt(5) == 0) {
+            if (reproduce(world)) {
+                System.out.println("Rabbit repoduce");
+                return;
+            }
+        }
+
+        // 50% for random move 50% for no move
+        if (new Random().nextBoolean()) {
+            System.out.println("Rabbit move Random");
+            move(getRandomEmptySurroundingTile(world), world);
+            return;
+        }
+        System.out.println("Rabbit do nothing");
 
     }
 
-    private void digBurrow(World world) {
+    private boolean digBurrow(World world) {
         if (!world.containsNonBlocking(world.getLocation(this))) {
-            home = new Burrow();
+            home = new Lair();
             world.setTile(world.getLocation(this), home);
+            return true;
         }
+        return false;
     }
 
-    private void moveTowardsHome(World world) {
-        int homeX = world.getLocation(home).getX();
-        int homeY = world.getLocation(home).getY();
-        int rabbitX = world.getLocation(this).getX();
-        int rabbitY = world.getLocation(this).getY();
-        if (homeX > rabbitX && homeY > rabbitY) {
-            move(new Location(rabbitX + 1, rabbitY + 1), world);
-        } else if (homeX > rabbitX && homeY < rabbitY) {
-            move(new Location(rabbitX + 1, rabbitY - 1), world);
-        } else if (homeX < rabbitX && homeY > rabbitY) {
-            move(new Location(rabbitX - 1, rabbitY + 1), world);
-        } else if (homeX < rabbitX && homeY < rabbitY) {
-            move(new Location(rabbitX - 1, rabbitY - 1), world);
-        } else if (homeX == rabbitX && homeY > rabbitY) {
-            move(new Location(rabbitX, rabbitY + 1), world);
-        } else if (homeX == rabbitX && homeY < rabbitY) {
-            move(new Location(rabbitX, rabbitY - 1), world);
-        } else if (homeX > rabbitX && homeY == rabbitY) {
-            move(new Location(rabbitX + 1, rabbitY), world);
-        } else if (homeX < rabbitX && homeY == rabbitY) {
-            move(new Location(rabbitX - 1, rabbitY), world);
-        } else if (homeX == rabbitX && homeY == rabbitY) {
-            home.addRabbit(this, world);
-        }
-    }
-
-    private void reproduce(World world) {
+    private boolean reproduce(World world) {
         for (Location tile : world.getSurroundingTiles()) {
             if (world.getTile(tile) instanceof Rabbit && world.getTile(tile) != this
                     && getRandomEmptySurroundingTile(world) != null) {
-                world.setTile(getRandomEmptySurroundingTile(world), new Rabbit(10));
-                break;
+                world.setTile(getRandomEmptySurroundingTile(world), new Rabbit());
+                return true;
             }
         }
+        return false;
     }
 
-    public void setInBurrow(Boolean b) {
-        inBurrow = b;
+    @Override
+    protected void hunger() {
+        if (!isInLair) {
+            hunger--;
+        }
     }
 
     @Override
