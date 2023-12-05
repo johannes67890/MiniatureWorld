@@ -10,34 +10,34 @@ import itumulator.world.Location;
 import itumulator.world.NonBlocking;
 import itumulator.world.World;
 
+/**
+ * Grass class
+ * 
+ * @implNote Implements {@link Actor}, {@link Nonblocking} and {@link DynamicDisplayInformationProvider}
+ */
 public class Grass implements Actor, DynamicDisplayInformationProvider, NonBlocking {
     Random r = new Random(); // Random number generator
 
-    /**
-     * Makes the grass spread 
-     * 
-     * @param world - The world to act in.
-     * 
-     */
     public void act(World world) {
        spread(world);
     }
     
     /**
-     * 
+     * Spreads the grass
+     * This method is called in {@link #act} and is used to spread the grass to empty tiles, with a 10% chance of spreading.
      */
     void spread(World world) {
          if (world.isDay() && r.nextInt(10) == 0) {
-                List<Location> availableTiles = new ArrayList<>();
-                for (Location l : world.getEmptySurroundingTiles()) {
-                    if (!(world.getTile(l) instanceof NonBlocking)) {
-                        availableTiles.add(l);
-                    }
+            List<Location> availableTiles = new ArrayList<>();
+            for (Location l : world.getEmptySurroundingTiles()) {
+                if (!(world.getTile(l) instanceof NonBlocking)) { // If the tile is not non-blocking (No two non-blocking tiles can be on to each other)
+                    availableTiles.add(l);
                 }
-                if (availableTiles.size() > 0) {
-                    Location place = availableTiles.get(r.nextInt(availableTiles.size()));
-                    world.setTile(place, new Grass());
-                }
+            }
+            if (availableTiles.size() > 0) { 
+                Location place = availableTiles.get(r.nextInt(availableTiles.size()));
+                world.setTile(place, new Grass());
+            }
         }
     }
 

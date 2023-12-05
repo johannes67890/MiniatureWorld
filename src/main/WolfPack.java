@@ -8,6 +8,15 @@ import itumulator.world.Location;
 import itumulator.world.NonBlocking;
 import itumulator.world.World;
 
+/**
+ * WolfPack class
+ * 
+ * @param pack - The pack of wolves
+ * @param home - The lair of the pack
+ * @param leader - The leader of the pack
+ * 
+ * @implNote Implements {@link Actor}, {@link DynamicDisplayInformationProvider} and {@link NonBlocking}
+ */
 public class WolfPack implements Actor, DynamicDisplayInformationProvider, NonBlocking {
     private ArrayList<Wolf> pack = new ArrayList<>();
     private Lair home = null;
@@ -15,11 +24,8 @@ public class WolfPack implements Actor, DynamicDisplayInformationProvider, NonBl
 
     public void act(World world) {
 
-        leader = pack.get(0);
-        for (Wolf wolf : pack) {
-            if (wolf.getHp() > leader.getHp()) {
-                leader = wolf;
-            }
+        if(leader==null){
+            leader = getStrongest();
         }
 
         if (home == null) {
@@ -33,7 +39,30 @@ public class WolfPack implements Actor, DynamicDisplayInformationProvider, NonBl
     public void addWolf(Wolf wolf) {
         pack.add(wolf);
     }
+    
+    public void setLeader(Wolf wolf) {
+        leader = wolf;
+    }
 
+    public ArrayList<Wolf> getPack() {
+        return pack;
+    }
+
+    /**
+     * Gets the strongest wolf in the pack (by hp)
+     * @return The strongest wolf in the pack
+     */
+    public Wolf getStrongest() {
+        Wolf strongest = pack.get(0);
+        for (Wolf wolf : pack) {
+            if (wolf.getHp() > strongest.getHp()) {
+                strongest = wolf;
+            }
+        }
+        return strongest;
+    }
+
+    
     public Location getLeaderLocation(World world) {
         if(leader==null){
             return world.getLocation(pack.get(0));

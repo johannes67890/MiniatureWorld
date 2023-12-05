@@ -4,6 +4,14 @@ import itumulator.executable.DisplayInformation;
 import itumulator.world.Location;
 import itumulator.world.World;
 
+/**
+ * Wolf class
+ * 
+ * @param damage - The damage the wolf does
+ * @param myPack - The {@link Wolfpack} the wolf belongs to
+ * 
+ * @implNote Implements {@link Predator} and extends {@link Animal}
+ */
 public class Wolf extends Animal implements Predator {
 
     private final int damage = 6;
@@ -23,6 +31,11 @@ public class Wolf extends Animal implements Predator {
         //if in lair dont do anything
         if(isInLair){
             return;
+        }
+
+        // if starving
+        if (hunger <= 2) {
+            findFood(Rabbit.class, world);
         }
 
         // if night move towards home
@@ -51,49 +64,21 @@ public class Wolf extends Animal implements Predator {
                 System.out.println("Wolf moved closer to leader");
                 return;
             }
-        }
+        } 
 
-        // if starving
-        if (hunger <= 2) {
-            if (food(world)) {
-                System.out.println("Wolf food");
-                return;
-            }
+        // if hungry
+        if (hunger <= 7) {
+            findFood(Rabbit.class, world);
         }
 
         //if leader move
         if(myPack.getLeaderLocation(world).equals(world.getLocation(this))){
             move(getRandomEmptySurroundingTile(world), world);
         }
-
-        // if hungry
-        if (hunger <= 7) {
-            if (food(world)) {
-                System.out.println("Wolf food");
-                return;
-            }
-        }
     }
 
-    // function that first tries to eat else tries to go towards food
-    private boolean food(World world) {
-        // check around for rabbits
-        for (Location location : world.getSurroundingTiles()) {
-            if (world.getTile(location) instanceof Rabbit) {
-                eat(world.getTile(location), location, world);
-                System.out.println("Wolf eat Rabbit");
-                return true;
-            }
-        }
-        // go towards rabbit
-        for (Location location : world.getSurroundingTiles(vision)) {
-            if (world.getTile(location) instanceof Rabbit) {
-                moveTowards(location, world);
-                System.out.println("Wolf go towards rabbit");
-                return true;
-            }
-        }
-        return false;
+    public int getHp(){
+        return hp;
     }
 
     @Override
@@ -112,9 +97,4 @@ public class Wolf extends Animal implements Predator {
     public DisplayInformation getInformation() {
         return new DisplayInformation(java.awt.Color.black, "wolf");
     }
-
-    public int getHp(){
-        return hp;
-    }
-
 }

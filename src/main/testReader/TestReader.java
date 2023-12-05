@@ -122,6 +122,14 @@ public class TestReader extends BufferedReader {
         } else throw new IllegalArgumentException("The type " + type + " does not have a valid interval.");
     } 
     
+    /**
+     * Returns the type without the type index.
+     * 
+     * Example: if the type is "wolf_1", then "wolf" is returned.
+     * 
+     * @param type - The type of the location.
+     * @return String - The type without the number.
+     */
     public String filterType(String type){
         return type.replaceAll("_\\d", "");
     }
@@ -141,7 +149,7 @@ public class TestReader extends BufferedReader {
     }
 
     /**
-     * Returns a random location for a given type.
+     * Returns a random location for a given type. If the type does not have a location, null is returned.
      * 
      * @throws IllegalArgumentException If the type does not exist.
      * @param type - The type of the location.

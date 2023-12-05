@@ -7,6 +7,13 @@ import itumulator.simulator.Actor;
 import itumulator.world.NonBlocking;
 import itumulator.world.World;
 
+/**
+ * Lair class
+ * 
+ * @param animals - ArrayList of {@link Animal}'s that is in the lair.
+ * 
+ * @implNote Implements {@link Actor}, {@link NonBlocking} and {@link DynamicDisplayInformationProvider}
+ */
 public class Lair implements Actor, NonBlocking, DynamicDisplayInformationProvider {
     private ArrayList<Animal> animals = new ArrayList<>();
 
@@ -15,13 +22,18 @@ public class Lair implements Actor, NonBlocking, DynamicDisplayInformationProvid
             removeAnimals(world);
         }
     }
-
+    /**
+     * Adds an animal to the lair
+     * @param animal - The animal to add
+     */
     public void addAnimal(Animal animal, World world){
         animal.setInLair(true);
         animals.add(animal);
         world.remove(animal);
     }
-
+    /**
+     * Removes an animal from the lair
+     */
     public void removeAnimals(World world){
         if(animals.size() > 0 && world.isTileEmpty(world.getLocation(this))) {
             world.setTile(world.getLocation(this), animals.get(0));

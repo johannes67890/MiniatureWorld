@@ -5,6 +5,14 @@ import itumulator.executable.DynamicDisplayInformationProvider;
 import itumulator.simulator.Actor;
 import itumulator.world.World;
 
+/**
+ * Bush class
+ * 
+ * @param hasBerries - Whether the bush has berries or not
+ * @param regrowTime - The time it takes for the bush to regrow berries
+ * 
+ * @implNote Implements {@link Actor} and {@link DynamicDisplayInformationProvider}
+ */
 public class Bush implements Actor, DynamicDisplayInformationProvider {
     private boolean hasBerries = true;
     private int regrowTime = 5;
@@ -26,6 +34,7 @@ public class Bush implements Actor, DynamicDisplayInformationProvider {
     public boolean getHasBerries(){
         return hasBerries;
     }
+
     @Override
     public DisplayInformation getInformation() {
         if(hasBerries){
