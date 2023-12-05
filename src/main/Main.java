@@ -1,3 +1,4 @@
+package main;
 
 import itumulator.executable.Program;
 import java.util.ArrayList;
@@ -7,7 +8,7 @@ import java.io.IOException;
 import itumulator.world.Location;
 import itumulator.world.NonBlocking;
 import itumulator.world.World;
-import testReader.TestReader;
+import main.testReader.TestReader;
 
 public class Main {
     public static void main(String[] args) throws IOException {

@@ -1,5 +1,6 @@
-import java.util.Random;
+package main;
 
+import java.util.Random;
 import itumulator.executable.DisplayInformation;
 import itumulator.world.Location;
 import itumulator.world.World;

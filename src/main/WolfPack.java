@@ -1,3 +1,5 @@
+package main;
+
 import java.util.ArrayList;
 import itumulator.executable.DisplayInformation;
 import itumulator.executable.DynamicDisplayInformationProvider;

@@ -1,9 +1,8 @@
-package testReader;
+package main.testReader;
+
 import java.io.*;
 import java.util.ArrayList;
 import java.util.HashMap;
-import java.util.HashSet;
-import java.util.Set;
 import java.util.stream.IntStream;
 import java.lang.Object;
 

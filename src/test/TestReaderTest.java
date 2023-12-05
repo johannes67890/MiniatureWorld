@@ -9,7 +9,7 @@ import java.util.Set;
 import org.junit.*;
 
 import itumulator.world.Location;
-import testReader.TestReader;
+import main.testReader.TestReader;
 
 public class TestReaderTest {
     public TestReader testReader;

@@ -1,5 +1,6 @@
-import java.util.Set;
+package main;
 
+import java.util.Set;
 import itumulator.executable.DisplayInformation;
 import itumulator.world.Location;
 import itumulator.world.World;

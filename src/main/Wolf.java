@@ -1,3 +1,5 @@
+package main;
+
 import itumulator.executable.DisplayInformation;
 import itumulator.world.Location;
 import itumulator.world.World;
