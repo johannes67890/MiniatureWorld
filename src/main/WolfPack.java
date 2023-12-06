@@ -4,7 +4,6 @@ import java.util.ArrayList;
 import itumulator.executable.DisplayInformation;
 import itumulator.executable.DynamicDisplayInformationProvider;
 import itumulator.simulator.Actor;
-import itumulator.world.Location;
 import itumulator.world.NonBlocking;
 import itumulator.world.World;
 

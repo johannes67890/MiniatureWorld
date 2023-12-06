@@ -1,3 +1,5 @@
-8
-wolf 1
-rabbit 1
+7
+TestType0 2
+TestType1 3-5 (3,5) 
+wolf 4
+wolf 4

@@ -2,8 +2,6 @@ package main;
 
 import java.util.Set;
 import itumulator.executable.DisplayInformation;
-import itumulator.executable.DynamicDisplayInformationProvider;
-import itumulator.simulator.Actor;
 import itumulator.world.Location;
 import itumulator.world.World;
 import java.util.Random;
