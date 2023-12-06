@@ -3,3 +3,5 @@ TestType0 2
 TestType1 3-5 (3,5) 
 wolf 4
 wolf 4
+cordyceps rabbit 1
+carcass fungi 5-8

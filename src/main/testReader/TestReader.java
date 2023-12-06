@@ -8,6 +8,30 @@ import java.lang.Object;
 
 import itumulator.world.Location;
 
+enum ReaderType {
+    // Objects
+    Grass("grass"),
+    Lair("burrow"),
+    Bush("bush"),
+    Carcass("carcass"),
+    // Animals
+    Rabbit("rabbit"),
+    Wolf("wolf"),
+    Bear("bear"),
+    // state
+    Fungi("fungi");
+
+
+    private  String type;
+ 
+    ReaderType (String type) {
+        this.type = type;
+    }
+    
+    public String getType() {
+        return type;
+    }
+}
 
 /**
  * This class is used to read the file and return the content of the file.
