@@ -10,9 +10,8 @@ import itumulator.world.World;
 import testReader.TestReader;
 
 public class Main {
-
     public static void main(String[] args) throws IOException {
-        Distributer distributior = Distributer.t1_3b;
+        Distributer distributior = Distributer.test;
         TestReader reader = new TestReader(distributior.getUrl());
         int size = reader.getWorldSize();
         int delay = 100;
@@ -20,10 +19,15 @@ public class Main {
         Program program = new Program(size, display_size, delay);
         World world = program.getWorld();
 
-        HashMap<String, ArrayList<Integer>> map = reader.getMap();
-        
-        for(String key : map.keySet()) {
-            for (int i = 0; i < reader.getRandomIntervalNumber(key); i++) {
+        HashMap<String, ArrayList<Object>> map = reader.getMap();
+        WolfPack tempPack = null;
+        for (String key : map.keySet()) {
+            key = reader.filterType(key);
+            if (key.equals("wolf")) {
+                tempPack = new WolfPack();
+                world.add(tempPack);
+            }
+            for (int i = 0; i < reader.getRandomNumberFromType(key); i++) {
                 Object object = null;
                 switch (key) {
                     case "grass":
@@ -33,45 +37,59 @@ public class Main {
                         object = new Rabbit();
                         break;
                     case "burrow":
-                        object = new Burrow();
+                        object = new Lair("rabbit");
+                        break;
+                    case "wolf":
+                        object = new Wolf(tempPack);
+                        break;
+                    case "bear":
+                        object = new Bear(reader.getLocation(key), world);
+                        break;
+                    case "berry":
+                        object = new Bush();
                         break;
                     default:
-                        break;
+                        throw new RuntimeException("Not on list");
                 }
                 spawnRandomObj(world, object);
             }
         }
 
         program.show();
-
-
     }
+
     /**
      * Spawns a random object in the world.
      * 
-     * @param world - The world to spawn the object in.
+     * @param world  - The world to spawn the object in.
      * @param object - The object to spawn.
      */
-    public static void spawnRandomObj(World world, Object object){
-        if(isWorldFull(world)) throw new IllegalArgumentException("The world is full.");
-            Location location = new Location(new Random().nextInt(world.getSize()), new Random().nextInt(world.getSize()));
-            
-            if(world.getTile(location) == null || (world.getTile(location) instanceof NonBlocking) == !(object instanceof NonBlocking)){ // if the tile 
-                if(!world.isTileEmpty(location)) {
-                    spawnRandomObj(world, object);
-                } else world.setTile(location, object);   
-            }
+    public static void spawnRandomObj(World world, Object object) {
+        if (isWorldFull(world))
+            throw new IllegalArgumentException("The world is full.");
+        Location location = new Location(new Random().nextInt(world.getSize()), new Random().nextInt(world.getSize()));
+
+        if (object instanceof NonBlocking && !world.containsNonBlocking(location)) {
+            world.setTile(location, object);
+        } else if (!(object instanceof NonBlocking) && world.isTileEmpty(location)) {
+            world.setTile(location, object);
+        } else {
+            spawnRandomObj(world, object);
+        }
     }
+
     /**
      * This method checks if the world is full.
+     * 
      * @param world - The world to check.
      * @return boolean - True if the world is full, false otherwise.
      */
     public static boolean isWorldFull(World world) {
-        if(world.getSize() == 0) return true;
+        if (world.getSize() == 0)
+            return true;
         for (int i = 0; i < world.getSize(); i++) {
             for (int j = 0; j < world.getSize(); j++) {
-                if(world.isTileEmpty(new Location(i, j))) {
+                if (world.isTileEmpty(new Location(i, j))) {
                     return false;
                 }
             }
@@ -80,5 +98,3 @@ public class Main {
     }
 
 }
-
-
