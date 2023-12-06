@@ -6,6 +6,7 @@ import itumulator.executable.DynamicDisplayInformationProvider;
 import itumulator.simulator.Actor;
 import itumulator.world.Location;
 import itumulator.world.World;
+import java.util.Random;
 /**
  * Bear class
  * 
@@ -23,7 +24,7 @@ public class Bear extends Animal implements Predator {
     public Bear(Location territoryC, World world) {
         super(30, 30, 2);
         if (territoryC == null) {
-            this.territoryC = world.getLocation(this);
+            this.territoryC = new Location(new Random().nextInt(world.getSize()), new Random().nextInt(world.getSize()));
         } else {
             this.territoryC = territoryC;
         }
@@ -90,7 +91,9 @@ public class Bear extends Animal implements Predator {
 
     @Override
     public DisplayInformation getInformation() {
-        return new DisplayInformation(java.awt.Color.black, "bear");
+        if (isAdult)
+            return new DisplayInformation(java.awt.Color.black, "bear");
+        return new DisplayInformation(java.awt.Color.black, "bear-small");
     }
 
 }

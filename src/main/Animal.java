@@ -24,6 +24,7 @@ import itumulator.world.World;
 public abstract class Animal implements Actor, DynamicDisplayInformationProvider {
 
     protected int hp, maxHp, age, maxAge, vision, hunger;
+    protected boolean isAdult = false;
     protected boolean isInLair = false;
 
     protected boolean life(World world){

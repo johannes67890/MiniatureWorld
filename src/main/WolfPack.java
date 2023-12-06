@@ -28,10 +28,27 @@ public class WolfPack implements Actor, DynamicDisplayInformationProvider, NonBl
             leader = getStrongest();
         }
 
+        // Set lair
         if (home == null) {
-            if (!world.containsNonBlocking(getLeaderLocation(world))) {
-                home = new Lair();
-                world.setTile(getLeaderLocation(world), home);
+            if (!world.containsNonBlocking(world.getLocation(getLeader()))) {
+                home = new Lair("wolf");
+                world.setTile(world.getLocation(getLeader()), home);
+            }
+        }
+
+        // Reproduce in lair
+        if (home != null) {
+            int adultsInLair = 0;
+            for(Animal wolf : home.getAnimals()){
+                if(wolf.isAdult){
+                    adultsInLair++;
+                }
+            }
+            if (world.getCurrentTime() == 18 && adultsInLair >= 2) {
+                Wolf newWolf = new Wolf(this);
+                world.add(newWolf);
+                home.addAnimal(newWolf, world);
+                System.out.println("Pack reproduced");
             }
         }
     }
@@ -62,27 +79,34 @@ public class WolfPack implements Actor, DynamicDisplayInformationProvider, NonBl
         return strongest;
     }
 
-    
-    public Location getLeaderLocation(World world) {
-        if(leader==null){
-            return world.getLocation(pack.get(0));
+    public Wolf getLeader() {
+        if (leader == null) {
+            return pack.get(0);
         }
-        return world.getLocation(leader);
+        return leader;
     }
 
     public void addToHome(Wolf wolf, World world) {
         home.addAnimal(wolf, world);
     }
 
-    public Location getHomeLocation(World world) {
-        return world.getLocation(home);
+    public boolean isInPack(Wolf wolf) {
+        if (pack.contains(wolf)) {
+            return true;
+        }
+        return false;
     }
 
-    public boolean hasHome() {
-        if (home == null) {
-            return false;
+    public void packEat(Wolf mySelf){
+        for(Wolf wolf : pack){
+            if(!wolf.equals(mySelf)){
+                wolf.addHunger(1);
+            }
         }
-        return true;
+    }
+
+    public Lair getHome(World world) {
+        return home;
     }
 
     public DisplayInformation getInformation() {
