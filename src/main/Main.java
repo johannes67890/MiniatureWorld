@@ -1,3 +1,4 @@
+package main;
 
 import itumulator.executable.Program;
 import java.util.ArrayList;
@@ -7,8 +8,14 @@ import java.io.IOException;
 import itumulator.world.Location;
 import itumulator.world.NonBlocking;
 import itumulator.world.World;
-import testReader.TestReader;
+import main.testReader.TestReader;
 
+/**
+ * Main class
+ * 
+ * The main class initializes the world and spawns the objects in the world.
+ * 
+ */
 public class Main {
     public static void main(String[] args) throws IOException {
         Distributer distributior = Distributer.test;
@@ -22,7 +29,7 @@ public class Main {
         HashMap<String, ArrayList<Object>> map = reader.getMap();
         WolfPack tempPack = null;
         for (String key : map.keySet()) {
-            key = reader.filterType(key);
+            key = reader.filterType(key); // Filter the type for duplicated types (e.g. wolf and wolf_1)
             if (key.equals("wolf")) {
                 tempPack = new WolfPack();
                 world.add(tempPack);

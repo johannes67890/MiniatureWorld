@@ -1,9 +1,17 @@
-import java.util.Random;
+package main;
 
 import itumulator.executable.DisplayInformation;
 import itumulator.world.Location;
 import itumulator.world.World;
 
+/**
+ * Wolf class
+ * 
+ * @param damage - The damage the wolf does
+ * @param myPack - The {@link Wolfpack} the wolf belongs to
+ * 
+ * @implNote Implements {@link Predator} and extends {@link Animal}
+ */
 public class Wolf extends Animal implements Predator {
 
     private final int damage = 6;
@@ -24,6 +32,11 @@ public class Wolf extends Animal implements Predator {
         // if in lair dont do anything
         if (isInLair) {
             return;
+        }
+
+        // if starving
+        if (hunger <= 2) {
+            findFood(Rabbit.class, world);
         }
 
         // if night move towards home
@@ -54,17 +67,11 @@ public class Wolf extends Animal implements Predator {
                     return;
                 }
             }
-        }
+        } 
 
-        // if starving
-        if (starving) {
-            if (food(world)) {
-                return;
-            } else {
-                move(getRandomEmptySurroundingTile(world), world);
-                System.out.println("Wolf moved random bc starving");
-                return;
-            }
+        // if hungry
+        if (hunger <= 7) {
+            findFood(Rabbit.class, world);
         }
 
         // Attack if wolf is to close
@@ -94,43 +101,10 @@ public class Wolf extends Animal implements Predator {
                 }
             }
         }
-
-        // if hungry
-        if (hungry) {
-            if (food(world)) {
-                return;
-            }
-        }
-
-        // 50% for random move 50% for no move
-        if (new Random().nextBoolean()) {
-            move(getRandomEmptySurroundingTile(world), world);
-            System.out.println("Wolf move Random");
-            return;
-        }
-        System.out.println("Wolf do nothing");
     }
 
-    // function that first tries to eat else tries to go towards food
-    private boolean food(World world) {
-        // check around for rabbits
-        for (Location location : world.getSurroundingTiles()) {
-            if (world.getTile(location) instanceof Rabbit) {
-                eat(world.getTile(location), location, world);
-                myPack.packEat(this);
-                System.out.println("Wolf eat Rabbit");
-                return true;
-            }
-        }
-        // go towards rabbit
-        for (Location location : world.getSurroundingTiles(vision)) {
-            if (world.getTile(location) instanceof Rabbit) {
-                moveTowards(location, world);
-                System.out.println("Wolf go towards rabbit");
-                return true;
-            }
-        }
-        return false;
+    public int getHp() {
+        return hp;
     }
 
     @Override
@@ -154,10 +128,6 @@ public class Wolf extends Animal implements Predator {
         if (isAdult)
             return new DisplayInformation(java.awt.Color.black, "wolf");
         return new DisplayInformation(java.awt.Color.black, "wolf-small");
-    }
-
-    public int getHp() {
-        return hp;
     }
 
 }

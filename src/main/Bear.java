@@ -1,10 +1,20 @@
-import java.util.Random;
-import java.util.Set;
+package main;
 
+import java.util.Set;
 import itumulator.executable.DisplayInformation;
+import itumulator.executable.DynamicDisplayInformationProvider;
+import itumulator.simulator.Actor;
 import itumulator.world.Location;
 import itumulator.world.World;
+import java.util.Random;
+/**
+ * Bear class
+ * 
+ * @param territoryC - The center of the territory
+ * @param territory - The territory of the bear
+ * @implNote Implements {@link Predator} adn extends {@link Animal}
 
+ */
 public class Bear extends Animal implements Predator {
     private Location territoryC;
     private Set<Location> territory;
@@ -22,20 +32,14 @@ public class Bear extends Animal implements Predator {
     }
 
     public void act(World world) {
-
         if(life(world)){
             return;
         }
 
         // if starving
-        if (starving) {
-            if(food(world)){
-                return;
-            } else{
-                move(getRandomEmptySurroundingTile(world), world);
-                System.out.println("Bear moved random bc starving");
-                return;
-            }
+        if (hunger <= 2) {
+            findFood(Rabbit.class, world);
+            findFood(Bush.class, world);
         }
 
         // check around to attack
@@ -61,10 +65,9 @@ public class Bear extends Animal implements Predator {
         }
 
         //if hungry
-        if(hungry){
-            if(food(world)){
-                return;
-            }
+        if(hunger<=7){
+            findFood(Rabbit.class, world);
+           findFood(Bush.class, world);
         }
 
         //move from center
@@ -80,44 +83,6 @@ public class Bear extends Animal implements Predator {
 
         
     }
-
-    //function that first tries to eat else tries to go towards food
-    private boolean food(World world) {
-        // check around for rabbit and berries
-        for (Location location : world.getSurroundingTiles()) {
-            if (world.getTile(location) instanceof Rabbit) {
-                eat(world.getTile(location), location, world);
-                System.out.println("Bear eat Rabbit");
-                return true;
-            } else if (world.getTile(location) instanceof Bush) {
-                Bush target = (Bush) world.getTile(location);
-                if (target.getHasBerries()) {
-                    hunger += 2;
-                    target.eatBerries();
-                    System.out.println("Bear eat berry");
-                    return true;
-                }
-            }
-        }
-
-        // go towards rabbit or berries
-        for (Location location : world.getSurroundingTiles(vision)) {
-            if (world.getTile(location) instanceof Rabbit) {
-                moveTowards(location, world);
-                System.out.println("bear go towards rabbit");
-                return true;
-            } else if (world.getTile(location) instanceof Bush) {
-                Bush target = (Bush) world.getTile(location);
-                if (target.getHasBerries()) {
-                    moveTowards(location, world);
-                    System.out.println("bear go towards berry");
-                    return true;
-                }
-            }
-        }
-        return false;
-    }
-
 
     public void attack(Location location, World world) {
         Animal target = (Animal) world.getTile(location);
