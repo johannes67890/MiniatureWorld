@@ -2,13 +2,16 @@ package main;
 
 import itumulator.executable.Program;
 import java.util.ArrayList;
+import java.util.Collection;
 import java.util.HashMap;
 import java.util.Random;
 import java.io.IOException;
 import itumulator.world.Location;
 import itumulator.world.NonBlocking;
 import itumulator.world.World;
+import main.testReader.ReaderKey;
 import main.testReader.TestReader;
+import main.testReader.MultiMap;
 
 /**
  * Main class
@@ -18,7 +21,7 @@ import main.testReader.TestReader;
  */
 public class Main {
     public static void main(String[] args) throws IOException {
-        Distributer distributior = Distributer.test;
+        Distributer distributior = Distributer.tf2_2;
         TestReader reader = new TestReader(distributior.getUrl());
         int size = reader.getWorldSize();
         int delay = 100;
@@ -26,33 +29,34 @@ public class Main {
         Program program = new Program(size, display_size, delay);
         World world = program.getWorld();
 
-        HashMap<String, ArrayList<Object>> map = reader.getMap();
+        HashMap<ReaderKey, HashMap<Integer, Object>> map = reader.getMap();
+        System.out.println(map.keySet() + " " + map.values());
         WolfPack tempPack = null;
-        for (String key : map.keySet()) {
-            key = reader.filterType(key); // Filter the type for duplicated types (e.g. wolf and wolf_1)
-            if (key.equals("wolf")) {
+        for (ReaderKey key : map.keySet()) {
+            if (key == ReaderKey.Wolf) {
                 tempPack = new WolfPack();
                 world.add(tempPack);
             }
             for (int i = 0; i < reader.getRandomNumberFromType(key); i++) {
                 Object object = null;
+
                 switch (key) {
-                    case "grass":
+                    case Grass:
                         object = new Grass();
                         break;
-                    case "rabbit":
+                    case Rabbit:
                         object = new Rabbit();
                         break;
-                    case "burrow":
+                    case Lair:
                         object = new Lair("rabbit");
                         break;
-                    case "wolf":
+                    case Wolf:
                         object = new Wolf(tempPack);
                         break;
-                    case "bear":
+                    case Bear:
                         object = new Bear(reader.getLocation(key), world);
                         break;
-                    case "berry":
+                    case Bush:
                         object = new Bush();
                         break;
                     default:
