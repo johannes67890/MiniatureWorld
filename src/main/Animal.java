@@ -62,8 +62,8 @@ public abstract class Animal
       hp++;
     }
 
-    starving = hunger <= 2;
-    hungry = hunger <= 6;
+    starving = hunger <= 5;
+    hungry = hunger <= 10;
 
     // An animal dies if it is too old or has no hp
     if (hp <= 0 || age > maxAge) {

@@ -22,7 +22,7 @@ public class Bear extends Predator {
   private Set<Location> territory;
 
   public Bear(Location territoryC, World world) {
-    super(1, 30, 2, 5, new ArrayList<>(asList("main.Carcass", "main.Bush")), 8);
+    super(1, 30, 2, 6, new ArrayList<>(asList("main.Carcass", "main.Bush")), 8);
     if (territoryC == null) {
       this.territoryC =
         new Location(

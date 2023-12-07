@@ -29,7 +29,7 @@ public class Bush extends Eatable implements Actor, DynamicDisplayInformationPro
 
     public int getEaten(int bideSize, World world){
         hasBerries = false;
-        return 1;
+        return 2;
     }
     
     public boolean getHasBerries(){

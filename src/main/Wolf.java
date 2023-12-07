@@ -19,7 +19,7 @@ public class Wolf extends Predator {
   private WolfPack myPack;
 
   public Wolf(WolfPack pack) {
-    super(15, 30, 2,3, new ArrayList<>(asList("main.Carcass")), 6);
+    super(15, 30, 2,4, new ArrayList<>(asList("main.Carcass")), 6);
     myPack = pack;
     myPack.addWolf(this);
   }
