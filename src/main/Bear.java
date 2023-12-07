@@ -18,11 +18,20 @@ import java.util.Set;
 
  */
 public class Bear extends Predator {
+
   private Location territoryC;
   private Set<Location> territory;
+  private boolean isSleeping = false;
 
   public Bear(Location territoryC, World world) {
-    super(1, 30, 2, 6, new ArrayList<>(asList("main.Carcass", "main.Bush")), 8);
+    super(
+      30,
+      30,
+      2,
+      6,
+      new ArrayList<>(asList("main.Carcass", "main.Bush")),
+      8
+    );
     if (territoryC == null) {
       this.territoryC =
         new Location(
@@ -36,7 +45,12 @@ public class Bear extends Predator {
   }
 
   public void act(World world) {
-    System.out.println(hunger);
+    //sleep at night
+    isSleeping = world.isNight();
+    if (isSleeping) {
+      return;
+    }
+
     if (life(world)) {
       return;
     }
@@ -46,7 +60,7 @@ public class Bear extends Predator {
       if (food(world)) {
         return;
       }
-      if (attackForFood(world)){
+      if (attackForFood(world)) {
         return;
       }
     }
@@ -62,7 +76,7 @@ public class Bear extends Predator {
       }
     }
 
-    // check territory and gotowards
+    // check territory and gotowards animal if in terratory
     for (Location location : territory) {
       for (Location view : world.getSurroundingTiles(vision)) {
         if (location.equals(view) && world.getTile(view) instanceof Animal) {
@@ -78,7 +92,7 @@ public class Bear extends Predator {
       if (food(world)) {
         return;
       }
-      if (attackForFood(world)){
+      if (attackForFood(world)) {
         return;
       }
     }
@@ -97,7 +111,15 @@ public class Bear extends Predator {
 
   @Override
   public DisplayInformation getInformation() {
-    if (isAdult) return new DisplayInformation(java.awt.Color.black, "bear");
+    if (isAdult && isSleeping) {
+      return new DisplayInformation(java.awt.Color.black, "bear-sleeping");
+    }
+    if (isAdult) {
+      return new DisplayInformation(java.awt.Color.black, "bear");
+    }
+    if(isSleeping){
+      return new DisplayInformation(java.awt.Color.black, "bear-small-sleeping");
+    }
     return new DisplayInformation(java.awt.Color.black, "bear-small");
   }
 }

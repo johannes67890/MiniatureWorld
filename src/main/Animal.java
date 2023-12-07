@@ -55,13 +55,14 @@ public abstract class Animal
       age++;
     }
 
-    // An animal loses hp if it is hungry and gains hp if it is not
+    // An animal loses hp if it is hungry and gains hp if it is full
     if (hunger <= 0) {
       hp--;
     } else if (hunger >= 7 && hp < maxHp) {
       hp++;
     }
 
+    //An animal can be staving or hungry
     starving = hunger <= 5;
     hungry = hunger <= 10;
 
@@ -70,7 +71,6 @@ public abstract class Animal
       die(world);
       return true;
     }
-
     return false;
   }
 

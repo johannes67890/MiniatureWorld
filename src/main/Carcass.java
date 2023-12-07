@@ -12,41 +12,41 @@ public class Carcass
   extends Eatable
   implements Actor, DynamicDisplayInformationProvider {
 
-  private int meat;
+  private int mass;
   private Fungus myFungus = null;
 
   Carcass(Animal type) {
     if (type instanceof Rabbit) {
       if (type.isAdult) {
-        meat = 5;
+        mass = 5;
       } else {
-        meat = 3;
+        mass = 3;
       }
     }
     if (type instanceof Wolf) {
       if (type.isAdult) {
-        meat = 10;
+        mass = 10;
       } else {
-        meat = 5;
+        mass = 5;
       }
     }
     if (type instanceof Bear) {
       if (type.isAdult) {
-        meat = 15;
+        mass = 15;
       } else {
-        meat = 8;
+        mass = 8;
       }
     }
   }
 
   public void act(World world) {
-    System.out.println("Meat: "+meat);
-
+    //theres a 20% chance the carcass decays
     if(new Random().nextInt(5)==0){
-        meat--;
+        mass--;
     }
 
-    if (meat <= 0) {
+    //if no mass decay totally
+    if (mass <= 0) {
       Location deadLocation = world.getLocation(this);
       world.delete(this);
       if (myFungus != null) {
@@ -54,10 +54,11 @@ public class Carcass
       }
     }
 
-    if(myFungus==null && new Random().nextInt(1)==0){
+    //change for a fungus to spawn inside carcass
+    if(myFungus==null && new Random().nextInt(5)==0){
         myFungus=new Fungus(this, world);
         world.add(myFungus);
-        System.out.println("Fungus spawned");
+        System.out.println("Fungus spawned in carcass");
     }
   }
 
@@ -69,10 +70,10 @@ public class Carcass
   }
 
   public int getEaten(int biteSize, World world) {
-    int tempMeat = meat;
-    meat -= biteSize;
-    if (tempMeat - biteSize < 0) {
-      return tempMeat;
+    int tempMass = mass;
+    mass -= biteSize;
+    if (tempMass - biteSize < 0) {
+      return tempMass;
     } else {
       return biteSize;
     }
@@ -84,7 +85,7 @@ public class Carcass
 
   @Override
   public DisplayInformation getInformation() {
-    if (meat <= 8) return new DisplayInformation(
+    if (mass <= 5) return new DisplayInformation(
       java.awt.Color.black,
       "carcass-small"
     );

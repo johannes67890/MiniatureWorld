@@ -20,19 +20,22 @@ public class Fungus implements Actor, DynamicDisplayInformationProvider {
   }
 
   public void act(World world) {
-    System.out.println("Size: " + size);
+    //50% chance to decay its carcass
     if (new Random().nextBoolean() && myCarcass != null) {
       eat(world);
     }
 
+    //if big enough spread
     if (size > 5) {
       spread(world);
     }
 
-    if (myCarcass == null) {
+    //if its out in the world
+    if (!world.)) {
       size--;
     }
 
+    //if no say die
     if(size<=0){
         world.delete(this);
     }
