@@ -15,7 +15,7 @@ import itumulator.world.World;
  * 
  * @implNote Implements {@link Actor}, {@link Nonblocking} and {@link DynamicDisplayInformationProvider}
  */
-public class Grass implements Actor, DynamicDisplayInformationProvider, NonBlocking {
+public class Grass extends Eatable implements Actor, DynamicDisplayInformationProvider, NonBlocking {
     Random r = new Random(); // Random number generator
 
     public void act(World world) {
@@ -41,8 +41,16 @@ public class Grass implements Actor, DynamicDisplayInformationProvider, NonBlock
         }
     }
 
+    
+    public int getEaten(int bideSize, World world) {
+        world.delete(this);
+        return 3;
+    }
+
     @Override
     public DisplayInformation getInformation() {
         return new DisplayInformation(java.awt.Color.green, "grass");
     }
+
+
 }
