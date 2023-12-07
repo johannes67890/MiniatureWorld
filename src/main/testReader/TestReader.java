@@ -23,6 +23,7 @@ import itumulator.world.Location;
 public class TestReader extends BufferedReader {
     private String filePath;
     private ArrayList<String[]> fileContentString;
+    private int worldSize;
     /**
      * Constructor for the TestReader class.
      * @param filePath - The path to the file.
@@ -38,6 +39,8 @@ public class TestReader extends BufferedReader {
             wordList.add(line);
         }
         this.fileContentString = wordList.stream().map(s -> s.split(" ")).collect(ArrayList::new, ArrayList::add, ArrayList::addAll);
+        this.worldSize = Integer.parseInt(this.fileContentString.get(0)[0]); // Assign the world size.
+        fileContentString.remove(0); // Remove the first line of the file. (The world size)
         this.close();
     }
 
@@ -66,77 +69,57 @@ public class TestReader extends BufferedReader {
      * 
      * @return HashMap<String, ArrayList<Object>>
      */
-    public HashMap<ReaderKey, HashMap<Integer, Object>> getMap(){
-        HashMap<ReaderKey, HashMap<Integer, Object>> map = new HashMap<>();
+    public HashMap<ReaderTypes.Keys, HashMap<Integer, ArrayList<Object>>> getMap(){
+        HashMap<ReaderTypes.Keys, HashMap<Integer, ArrayList<Object>>> map = new HashMap<>();
 
-        HashMap<Integer,Object> innerMap = new HashMap<>();
-        ReaderKey mapKey = null;
+        ReaderTypes.Keys mapKey = null;
+        HashMap<Integer, ArrayList<Object>> innerMap = new HashMap<>();
+        ArrayList<Object> innerList = new ArrayList<>();
+
         for (String[] strings : fileContentString) {
-          
-            for (String string : strings) {
-                int i = 0;
-                
-                if(isNumeric(strings[0])) continue;
-                else mapKey = assignKey(strings[0]);
-
-                if(string.matches("\\((.*?)\\)")){ // If the string contains coordinates.
-                    if(innerMap.values().stream().anyMatch(c -> c instanceof Location)) throw new IllegalArgumentException("Input contains more than one location. A location has already been set.");
-                    innerMap.put(i, setCoordinates(string));
-                    map.put(mapKey, innerMap);
-                } else if(string.contains("-")){ // If the string contains an interval.
-                    innerMap.put(i, string);
-                    map.put(mapKey, innerMap);
-                } else if(isNumeric(string) && mapKey != null){ // If the key is not null, then we have found a type.
-                    innerMap.put(i, Integer.parseInt(string));
-                    map.put(mapKey, innerMap);
-                } else if(isNumeric(string) && mapKey == null){ // If the key is null, then we have not found a type yet.
+            int i = 0;
+            innerList = new ArrayList<>();
+            for (String str : strings) {
+                if(str.matches("\\((.*?)\\)")){ // If the string contains coordinates.
+                    //if(innerMap.values().stream().anyMatch(c -> c instanceof Location)) throw new IllegalArgumentException("Input contains more than one location. A location has already been set.");
+                    innerList.add(setCoordinates(str));
+                } 
+                else if(str.contains("-") || isNumeric(str) && mapKey != null){ // If the string contains an interval.
+                    innerList.add(getTypeRange(str));
+                } else if(isNumeric(str) && mapKey == null){ // If the key is null, then we have not found a type yet.
                     continue;
-                } else if(!isNumeric(string) && mapKey != null){ // Reset the key and values. Ready for the next type.
-                    if(mapKey.getKey().equals(string) || map.containsKey(assignKey(string))) { // if there are mutible of the same type.
-                        i++;
-                        mapKey = assignKey(string);
-                        innerMap = new HashMap<>(); 
+                } else if(!isNumeric(str) && mapKey != null){ // Reset the key and values. Ready for the next type.
+                    if(mapKey.getKey().equals(str)) { // if there are mutible of the same type.
                         continue;
-                    } else mapKey = assignKey(string);
-                    innerMap = new HashMap<>(); 
+                    } else if(map.containsKey(assignKey(str))){
+                        mapKey = assignKey(str);
+                        //innerList = new ArrayList<>();
+                        innerMap = new HashMap<>();
+                        i++;
+                        continue;
+                    }
+                    else{
+                       mapKey = assignKey(str); 
+                       innerList = new ArrayList<>();
+                       innerMap = new HashMap<>();
+                    }
                 }
                 else { // If the key is null, then we have not found a type.
-                    mapKey = assignKey(string);
+                    mapKey = assignKey(str);
                 }
-                i++;
+               
+                innerMap.put(i, innerList);
             }
+            i++;
+            map.put(mapKey, innerMap);
         }
 
-        //  if(str.matches("\\((.*?)\\)")){ // If the string contains coordinates.
-        //             if(innerMap.values().stream().anyMatch(c -> c instanceof Location)) throw new IllegalArgumentException("Input contains more than one location. A location has already been set.");
-        //             innerMap.put("location", setCoordinates(str));
-        //             map.put(mapKey, innerMap);
-        //         } else if(str.contains("-")){ // If the string contains an interval.
-        //             innerMap.put("interval", str);
-        //             map.put(mapKey, innerMap);
-        //         } else if(isNumeric(str) && mapKey != null){ // If the key is not null, then we have found a type.
-        //             innerMap.put("number", Integer.parseInt(str));
-        //             map.put(mapKey, innerMap);
-        //         } else if(isNumeric(str) && mapKey == null){ // If the key is null, then we have not found a type yet.
-        //             continue;
-        //         } else if(!isNumeric(str) && mapKey != null){ // Reset the key and values. Ready for the next type.
-        //             if(mapKey.getKey().equals(str) || map.containsKey(assignKey(str))) { // if there are mutible of the same type.
-        //                 mapKey = assignKey(str);
-        //             } else mapKey = assignKey(str);
-        //             innerMap = new HashMap<>(); 
-        //         }
-        //         else { // If the key is null, then we have not found a type.
-        //             mapKey = assignKey(str);
-        //         }
+        
         return map;
     }
-    
 
-    public ReaderKey assignKey(String str) {
-       if(str.equals(ReaderKey.getEnum(str).getKey())){ // If the string is a type.
-            return ReaderKey.getEnum(str);
-        } 
-        else throw new IllegalArgumentException("The type " + str + " does not exist.");
+    public ReaderTypes.Keys assignKey(String str) {
+            return ReaderTypes.Keys.getEnumFromKeys(str);
     }
 
     /**
@@ -146,20 +129,17 @@ public class TestReader extends BufferedReader {
      * @param type - The type of the location.
      * @return IntStream - The stream of integers.
      */
-    public IntStream getTypeRange(ReaderKey key){
-        if(!this.getMap().containsKey(key)) throw new IllegalArgumentException("The key " + key + " does not exist.");
-        HashMap<String, Object> value = this.getMap().get(key).get("interval") != null ? this.getMap().get(key) : this.getMap().get(key);
-
-        if(value.get(0) instanceof String){
-            String[] range = ((String) value.get(0)).split("-");
+    public IntStream getTypeRange(String str){
+        if(isNumeric(str)) {
+            int numericVal = Integer.parseInt(str);
+            return IntStream.rangeClosed(numericVal, numericVal);
+        }
+        else if(str instanceof String){
+            String[] range = str.split("-");
             int start = Integer.parseInt(range[0]);
             int end = Integer.parseInt(range[1]);
             return IntStream.rangeClosed(start, end);
         } 
-        if(value.get(0) instanceof Integer) {
-
-            return IntStream.rangeClosed((int) value.get(0), (int) value.get(0));
-        }
         else return null;
     } 
 
@@ -173,9 +153,9 @@ public class TestReader extends BufferedReader {
      * @param type - 
      * @return int - The random number.
      */
-    public int getRandomNumberFromType(ReaderKey key){
+    public int getRandomNumberFromType(ReaderTypes.Keys key){
         // get all object values of the key
-        IntStream stream = this.getTypeRange(key);    
+        IntStream stream = this.getMap().get(key).values().stream().filter(c -> c instanceof IntStream).mapToInt(c -> ((IntStream) c).findAny().getAsInt());    
         
         return stream.findAny().getAsInt();
     }
@@ -187,7 +167,7 @@ public class TestReader extends BufferedReader {
      * @param type - The type of the location.
      * @return Location - The random location.
      */
-    public Location getLocation(ReaderKey key){
+    public Location getLocation(ReaderTypes.Keys key){
         if(!this.getMap().containsKey(key)) throw new IllegalArgumentException("The type " + key + " does not exist.");
         HashMap<String, Object> value = this.getMap().get(key).get("Location") != null ? this.getMap().get(key) : this.getMap().get(key);
         if(value.get(key) instanceof Location){
@@ -200,7 +180,7 @@ public class TestReader extends BufferedReader {
      * @return int
      */
     public int getWorldSize(){
-        return Integer.parseInt(this.fileContentString.get(0)[0]);
+        return worldSize;
     }
     
     /**

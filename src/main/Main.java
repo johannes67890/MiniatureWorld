@@ -1,17 +1,16 @@
 package main;
 
 import itumulator.executable.Program;
+
 import java.util.ArrayList;
-import java.util.Collection;
 import java.util.HashMap;
 import java.util.Random;
 import java.io.IOException;
 import itumulator.world.Location;
 import itumulator.world.NonBlocking;
 import itumulator.world.World;
-import main.testReader.ReaderKey;
+import main.testReader.ReaderTypes;
 import main.testReader.TestReader;
-import main.testReader.MultiMap;
 
 /**
  * Main class
@@ -29,11 +28,11 @@ public class Main {
         Program program = new Program(size, display_size, delay);
         World world = program.getWorld();
 
-        HashMap<ReaderKey, HashMap<Integer, Object>> map = reader.getMap();
+        HashMap<ReaderTypes.Keys, HashMap<Integer, ArrayList<Object>>> map = reader.getMap();
         System.out.println(map.keySet() + " " + map.values());
         WolfPack tempPack = null;
-        for (ReaderKey key : map.keySet()) {
-            if (key == ReaderKey.Wolf) {
+        for (ReaderTypes.Keys key : map.keySet()) {
+            if (key == ReaderTypes.Keys.Wolf) {
                 tempPack = new WolfPack();
                 world.add(tempPack);
             }
