@@ -12,16 +12,18 @@ import java.util.Random;
 /**
  * An abstract class for all Animals.
  *
- * @param hp - The health of the animal
- * @param maxAge - The maximum age of the animal
- * @param vision - The vision-radius of the animal (used to look further than surrounding tiles)
- * @param hunger - The hunger of the animal
+ * @param hp       - The health of the animal
+ * @param maxAge   - The maximum age of the animal
+ * @param vision   - The vision-radius of the animal (used to look further than
+ *                 surrounding tiles)
+ * @param hunger   - The hunger of the animal
  * @param isInLair - Whether the animal is in its lair or not
  *
- * @implNote Implements {@link Actor} and {@link DynamicDisplayInformationProvider}
+ * @implNote Implements {@link Actor} and
+ *           {@link DynamicDisplayInformationProvider}
  */
 public abstract class Animal
-  implements Actor, DynamicDisplayInformationProvider {
+    implements Actor, DynamicDisplayInformationProvider {
 
   protected int hp, maxHp, age, maxAge, vision, hunger, biteSize;
   protected ArrayList<String> eats;
@@ -31,18 +33,17 @@ public abstract class Animal
   protected boolean hungry = false;
 
   protected Animal(
-    int hp,
-    int maxAge,
-    int vision,
-    int biteSize,
-    ArrayList<String> eats
-  ) {
+      int hp,
+      int maxAge,
+      int vision,
+      int biteSize,
+      ArrayList<String> eats) {
     this.age = 0;
     this.hp = hp;
     this.maxHp = hp;
     this.maxAge = maxAge;
     this.vision = vision;
-    this.hunger = 10;
+    this.hunger = 15;
     this.biteSize = biteSize;
     this.eats = eats;
   }
@@ -62,7 +63,7 @@ public abstract class Animal
       hp++;
     }
 
-    //An animal can be staving or hungry
+    // An animal can be staving or hungry
     starving = hunger <= 5;
     hungry = hunger <= 10;
 
@@ -84,34 +85,33 @@ public abstract class Animal
 
   /**
    * Finds food and eats it
+   * 
    * @param world world
    * @return true if food is found
    */
 
   public boolean food(World world) {
-    //try to eat around itself
+    // try to eat around itself
     for (Location location : world.getSurroundingTiles()) {
       if (world.containsNonBlocking(location)) {
-        if (
-          eats.contains(world.getNonBlocking(location).getClass().getName())
-        ) {
+        if (eats.contains(world.getNonBlocking(location).getClass().getName())) {
           Eatable food = (Eatable) world.getNonBlocking(location);
-          hunger += food.getEaten(biteSize, world);
+          hungerPlus(hunger += food.getEaten(biteSize, world));
           return true;
         }
       }
-      if (
-        world.getTile(location) != null &&
-        eats.contains(world.getTile(location).getClass().getName())
-      ) {
+      if (world.getTile(location) != null &&
+          eats.contains(world.getTile(location).getClass().getName())) {
         Eatable food = (Eatable) world.getTile(location);
-        hunger += food.getEaten(biteSize, world);
+        hungerPlus(hunger += food.getEaten(biteSize, world));
         return true;
       }
     }
     // Go towards food
     for (Location location : world.getSurroundingTiles(vision)) {
-      if (world.getTile(location) != null && ((world.containsNonBlocking(location) && eats.contains(world.getNonBlocking(location).getClass().getName())) || eats.contains(world.getTile(location).getClass().getName()))) {
+      if (world.getTile(location) != null && ((world.containsNonBlocking(location)
+          && eats.contains(world.getNonBlocking(location).getClass().getName()))
+          || eats.contains(world.getTile(location).getClass().getName()))) {
         moveTowards(location, world);
         return true;
       }
@@ -121,18 +121,20 @@ public abstract class Animal
 
   /**
    * Entity dies
+   * 
    * @param world
    */
   protected void die(World world) {
     Location deadLocation = world.getLocation(this);
     world.delete(this);
-    world.setTile(deadLocation, new Carcass(this));
+    world.setTile(deadLocation, new Carcass(this, false, world));
   }
 
   /**
    * Moves to a location
+   * 
    * @param location - The location to move to
-   * @param world - The World to move in
+   * @param world    - The World to move in
    */
   protected void move(Location location, World world) {
     if (location != null) {
@@ -204,13 +206,19 @@ public abstract class Animal
     }
   }
 
+  protected void hungerPlus(int amount) {
+    hunger += amount;
+  }
+
   /**
    * Gets a random empty surrounding tile
+   * 
    * @return random empty surrounding tile
    */
   protected Location getRandomEmptySurroundingTile(World world) {
     List<Location> list = new ArrayList<>(world.getEmptySurroundingTiles());
-    if (list.size() == 0) return null;
+    if (list.size() == 0)
+      return null;
     return list.get(new Random().nextInt(list.size()));
   }
 

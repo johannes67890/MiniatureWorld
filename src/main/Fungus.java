@@ -11,7 +11,7 @@ public class Fungus implements Actor, DynamicDisplayInformationProvider {
 
   private int size = 1;
   private int reach = 3;
-  private Carcass myCarcass = null;
+  private Carcass myCarcass;
   private Location location;
 
   public Fungus(Carcass carcass, World world) {
@@ -22,7 +22,7 @@ public class Fungus implements Actor, DynamicDisplayInformationProvider {
   public void act(World world) {
     //50% chance to decay its carcass
     if (new Random().nextBoolean() && myCarcass != null) {
-      eat(world);
+      size += myCarcass.getEaten(1, world);
     }
 
     //if big enough spread
@@ -30,18 +30,19 @@ public class Fungus implements Actor, DynamicDisplayInformationProvider {
       spread(world);
     }
 
-    //if its out in the world
-    if (!world.)) {
+    //if its out in the world slowly die
+    if (world.getTile(location) instanceof Fungus) {
       size--;
     }
 
-    //if no say die
+    //if no size die
     if(size<=0){
         world.delete(this);
     }
   }
 
-  public void spread(World world) {
+  //fungus can spread
+  private void spread(World world) {
     for (Location location : world.getSurroundingTiles(location, reach)) {
       if (
         world.getTile(location) != null &&
@@ -49,15 +50,11 @@ public class Fungus implements Actor, DynamicDisplayInformationProvider {
       ) {
         Carcass carcass = (Carcass) world.getTile(location);
         if (!carcass.hasFungus()) {
-          carcass.addFungus(new Fungus(carcass, world), world);
+          carcass.addFungus(world);
           System.out.println("Fungus spread");
         }
       }
     }
-  }
-
-  private void eat(World world) {
-    size += myCarcass.getEaten(1, world);
   }
 
   @Override

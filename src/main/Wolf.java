@@ -25,11 +25,11 @@ public class Wolf extends Predator {
   }
 
   public void act(World world) {
-    System.out.println(hunger);
     // if in lair dont do anything
     if (isInLair) {
       return;
     }
+
 
     if (life(world)) {
       return;
@@ -130,6 +130,12 @@ public class Wolf extends Predator {
 
   public void addHunger(int x) {
     hunger += x;
+  }
+
+  @Override
+  public void hungerPlus(int amount){
+    hunger+=amount;
+    myPack.packEat(this);
   }
 
   @Override

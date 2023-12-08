@@ -14,8 +14,13 @@ public class Carcass
 
   private int mass;
   private Fungus myFungus = null;
+  private boolean hasFungus = false;
 
-  Carcass(Animal type) {
+  Carcass(Animal type, boolean shouldHaveFungus, World world) {
+    if(shouldHaveFungus){
+      addFungus(world);
+    }
+
     if (type instanceof Rabbit) {
       if (type.isAdult) {
         mass = 5;
@@ -55,18 +60,14 @@ public class Carcass
     }
 
     //change for a fungus to spawn inside carcass
-    if(myFungus==null && new Random().nextInt(5)==0){
-        myFungus=new Fungus(this, world);
-        world.add(myFungus);
+    if(!hasFungus && new Random().nextInt(5)==0){
+        addFungus(world);
         System.out.println("Fungus spawned in carcass");
     }
   }
 
   public boolean hasFungus(){
-    if(myFungus==null){
-        return false;
-    }
-    return true;
+    return hasFungus;
   }
 
   public int getEaten(int biteSize, World world) {
@@ -79,8 +80,10 @@ public class Carcass
     }
   }
 
-  public void addFungus(Fungus fungus, World world) {
-    myFungus = fungus;
+  public void addFungus(World world) {
+    myFungus = new Fungus(this, world);
+    hasFungus = true;
+    world.add(myFungus);
   }
 
   @Override
