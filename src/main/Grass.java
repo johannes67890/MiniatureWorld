@@ -16,7 +16,6 @@ import itumulator.world.World;
  * @implNote Implements {@link Actor}, {@link Nonblocking} and {@link DynamicDisplayInformationProvider}
  */
 public class Grass extends Eatable implements Actor, DynamicDisplayInformationProvider, NonBlocking {
-    Random r = new Random(); // Random number generator
 
     public void act(World world) {
        spread(world);
@@ -26,16 +25,16 @@ public class Grass extends Eatable implements Actor, DynamicDisplayInformationPr
      * Spreads the grass
      * This method is called in {@link #act} and is used to spread the grass to empty tiles, with a 10% chance of spreading.
      */
-    void spread(World world) {
-         if (world.isDay() && r.nextInt(10) == 0) {
+    private void spread(World world) {
+         if (world.isDay() && new Random().nextInt(10) == 0) {
             List<Location> availableTiles = new ArrayList<>();
-            for (Location l : world.getEmptySurroundingTiles()) {
-                if (!(world.getTile(l) instanceof NonBlocking)) { // If the tile is not non-blocking (No two non-blocking tiles can be on to each other)
-                    availableTiles.add(l);
+            for (Location location : world.getEmptySurroundingTiles()) {
+                if (!(world.getTile(location) instanceof NonBlocking)) { // If the tile is not non-blocking (No two non-blocking tiles can be on to each other)
+                    availableTiles.add(location);
                 }
             }
             if (availableTiles.size() > 0) { 
-                Location place = availableTiles.get(r.nextInt(availableTiles.size()));
+                Location place = availableTiles.get(new Random().nextInt(availableTiles.size()));
                 world.setTile(place, new Grass());
             }
         }

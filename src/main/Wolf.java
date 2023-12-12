@@ -6,6 +6,7 @@ import itumulator.world.World;
 import static java.util.Arrays.asList;
 
 import java.util.ArrayList;
+import java.util.Random;
 
 /**
  * Wolf class
@@ -43,6 +44,8 @@ public class Wolf extends Predator {
       if (attackForFood(world)){
         return;
       }
+      move(getRandomEmptySurroundingTile(world), world);
+      System.out.println("Wolf move cuz starving");
     }
 
     // if night move towards home
@@ -89,7 +92,7 @@ public class Wolf extends Predator {
       }
     }
 
-    // Attack if wolf is to close
+    // Attack if wolf from other pack is to close
     for (Location location : world.getSurroundingTiles()) {
       if (
         world.getTile(location) instanceof Wolf &&
@@ -101,7 +104,7 @@ public class Wolf extends Predator {
       }
     }
 
-    // Move away from other wolfs if in sight
+    // Move away if wolf from other pack is in sight
     for (Location location : world.getSurroundingTiles(vision)) {
       if (
         world.getTile(location) instanceof Wolf &&
@@ -122,14 +125,18 @@ public class Wolf extends Predator {
         }
       }
     }
+    
+    // 50% for random move 50% for no move
+    if (new Random().nextBoolean()) {
+      move(getRandomEmptySurroundingTile(world), world);
+      System.out.println("Wolf move random");
+      return;
+    }
+    System.out.println("Wolf do nothing");
   }
 
   public int getHp() {
     return hp;
-  }
-
-  public void addHunger(int x) {
-    hunger += x;
   }
 
   @Override

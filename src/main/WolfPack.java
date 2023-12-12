@@ -94,7 +94,7 @@ public class WolfPack
   public void packEat(Wolf mySelf) {
     for (Wolf wolf : pack) {
       if (!wolf.equals(mySelf)) {
-        wolf.addHunger(1);
+        wolf.hunger++;
       }
     }
   }

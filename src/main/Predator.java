@@ -1,11 +1,10 @@
 package main;
 
-import itumulator.executable.DisplayInformation;
 import itumulator.world.Location;
 import itumulator.world.World;
 import java.util.ArrayList;
 
-public class Predator extends Animal {
+abstract public class Predator extends Animal {
 
   protected int damage;
 
@@ -21,10 +20,8 @@ public class Predator extends Animal {
     this.damage = damage;
   }
 
-  public void act(World world) {}
-
   //Predetars attack to get food
-  public boolean attackForFood(World world) {
+  protected boolean attackForFood(World world) {
     //if animal close attack
     for (Location location : world.getSurroundingTiles()) {
       if (
@@ -49,16 +46,10 @@ public class Predator extends Animal {
     return false;
   }
 
-  public void attack(Location location, World world) {
+  protected void attack(Location location, World world) {
     Animal target = (Animal) world.getTile(location);
     target.takeDamage(damage);
   }
 
-  @Override
-  public DisplayInformation getInformation() {
-    // TODO Auto-generated method stub
-    throw new UnsupportedOperationException(
-      "Unimplemented method 'getInformation'"
-    );
-  }
+
 }

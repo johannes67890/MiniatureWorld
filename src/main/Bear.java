@@ -63,6 +63,8 @@ public class Bear extends Predator {
       if (attackForFood(world)) {
         return;
       }
+      move(getRandomEmptySurroundingTile(world), world);
+      System.out.println("Bear move cuz starving");
     }
 
     // check around to attack if other animal is in terratory

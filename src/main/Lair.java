@@ -41,7 +41,7 @@ public class Lair implements Actor, NonBlocking, DynamicDisplayInformationProvid
     /**
      * Removes an animal from the lair
      */
-    public void removeAnimals(World world){
+    private void removeAnimals(World world){
         if(animals.size() > 0 && world.isTileEmpty(world.getLocation(this))) {
             world.setTile(world.getLocation(this), animals.get(0));
             animals.get(0).setInLair(false);

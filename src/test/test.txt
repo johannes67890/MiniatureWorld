@@ -1,4 +1,2 @@
 4
-wolf 1
-rabbit 1
-grass 3
+snake 2

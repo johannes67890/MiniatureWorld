@@ -111,7 +111,7 @@ public class Rabbit extends Animal {
     for (Location location : world.getSurroundingTiles()) {
       if (world.getTile(location) instanceof Rabbit) {
         Rabbit temp = (Rabbit) world.getTile(location);
-        if (temp.isAdult) {
+        if (temp.isAdult && world.getEmptySurroundingTiles().size()!=0) {
           world.setTile(getRandomEmptySurroundingTile(world), new Rabbit());
           return true;
         }
