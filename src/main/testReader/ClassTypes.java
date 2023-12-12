@@ -26,17 +26,6 @@ public enum ClassTypes{
         public Class<?> getClassName(){
             return ReaderClass;
         }
-        }
-    
-
-    
-   
-
-    // public static ReaderTypes.Values getEnumFromValues(String key) {
-    //         for (Values v : Values.values()) {
-    //             if(v.getvalue().equalsIgnoreCase(key)) return v;
-    //         }
-    //     throw new IllegalArgumentException("The type " + key + " does not exist on the list. See ReaderKey.java for the list of types.");
-    // }
+}
     
 

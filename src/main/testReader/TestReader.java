@@ -67,25 +67,21 @@ public class TestReader extends BufferedReader {
 
 
 
-    public HashMap<Class<? extends ClassTypes>, Object> getInstances() throws Exception{
-        HashMap<Class<?  extends ClassTypes>, Object> instances = new HashMap<>();
-        Class<? extends ClassTypes> c = null;
+    public ArrayList<Object> getInstances() throws Exception{
+        ArrayList<Object> instances = new ArrayList<>();
+        Class<?> c = null;
         for (String[] strings : fileContentString) {        
             if(getClass(strings[0]) instanceof Class<?>) {
                 c = getClass(strings[0]);
-                
-                instances.put(c, new Object());
-               
-                
+                instances.add(c);            
             } else if(!(getClass(strings[0]) instanceof Class<?>)) throw new IllegalArgumentException("The type " + strings[0] + " does not exist.");
-            
             
             for (String str : strings) {
                 if(str.matches("\\((.*?)\\)")){ // If the string contains coordinates.
-                    instances.put(c,setCoordinates(str));
+                    instances.add(setCoordinates(str));
                 } 
                 else if(str.contains("-") || isNumeric(str)){ // If the string contains an interval.
-                    instances.put(c,getTypeRange(str));
+                    instances.add(getTypeRange(str));
                 }
             } 
         }   
@@ -100,11 +96,11 @@ public class TestReader extends BufferedReader {
         map.put(clazz, favorite);
     }
 
-    public Class<?  extends ClassTypes> getClass(ClassTypes ClassName){
-        return (Class<? extends ClassTypes>) ClassName.getClassName();
+    public Class<?> getClass(ClassTypes ClassName){
+        return  ClassName.getClassName();
     }
 
-    public Class<? extends ClassTypes> getClass(String str){
+    public Class<?> getClass(String str){
         return getClass(ClassTypes.valueOf(str));
     }
 

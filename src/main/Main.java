@@ -12,7 +12,6 @@ import itumulator.world.Location;
 import itumulator.world.NonBlocking;
 import itumulator.world.World;
 import main.testReader.ClassTypes;
-import main.testReader.ReaderTypes;
 import main.testReader.TestReader;
 
 /**
@@ -32,12 +31,11 @@ public class Main {
         World world = program.getWorld();
 
         try {
-            System.out.println(reader.getInstances());
-            for (Class<?> c : reader.getInstances().keySet()) {
-                if(c.isInstance(ClassTypes.bear)){
-                    System.out.println("true");
-                } 
+            
+            for (Object obj : reader.getInstances()) {
+                                
             }
+            
         } catch (Exception e) {
             System.out.println(e);
         }
