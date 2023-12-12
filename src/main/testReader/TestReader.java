@@ -76,8 +76,9 @@ public class TestReader extends BufferedReader {
         HashMap<Integer, ArrayList<Object>> innerMap = new HashMap<>();
         ArrayList<Object> innerList = new ArrayList<>();
 
+        HashMap<Integer, ArrayList<Object>> temp = new HashMap<>();
+        int i = 0;
         for (String[] strings : fileContentString) {
-            int i = 0;
             innerList = new ArrayList<>();
             for (String str : strings) {
                 if(str.matches("\\((.*?)\\)")){ // If the string contains coordinates.
@@ -93,15 +94,18 @@ public class TestReader extends BufferedReader {
                         continue;
                     } else if(map.containsKey(assignKey(str))){
                         mapKey = assignKey(str);
-                        //innerList = new ArrayList<>();
-                        innerMap = new HashMap<>();
+                        innerList.clear();
+                        innerMap.clear();
+                        temp = map.get(mapKey);
                         i++;
                         continue;
                     }
                     else{
                        mapKey = assignKey(str); 
-                       innerList = new ArrayList<>();
-                       innerMap = new HashMap<>();
+                       innerList.clear();
+                       innerMap.clear();
+                       temp.clear();
+                       continue;
                     }
                 }
                 else { // If the key is null, then we have not found a type.
@@ -110,10 +114,10 @@ public class TestReader extends BufferedReader {
                
                 innerMap.put(i, innerList);
             }
+            temp.putAll(innerMap);
+            map.put(mapKey, temp);
             i++;
-            map.put(mapKey, innerMap);
         }
-
         
         return map;
     }
