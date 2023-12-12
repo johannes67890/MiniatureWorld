@@ -103,6 +103,6 @@ public class Snake extends Predator {
     if(isSleeping){
       return new DisplayInformation(java.awt.Color.black, "snake-small-sleeping");
     }
-    return new DisplayInformation(java.awt.Color.black, "snake");
+    return new DisplayInformation(java.awt.Color.black, "snake-small");
   }
 }

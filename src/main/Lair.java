@@ -18,7 +18,7 @@ public class Lair implements Actor, NonBlocking, DynamicDisplayInformationProvid
     private ArrayList<Animal> animals = new ArrayList<>();
     private String type;
 
-    Lair(String type) {
+    public Lair(String type) {
         this.type = type;
     }
 

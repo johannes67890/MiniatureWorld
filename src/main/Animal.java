@@ -230,6 +230,11 @@ public abstract class Animal
     return list.get(new Random().nextInt(list.size()));
   }
 
+  
+  public int getHunger(){
+    return hunger;
+  }
+
   @Override
   public abstract DisplayInformation getInformation();
 }

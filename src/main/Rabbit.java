@@ -24,7 +24,6 @@ public class Rabbit extends Animal {
   }
 
   public void act(World world) {
-    System.out.println(hunger);
     if (isInLair) {
       return;
     }
@@ -150,6 +149,7 @@ public class Rabbit extends Animal {
     }
     return false;
   }
+
 
   @Override
   public DisplayInformation getInformation() {
