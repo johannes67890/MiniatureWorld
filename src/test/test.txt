@@ -1,2 +1,3 @@
-4
-snake 2
+1
+rabbit 1
+grass 1

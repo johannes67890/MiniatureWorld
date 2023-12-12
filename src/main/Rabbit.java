@@ -24,6 +24,7 @@ public class Rabbit extends Animal {
   }
 
   public void act(World world) {
+    System.out.println(hunger);
     if (isInLair) {
       return;
     }
@@ -111,10 +112,40 @@ public class Rabbit extends Animal {
     for (Location location : world.getSurroundingTiles()) {
       if (world.getTile(location) instanceof Rabbit) {
         Rabbit temp = (Rabbit) world.getTile(location);
-        if (temp.isAdult && world.getEmptySurroundingTiles().size()!=0) {
+        if (temp.isAdult && world.getEmptySurroundingTiles().size() != 0) {
           world.setTile(getRandomEmptySurroundingTile(world), new Rabbit());
           return true;
         }
+      }
+    }
+    return false;
+  }
+
+  @Override
+  protected boolean food(World world) {
+    //try to eat grass
+    if (world.containsNonBlocking(world.getLocation(this))) {
+      if (world.getNonBlocking(world.getLocation(this)) instanceof Grass) {
+        Grass food = (Grass) world.getNonBlocking(world.getLocation(this));
+        hungerPlus(food.getEaten(biteSize, world));
+        return true;
+      }
+    }
+
+    // Go towards food
+    for (Location location : world.getSurroundingTiles(vision)) {
+      if (
+        world.getTile(location) != null &&
+        (
+          (
+            world.containsNonBlocking(location) &&
+            eats.contains(world.getNonBlocking(location).getClass().getName())
+          ) ||
+          eats.contains(world.getTile(location).getClass().getName())
+        )
+      ) {
+        moveTowards(location, world);
+        return true;
       }
     }
     return false;
