@@ -6,9 +6,12 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Random;
 import java.io.IOException;
+import java.lang.reflect.Constructor;
+
 import itumulator.world.Location;
 import itumulator.world.NonBlocking;
 import itumulator.world.World;
+import main.testReader.ClassTypes;
 import main.testReader.ReaderTypes;
 import main.testReader.TestReader;
 
@@ -20,7 +23,7 @@ import main.testReader.TestReader;
  */
 public class Main {
     public static void main(String[] args) throws IOException {
-        Distributer distributior = Distributer.tf2_2;
+        Distributer distributior = Distributer.test;
         TestReader reader = new TestReader(distributior.getUrl());
         int size = reader.getWorldSize();
         int delay = 100;
@@ -28,42 +31,26 @@ public class Main {
         Program program = new Program(size, display_size, delay);
         World world = program.getWorld();
 
-        HashMap<ReaderTypes.Keys, HashMap<Integer, ArrayList<Object>>> map = reader.getMap();
-        System.out.println(map.keySet() + " " + map.values());
-        WolfPack tempPack = null;
-        for (ReaderTypes.Keys key : map.keySet()) {
-            if (key == ReaderTypes.Keys.Wolf) {
-                tempPack = new WolfPack();
-                world.add(tempPack);
+        try {
+            System.out.println(reader.getInstances());
+            for (Class<?> c : reader.getInstances().keySet()) {
+                if(c.isInstance(ClassTypes.bear)){
+                    System.out.println("true");
+                } 
             }
-            for (int i = 0; i < reader.getRandomNumberFromType(key); i++) {
-                Object object = null;
-
-                switch (key) {
-                    case Grass:
-                        object = new Grass();
-                        break;
-                    case Rabbit:
-                        object = new Rabbit();
-                        break;
-                    case Lair:
-                        object = new Lair("rabbit");
-                        break;
-                    case Wolf:
-                        object = new Wolf(tempPack);
-                        break;
-                    case Bear:
-                        object = new Bear(reader.getLocation(key), world);
-                        break;
-                    case Bush:
-                        object = new Bush();
-                        break;
-                    default:
-                        throw new RuntimeException("Not on list");
-                }
-                spawnRandomObj(world, object);
-            }
+        } catch (Exception e) {
+            System.out.println(e);
         }
+       
+
+        // for (Class<?> key : reader.test().getClasses()) {
+        //     // if (key == ReaderTypes.Wolf) {
+        //     //     tempPack = new WolfPack();
+        //     //     world.add(tempPack);
+        //     // }
+        //     for (int i = 0; i < reader.getRandomNumberFromType(key); i++) {
+        //         spawnRandomObj(world, key);
+        //     }
 
         program.show();
     }

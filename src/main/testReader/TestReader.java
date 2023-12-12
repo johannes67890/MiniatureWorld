@@ -8,6 +8,10 @@ import java.util.stream.IntStream;
 import java.lang.Object;
 
 import itumulator.world.Location;
+import itumulator.world.World;
+import main.Bear;
+
+import java.lang.reflect.*;
 
 
 /**
@@ -24,6 +28,7 @@ public class TestReader extends BufferedReader {
     private String filePath;
     private ArrayList<String[]> fileContentString;
     private int worldSize;
+    private HashMap<Class<?>, Object> map = new HashMap<>();
     /**
      * Constructor for the TestReader class.
      * @param filePath - The path to the file.
@@ -61,69 +66,46 @@ public class TestReader extends BufferedReader {
     }
 
 
-    
-    /**
-     * Method that returns the content of the file as a HashMap.
-     * 
-     * The HashMap contains the type as a key (type String) and the values as a list of objects.
-     * 
-     * @return HashMap<String, ArrayList<Object>>
-     */
-    public HashMap<ReaderTypes.Keys, HashMap<Integer, ArrayList<Object>>> getMap(){
-        HashMap<ReaderTypes.Keys, HashMap<Integer, ArrayList<Object>>> map = new HashMap<>();
 
-        ReaderTypes.Keys mapKey = null;
-        HashMap<Integer, ArrayList<Object>> innerMap = new HashMap<>();
-        ArrayList<Object> innerList = new ArrayList<>();
-
-        HashMap<Integer, ArrayList<Object>> temp = new HashMap<>();
-        int i = 0;
-        for (String[] strings : fileContentString) {
-            innerList = new ArrayList<>();
+    public HashMap<Class<? extends ClassTypes>, Object> getInstances() throws Exception{
+        HashMap<Class<?  extends ClassTypes>, Object> instances = new HashMap<>();
+        Class<? extends ClassTypes> c = null;
+        for (String[] strings : fileContentString) {        
+            if(getClass(strings[0]) instanceof Class<?>) {
+                c = getClass(strings[0]);
+                
+                instances.put(c, new Object());
+               
+                
+            } else if(!(getClass(strings[0]) instanceof Class<?>)) throw new IllegalArgumentException("The type " + strings[0] + " does not exist.");
+            
+            
             for (String str : strings) {
                 if(str.matches("\\((.*?)\\)")){ // If the string contains coordinates.
-                    //if(innerMap.values().stream().anyMatch(c -> c instanceof Location)) throw new IllegalArgumentException("Input contains more than one location. A location has already been set.");
-                    innerList.add(setCoordinates(str));
+                    instances.put(c,setCoordinates(str));
                 } 
-                else if(str.contains("-") || isNumeric(str) && mapKey != null){ // If the string contains an interval.
-                    innerList.add(getTypeRange(str));
-                } else if(isNumeric(str) && mapKey == null){ // If the key is null, then we have not found a type yet.
-                    continue;
-                } else if(!isNumeric(str) && mapKey != null){ // Reset the key and values. Ready for the next type.
-                    if(mapKey.getKey().equals(str)) { // if there are mutible of the same type.
-                        continue;
-                    } else if(map.containsKey(assignKey(str))){
-                        mapKey = assignKey(str);
-                        innerList.clear();
-                        innerMap.clear();
-                        temp = map.get(mapKey);
-                        i++;
-                        continue;
-                    }
-                    else{
-                       mapKey = assignKey(str); 
-                       innerList.clear();
-                       innerMap.clear();
-                       temp.clear();
-                       continue;
-                    }
+                else if(str.contains("-") || isNumeric(str)){ // If the string contains an interval.
+                    instances.put(c,getTypeRange(str));
                 }
-                else { // If the key is null, then we have not found a type.
-                    mapKey = assignKey(str);
-                }
-               
-                innerMap.put(i, innerList);
-            }
-            temp.putAll(innerMap);
-            map.put(mapKey, temp);
-            i++;
-        }
-        
-        return map;
+            } 
+        }   
+        return instances;
     }
 
-    public ReaderTypes.Keys assignKey(String str) {
-            return ReaderTypes.Keys.getEnumFromKeys(str);
+    public <T> T getT(Class<T> clazz) {
+        return clazz.cast(map.get(clazz));
+    }
+
+    public <T> void putT(Class<T> clazz, T favorite) {
+        map.put(clazz, favorite);
+    }
+
+    public Class<?  extends ClassTypes> getClass(ClassTypes ClassName){
+        return (Class<? extends ClassTypes>) ClassName.getClassName();
+    }
+
+    public Class<? extends ClassTypes> getClass(String str){
+        return getClass(ClassTypes.valueOf(str));
     }
 
     /**
@@ -157,11 +139,11 @@ public class TestReader extends BufferedReader {
      * @param type - 
      * @return int - The random number.
      */
-    public int getRandomNumberFromType(ReaderTypes.Keys key){
+    public int getRandomNumberFromType(ReaderTypes.ClassTypes className){
         // get all object values of the key
-        IntStream stream = this.getMap().get(key).values().stream().filter(c -> c instanceof IntStream).mapToInt(c -> ((IntStream) c).findAny().getAsInt());    
+        //IntStream stream = this.getMap().get(key).values().stream().filter(c -> c instanceof IntStream).mapToInt(c -> ((IntStream) c).findAny().getAsInt());    
         
-        return stream.findAny().getAsInt();
+       // return stream.findAny().getAsInt();
     }
 
     /**
@@ -171,12 +153,7 @@ public class TestReader extends BufferedReader {
      * @param type - The type of the location.
      * @return Location - The random location.
      */
-    public Location getLocation(ReaderTypes.Keys key){
-        if(!this.getMap().containsKey(key)) throw new IllegalArgumentException("The type " + key + " does not exist.");
-        HashMap<String, Object> value = this.getMap().get(key).get("Location") != null ? this.getMap().get(key) : this.getMap().get(key);
-        if(value.get(key) instanceof Location){
-            return (Location) value.get(key);
-        } else return null;
+    public Location getLocation(ReaderTypes.ClassTypes className){
     }
     
     /**
