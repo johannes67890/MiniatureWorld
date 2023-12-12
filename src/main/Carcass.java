@@ -42,6 +42,13 @@ public class Carcass
         mass = 8;
       }
     }
+    if (type instanceof Snake) {
+      if (type.isAdult) {
+        mass = 6;
+      } else {
+        mass = 4;
+      }
+    }
   }
 
   public void act(World world) {

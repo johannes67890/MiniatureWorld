@@ -21,6 +21,6 @@ public class SnakeEgg implements Actor, DynamicDisplayInformationProvider {
 
   @Override
   public DisplayInformation getInformation() {
-    return new DisplayInformation(java.awt.Color.white);
+    return new DisplayInformation(java.awt.Color.white, "snake-egg");
   }
 }

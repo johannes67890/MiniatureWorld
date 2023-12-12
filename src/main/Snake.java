@@ -94,9 +94,15 @@ public class Snake extends Predator {
 
   @Override
   public DisplayInformation getInformation() {
-    if (!isAdult) {
-      return new DisplayInformation(java.awt.Color.blue);
+    if (isAdult && isSleeping) {
+      return new DisplayInformation(java.awt.Color.black, "snake-sleeping");
     }
-    return new DisplayInformation(java.awt.Color.black);
+    if (isAdult) {
+      return new DisplayInformation(java.awt.Color.black, "snake");
+    }
+    if(isSleeping){
+      return new DisplayInformation(java.awt.Color.black, "snake-small-sleeping");
+    }
+    return new DisplayInformation(java.awt.Color.black, "snake");
   }
 }
