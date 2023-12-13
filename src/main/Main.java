@@ -6,11 +6,11 @@ import java.util.*;
 import java.util.stream.IntStream;
 import java.io.IOException;
 import java.lang.reflect.Constructor;
+import java.time.InstantSource;
 
 import itumulator.world.Location;
 import itumulator.world.NonBlocking;
 import itumulator.world.World;
-import main.testReader.ClassTypes;
 import main.testReader.TestReader;
 
 /**
@@ -21,7 +21,7 @@ import main.testReader.TestReader;
  */
 public class Main {
     public static void main(String[] args) throws IOException {
-        Distributer distributior = Distributer.test;
+        Distributer distributior = Distributer.t2_2a;
         TestReader reader = new TestReader(distributior.getUrl());
         int size = reader.getWorldSize();
         int delay = 100;
@@ -49,32 +49,22 @@ public class Main {
                         System.out.println(constructor);
                         continue;
                     } 
-
-                    parameters.put(obj.getClass(), obj);
-         
-
-                    // if(obj instanceof IntStream) parameters.put(IntStream.class, (IntStream) obj);
-                    // if(obj instanceof Location) parameters.put(Location.class, (Location) obj);
-                  
-                    // spawnRandomObj(world, constructor.newInstance());
-
-                            // constructor.setAccessible(true);
-                            // Class<?>[] parameterTypes = constructor.getParameterTypes();
-                            // if (parameterTypes.length > 0) {
-                            //     if(key == ClassTypes.bear.getType()){
-                            //         Object instance = constructor.newInstance(Location.class.cast(new Location(2, 3)), world);
-                            //     spawnRandomObj(world, instance);
-
-                            //     }
-                            // } else spawnRandomObj(world, constructor.newInstance());
+                    if(obj instanceof IntStream) {
+                        parameters.put(IntStream.class, obj);
+                    } else parameters.put(obj.getClass(), obj);
                 }
-                Class<?> intStreamClass = IntStream.class;
-                int t = getRandomNumberFromStream((IntStream) parameters.get(intStreamClass));
-                System.out.println(t);
-                // for (int i = 0; i < getRandomNumberFromStream((IntStream) parameters.get(IntStream.class)); i++) {
-                //     System.out.println(i);
-                // }
-                // spawnRandomObj(world, constructor.newInstance(parameters.get(key)));
+                IntStream ClassStream = (IntStream) parameters.get(IntStream.class);
+               
+                int spawnAmount = getRandomNumberFromStream(ClassStream);
+                 
+                for (int i = 0; i < spawnAmount; i++) {
+                    parameters.remove(IntStream.class);
+                    if(parameters.size() == 0) {
+                        spawnRandomObj(world, constructor.newInstance());
+                        continue;
+                    }
+                    spawnRandomObj(world, constructor.newInstance(parameters.get(key)));
+                }
             }
         } catch (Exception e) {
             System.out.println(e);
