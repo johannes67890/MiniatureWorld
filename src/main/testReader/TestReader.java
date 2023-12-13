@@ -88,7 +88,7 @@ public class TestReader extends BufferedReader {
                 else if(str.contains("-") || isNumeric(str)){ // If the string contains an interval.
                     objects.push(getTypeRange(str));
                 }
-
+                
             } 
             instances.add(objects);
         }   

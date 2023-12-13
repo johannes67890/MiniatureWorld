@@ -6,7 +6,6 @@ import java.util.*;
 import java.util.stream.IntStream;
 import java.io.IOException;
 import java.lang.reflect.Constructor;
-import java.time.InstantSource;
 
 import itumulator.world.Location;
 import itumulator.world.NonBlocking;
@@ -21,7 +20,7 @@ import main.testReader.TestReader;
  */
 public class Main {
     public static void main(String[] args) throws IOException {
-        Distributer distributior = Distributer.t2_2a;
+        Distributer distributior = Distributer.t1_3b;
         TestReader reader = new TestReader(distributior.getUrl());
         int size = reader.getWorldSize();
         int delay = 100;
@@ -34,7 +33,10 @@ public class Main {
             Iterator<Object> iterator = Stacks.iterator();
             Class<?> key = null;
             Constructor<?> constructor = null;
+            
             HashMap<Class<?>, Object> parameters = new HashMap<Class<?>, Object>();
+            WolfPack wolfPack = new WolfPack();
+
             while (iterator.hasNext()) {
                 Object obj = iterator.next();
                     if(obj instanceof Class<?>) {
@@ -46,12 +48,18 @@ public class Main {
                             Class<?>[] pTypes = constr.getParameterTypes();
                             constructor = key.getDeclaredConstructor(pTypes);
                         }
-                        System.out.println(constructor);
                         continue;
                     } 
+
+                    if(key == Wolf.class){
+                        world.add(wolfPack);
+                        parameters.put(WolfPack.class, wolfPack);
+                        key = WolfPack.class;
+                    }
                     if(obj instanceof IntStream) {
                         parameters.put(IntStream.class, obj);
-                    } else parameters.put(obj.getClass(), obj);
+                    }else parameters.put(obj.getClass(), obj);
+                    
                 }
                 IntStream ClassStream = (IntStream) parameters.get(IntStream.class);
                
@@ -59,16 +67,18 @@ public class Main {
                  
                 for (int i = 0; i < spawnAmount; i++) {
                     parameters.remove(IntStream.class);
+                    
                     if(parameters.size() == 0) {
                         spawnRandomObj(world, constructor.newInstance());
                         continue;
                     }
                     spawnRandomObj(world, constructor.newInstance(parameters.get(key)));
                 }
-            }
+            } 
         } catch (Exception e) {
-            System.out.println(e);
+          System.out.println("Exception encountered invoking: " + e);
         }
+
         program.show();
     }
 
