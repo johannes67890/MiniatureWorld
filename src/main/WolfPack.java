@@ -31,7 +31,7 @@ public class WolfPack implements Actor, DynamicDisplayInformationProvider, NonBl
         // Set lair
         if (home == null) {
             if (!world.containsNonBlocking(world.getLocation(getLeader()))) {
-                home = new Lair(ClassTypes.wolf);
+                home = new Lair();
                 world.setTile(world.getLocation(getLeader()), home);
             }
         }

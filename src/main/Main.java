@@ -20,7 +20,7 @@ import main.testReader.TestReader;
  */
 public class Main {
     public static void main(String[] args) throws IOException {
-        Distributer distributior = Distributer.t1_3b;
+        Distributer distributior = Distributer.t2_4a;
         TestReader reader = new TestReader(distributior.getUrl());
         int size = reader.getWorldSize();
         int delay = 100;

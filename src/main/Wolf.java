@@ -94,7 +94,7 @@ public class Wolf extends Animal implements Predator {
             if (world.containsNonBlocking(location)) {
                 if (world.getNonBlocking(location) instanceof Lair) {
                     Lair temp = (Lair) world.getNonBlocking(location);
-                    if (temp.getType() == ClassTypes.wolf && !myPack.getHome(world).equals(temp)) {
+                    if (temp.getAnimals().getClass().isInstance(ClassTypes.wolf) && !myPack.getHome(world).equals(temp)) {
                         moveAway(location, world);
                         System.out.println("Wolf moved away from other lair");
                         return;

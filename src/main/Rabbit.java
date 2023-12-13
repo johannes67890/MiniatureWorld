@@ -30,12 +30,11 @@ public class Rabbit extends Animal {
         }
 
 
-        // if the rabbit is on a lair, and doesn't have a home, set the burrow as its
-        // home
+        // if the rabbit is on a lair, and doesn't have a home, set the burrow as it's home.
         if (world.containsNonBlocking(world.getLocation(this))) {
             if (home == null && world.getNonBlocking(world.getLocation(this)) instanceof Lair) {
                 Lair temp = (Lair) world.getNonBlocking(world.getLocation(this));
-                if (temp.getType() == ClassTypes.rabbit) {
+                if (temp.getAnimals().getClass().isInstance(ClassTypes.rabbit)) {
                     home = temp;
                 }
             }
@@ -105,8 +104,9 @@ public class Rabbit extends Animal {
 
     private boolean digBurrow(World world) {
         if (!world.containsNonBlocking(world.getLocation(this))) {
-            home = new Lair(ClassTypes.rabbit);
+            home = new Lair();
             world.setTile(world.getLocation(this), home);
+            home.addAnimal(this, world);
             return true;
         }
         return false;
@@ -134,7 +134,7 @@ public class Rabbit extends Animal {
 
     @Override
     public DisplayInformation getInformation() {
-        if (isAdult)
+        if (isAdult) 
             return new DisplayInformation(java.awt.Color.black, "rabbit-large");
         return new DisplayInformation(java.awt.Color.black, "rabbit-small");
     }
