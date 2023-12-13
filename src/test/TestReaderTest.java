@@ -26,10 +26,5 @@ public class TestReaderTest {
 
     }
 
-    @Test
-    public void testTeoro() {
-        Assert.assertEquals(new Location(2, 4), testReader.getLocation());
-    }
-   
 }
 

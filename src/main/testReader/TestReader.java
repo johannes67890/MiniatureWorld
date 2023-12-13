@@ -4,6 +4,7 @@ import java.io.*;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.HashMap;
+import java.util.Stack;
 import java.util.stream.IntStream;
 import java.lang.Object;
 
@@ -28,7 +29,7 @@ public class TestReader extends BufferedReader {
     private String filePath;
     private ArrayList<String[]> fileContentString;
     private int worldSize;
-    private HashMap<Class<?>, Object> map = new HashMap<>();
+
     /**
      * Constructor for the TestReader class.
      * @param filePath - The path to the file.
@@ -67,37 +68,35 @@ public class TestReader extends BufferedReader {
 
 
 
-    public ArrayList<Object> getInstances() throws Exception{
-        ArrayList<Object> instances = new ArrayList<>();
+    public ArrayList<Stack<Object>> getInstances() throws Exception{
+        ArrayList<Stack<Object>> instances = new ArrayList<Stack<Object>>();
+        Stack<Object> objects = new Stack<Object>();
         Class<?> c = null;
+
+
         for (String[] strings : fileContentString) {        
+            objects = new Stack<Object>();
             if(getClass(strings[0]) instanceof Class<?>) {
                 c = getClass(strings[0]);
-                instances.add(c);            
+                objects.push(c);        
             } else if(!(getClass(strings[0]) instanceof Class<?>)) throw new IllegalArgumentException("The type " + strings[0] + " does not exist.");
             
             for (String str : strings) {
                 if(str.matches("\\((.*?)\\)")){ // If the string contains coordinates.
-                    instances.add(setCoordinates(str));
+                    objects.push(setCoordinates(str));
                 } 
                 else if(str.contains("-") || isNumeric(str)){ // If the string contains an interval.
-                    instances.add(getTypeRange(str));
+                    objects.push(getTypeRange(str));
                 }
+
             } 
+            instances.add(objects);
         }   
         return instances;
     }
 
-    public <T> T getT(Class<T> clazz) {
-        return clazz.cast(map.get(clazz));
-    }
-
-    public <T> void putT(Class<T> clazz, T favorite) {
-        map.put(clazz, favorite);
-    }
-
     public Class<?> getClass(ClassTypes ClassName){
-        return  ClassName.getClassName();
+        return  ClassName.getType();
     }
 
     public Class<?> getClass(String str){
@@ -125,33 +124,6 @@ public class TestReader extends BufferedReader {
         else return null;
     } 
 
-
-    /**
-     * Returns a random number for a given type. 
-     * 
-     * The random number is in the range of the type. See {@link getTypeRange} for the range.
-     * 
-     * @throws IllegalArgumentException If the type does not exist.
-     * @param type - 
-     * @return int - The random number.
-     */
-    public int getRandomNumberFromType(ReaderTypes.ClassTypes className){
-        // get all object values of the key
-        //IntStream stream = this.getMap().get(key).values().stream().filter(c -> c instanceof IntStream).mapToInt(c -> ((IntStream) c).findAny().getAsInt());    
-        
-       // return stream.findAny().getAsInt();
-    }
-
-    /**
-     * Returns a random location for a given type. If the type does not have a location, null is returned.
-     * 
-     * @throws IllegalArgumentException If the type does not exist.
-     * @param type - The type of the location.
-     * @return Location - The random location.
-     */
-    public Location getLocation(ReaderTypes.ClassTypes className){
-    }
-    
     /**
      * Returns the size of the world.
      * @return int

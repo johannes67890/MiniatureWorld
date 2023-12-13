@@ -1,3 +1,4 @@
 7
-bear (2,4)
-bear (2,3)
+bear 1 (2,4)
+rabbit 1
+bear 1 (2,3)
