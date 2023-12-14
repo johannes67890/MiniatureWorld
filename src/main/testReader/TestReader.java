@@ -72,7 +72,9 @@ public class TestReader extends BufferedReader {
         Class<?> c = null; // The class of the current instance, on runtime.
 
 
-        for (String[] strings : fileContentString) {        
+        for (String[] strings : fileContentString) {     
+            objects = new Stack<Object>();
+   
             // If the first line of the file-line is a class.
             if(getClass(strings[0]) instanceof Class<?>) {
                 c = getClass(strings[0]);

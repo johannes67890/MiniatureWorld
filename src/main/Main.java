@@ -34,12 +34,14 @@ public class Main {
             Class<?> key = null;
             Constructor<?> constructor = null;
             
+            // Create a hashmap with the constructor parameters.
             HashMap<Class<?>, Object> parameters = new HashMap<Class<?>, Object>();
             WolfPack wolfPack = new WolfPack();
 
             while (iterator.hasNext()) {
                 Object obj = iterator.next();
-                    if(obj instanceof Class<?>) {
+                    // Set the current key and constructor.
+                    if(obj instanceof Class<?>) { // 
                         key = (Class<?>) obj;
 
                         Constructor<?>[] constructors = key.getDeclaredConstructors();
@@ -50,7 +52,7 @@ public class Main {
                         }
                         continue;
                     } 
-
+                    // set the parameters for the class constructor.
                     if(key == Wolf.class){
                         world.add(wolfPack);
                         parameters.put(WolfPack.class, wolfPack);
@@ -61,16 +63,21 @@ public class Main {
                     }else parameters.put(obj.getClass(), obj);
                     
                 }
+                //
+                // Spawn the object(s) in the world.
+                //
                 IntStream ClassStream = (IntStream) parameters.get(IntStream.class);
-                int spawnAmount = getRandomNumberFromStream(ClassStream);
+            
+                int spawnAmount = getRandomNumberFromStream(ClassStream); // Get the amount of objects to spawn from parameters.
+                 
                 for (int i = 0; i < spawnAmount; i++) {
-                    parameters.remove(IntStream.class);
+                    parameters.remove(IntStream.class); // Remove the IntStream from the parameters. We don't need it anymore.
                     
-                    if(parameters.size() == 0) {
+                    if(parameters.size() == 0) { // If the parameters are empty, spawn the object without constructor parameters.
                         spawnRandomObj(world, constructor.newInstance());
                         continue;
                     }
-                spawnRandomObj(world, constructor.newInstance(parameters.get(key)));
+                    spawnRandomObj(world, constructor.newInstance(parameters.get(key)));
                 }
             } 
         } catch (Exception e) {
