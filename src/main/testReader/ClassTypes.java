@@ -6,6 +6,7 @@ import main.Carcass;
 import main.Grass;
 import main.Lair;
 import main.Rabbit;
+import main.Snake;
 import main.Wolf;
 
 /*
@@ -19,7 +20,9 @@ public enum ClassTypes{
     rabbit(Rabbit.class),
     wolf(Wolf.class),
     bear(Bear.class),
+    snake(Snake.class),
     carcass(Carcass.class);
+
 
 
     private Class<?> ReaderClass;

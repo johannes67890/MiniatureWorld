@@ -86,11 +86,10 @@ public class TestReader extends BufferedReader {
                 if(str.matches("\\((.*?)\\)")){ // If the string contains coordinates.
                     objects.push(setCoordinates(str));
                 } 
-                else if(str.contains("-") || isNumeric(str)){ // If the string contains an interval.
-                    objects.push(getTypeRange(str));
-                } 
                 if(str.equals("fungi") && c == Carcass.class){
                     objects.push(true);
+                } else if(str.contains("-") || isNumeric(str)){ // If the string contains an interval.
+                    objects.push(getTypeRange(str));
                 } 
             } 
             instances.add(objects);

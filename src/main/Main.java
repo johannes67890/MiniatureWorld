@@ -22,7 +22,7 @@ import main.testReader.TestReader;
  */
 public class Main {
     public static void main(String[] args) throws IOException {
-        Distributer distributior = Distributer.tf3_1a;
+        Distributer distributior = Distributer.test;
         TestReader reader = new TestReader(distributior.getUrl());
         int size = reader.getWorldSize();
         int delay = 100;
@@ -37,7 +37,8 @@ public class Main {
             Constructor<?> constructor = null;
             
             // Create a hashmap with the constructor parameters.
-            HashMap<Class<?>, Object> parameters = new HashMap<Class<?>, Object>();
+            Stack<Object> parameters = new Stack<Object>();
+            IntStream ClassStream = null;
             WolfPack wolfPack = new WolfPack();
 
             while (iterator.hasNext()) {
@@ -54,37 +55,37 @@ public class Main {
                         }
                         continue;
                     } 
-                    // set the parameters for the class constructor.
                     if(key == Wolf.class){
                         world.add(wolfPack);
-                        parameters.put(WolfPack.class, wolfPack);
+                        parameters.add(wolfPack);
                         key = WolfPack.class;
                     }
-                    
                     if(obj instanceof IntStream) {
-                        parameters.put(IntStream.class, obj);
-                    }else parameters.put(obj.getClass(), obj);
+                      ClassStream = (IntStream) obj;
+                    }else parameters.add(obj);
+                    // set the parameters for the class constructor.
                     
                 }
                 //
                 // Spawn the object(s) in the world.
-                //
-                IntStream ClassStream = (IntStream) parameters.get(IntStream.class);
-            
+                //            
                 int spawnAmount = getRandomNumberFromStream(ClassStream); // Get the amount of objects to spawn from parameters.
                  
                 for (int i = 0; i < spawnAmount; i++) {
                     parameters.remove(IntStream.class); // Remove the IntStream from the parameters. We don't need it anymore.
                     
+                    if(key == Carcass.class){
+                      parameters.add(new Wolf(new WolfPack()));
+                    }
                     if(parameters.size() == 0 && key == Bear.class){ // If the bear has no set Location, spawn it at a random location. 
                       Location loc = null;
                         spawnRandomObj(world, constructor.newInstance(loc));
                         continue;
-                    }else if(parameters.size() == 0) { // If the parameters are empty, spawn the object without constructor parameters.
+                    } else if(parameters.size() == 0) { // If the parameters are empty, spawn the object without constructor parameters.
                         spawnRandomObj(world, constructor.newInstance());
                         continue;
                     }
-                    spawnRandomObj(world, constructor.newInstance(parameters.get(key)));
+                    spawnRandomObj(world, constructor.newInstance(parameters.toArray()));
                 }
             } 
         } catch (Exception e) {
