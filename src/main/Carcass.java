@@ -15,11 +15,10 @@ public class Carcass
   private int mass;
   private Fungus myFungus = null;
   private boolean hasFungus;
+  private boolean shouldHaveFungus = false;
 
-  Carcass(Animal type, boolean shouldHaveFungus, World world) {
-    if(shouldHaveFungus){
-      addFungus(world);
-    }
+  Carcass(Animal type, boolean shouldHaveFungus) {
+    this.shouldHaveFungus = shouldHaveFungus;
 
     if (type instanceof Rabbit) {
       if (type.isAdult) {
@@ -52,6 +51,13 @@ public class Carcass
   }
 
   public void act(World world) {
+if(shouldHaveFungus){
+      addFungus(world);
+      shouldHaveFungus = false;
+    }
+
+
+
     //theres a 20% chance the carcass decays
     if(new Random().nextInt(5)==0){
         mass--;
@@ -88,7 +94,7 @@ public class Carcass
   }
 
   public void addFungus(World world) {
-    myFungus = new Fungus(this, world);
+    myFungus = new Fungus(this, world.getLocation(this));
     hasFungus = true;
     world.add(myFungus);
   }
