@@ -21,12 +21,13 @@ public class Wolf extends Predator {
   private WolfPack myPack;
 
   public Wolf(WolfPack pack) {
-    super(15, 30, 2,4, new ArrayList<>(asList("main.Carcass")), 6);
+    super(15, 30, 2,4, new ArrayList<>(asList("Carcass")), 6);
     myPack = pack;
     myPack.addWolf(this);
   }
 
   public void act(World world) {
+    System.out.println(hunger);
     // if in lair dont do anything
     if (isInLair) {
       return;
@@ -34,6 +35,19 @@ public class Wolf extends Predator {
 
 
     if (life(world)) {
+      return;
+    }
+    // if night move towards home
+    if (world.isNight() && myPack.getHome(world) != null) {
+      if (
+        world.getLocation(this).equals(world.getLocation(myPack.getHome(world)))
+      ) {
+        myPack.addToHome(this, world);
+        System.out.println("Wolf enters home");
+        return;
+      }
+      moveTowards(world.getLocation(myPack.getHome(world)), world);
+      System.out.println("Wolf move to home");
       return;
     }
 
@@ -49,19 +63,6 @@ public class Wolf extends Predator {
       System.out.println("Wolf move cuz starving");
     }
 
-    // if night move towards home
-    if (world.isNight() && myPack.getHome(world) != null) {
-      if (
-        world.getLocation(this).equals(world.getLocation(myPack.getHome(world)))
-      ) {
-        myPack.addToHome(this, world);
-        System.out.println("Wolf enters home");
-        return;
-      }
-      moveTowards(world.getLocation(myPack.getHome(world)), world);
-      System.out.println("Wolf move to home");
-      return;
-    }
 
     // If far way from leader, go towards leader
     if (world.isOnTile(myPack.getLeader())) {

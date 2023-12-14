@@ -26,6 +26,8 @@ public class RabbitTest {
     // Test if a rabbit can die of old age
     @Test
     public void k1_2b() {
+        program = new Program(1, 800, 100);
+        world = program.getWorld();
         Location location = new Location(0, 0);
         world.setCurrentLocation(location);
         world.setTile(location, rabbit);
@@ -86,7 +88,7 @@ public class RabbitTest {
     // Also covers k1-3b
     @Test
     public void k1_2g() {
-        Lair lair = new Lair("rabbit");
+        Lair lair = new Lair();
         Location location = new Location(0, 0);
         world.setCurrentLocation(location);
         world.setTile(location, rabbit);
