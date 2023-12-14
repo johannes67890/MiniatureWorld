@@ -2,8 +2,6 @@ package main;
 
 import java.util.Set;
 import itumulator.executable.DisplayInformation;
-import itumulator.executable.DynamicDisplayInformationProvider;
-import itumulator.simulator.Actor;
 import itumulator.world.Location;
 import itumulator.world.World;
 import java.util.Random;
@@ -21,17 +19,14 @@ public class Bear extends Animal implements Predator {
 
     private final int damage = 6;
 
-    public Bear(Location territoryC, World world) {
+    public Bear(Location territoryC) {
         super(30, 30, 2);
-        if (territoryC == null) {
-            this.territoryC = new Location(new Random().nextInt(world.getSize()), new Random().nextInt(world.getSize()));
-        } else {
-            this.territoryC = territoryC;
-        }
-        this.territory = world.getSurroundingTiles(this.territoryC, 2);
     }
 
+
+
     public void act(World world) {
+        setTerritory(territoryC, world);
         if(life(world)){
             return;
         }
@@ -82,6 +77,15 @@ public class Bear extends Animal implements Predator {
         System.out.println("Bear move towards C");
 
         
+    }
+
+    public void setTerritory(Location territoryC, World world){
+        if (territoryC == null) {
+            this.territoryC = new Location(new Random().nextInt(world.getSize()), new Random().nextInt(world.getSize()));
+        } else {
+            this.territoryC = territoryC;
+        }
+        this.territory = world.getSurroundingTiles(this.territoryC, 2);
     }
 
     public void attack(Location location, World world) {

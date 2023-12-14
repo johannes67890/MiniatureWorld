@@ -1,10 +1,12 @@
 package main;
 
 import itumulator.executable.Program;
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.Random;
+
+import java.util.*;
+import java.util.stream.IntStream;
 import java.io.IOException;
+import java.lang.reflect.Constructor;
+
 import itumulator.world.Location;
 import itumulator.world.NonBlocking;
 import itumulator.world.World;
@@ -18,52 +20,87 @@ import main.testReader.TestReader;
  */
 public class Main {
     public static void main(String[] args) throws IOException {
-        Distributer distributior = Distributer.test;
+        Distributer distributior = Distributer.t2_4a;
         TestReader reader = new TestReader(distributior.getUrl());
         int size = reader.getWorldSize();
         int delay = 100;
         int display_size = 800;
         Program program = new Program(size, display_size, delay);
         World world = program.getWorld();
+        
+        try {    
+        for (Stack<Object> Stacks : reader.getInstances()) {
+            Iterator<Object> iterator = Stacks.iterator();
+            Class<?> key = null;
+            Constructor<?> constructor = null;
+            
+            // Create a hashmap with the constructor parameters.
+            HashMap<Class<?>, Object> parameters = new HashMap<Class<?>, Object>();
+            WolfPack wolfPack = new WolfPack();
 
-        HashMap<String, ArrayList<Object>> map = reader.getMap();
-        WolfPack tempPack = null;
-        for (String key : map.keySet()) {
-            key = reader.filterType(key); // Filter the type for duplicated types (e.g. wolf and wolf_1)
-            if (key.equals("wolf")) {
-                tempPack = new WolfPack();
-                world.add(tempPack);
-            }
-            for (int i = 0; i < reader.getRandomNumberFromType(key); i++) {
-                Object object = null;
-                switch (key) {
-                    case "grass":
-                        object = new Grass();
-                        break;
-                    case "rabbit":
-                        object = new Rabbit();
-                        break;
-                    case "burrow":
-                        object = new Lair("rabbit");
-                        break;
-                    case "wolf":
-                        object = new Wolf(tempPack);
-                        break;
-                    case "bear":
-                        object = new Bear(reader.getLocation(key), world);
-                        break;
-                    case "berry":
-                        object = new Bush();
-                        break;
-                    default:
-                        throw new RuntimeException("Not on list");
+            while (iterator.hasNext()) {
+                Object obj = iterator.next();
+                    // Set the current key and constructor.
+                    if(obj instanceof Class<?>) { // 
+                        key = (Class<?>) obj;
+
+                        Constructor<?>[] constructors = key.getDeclaredConstructors();
+                        for (Constructor<?> constr : constructors) {
+                            constr.setAccessible(true);
+                            Class<?>[] pTypes = constr.getParameterTypes();
+                            constructor = key.getDeclaredConstructor(pTypes);
+                        }
+                        continue;
+                    } 
+                    // set the parameters for the class constructor.
+                    if(key == Wolf.class){
+                        world.add(wolfPack);
+                        parameters.put(WolfPack.class, wolfPack);
+                        key = WolfPack.class;
+                    }
+                    if(obj instanceof IntStream) {
+                        parameters.put(IntStream.class, obj);
+                    }else parameters.put(obj.getClass(), obj);
+                    
                 }
-                spawnRandomObj(world, object);
-            }
+                //
+                // Spawn the object(s) in the world.
+                //
+                IntStream ClassStream = (IntStream) parameters.get(IntStream.class);
+            
+                int spawnAmount = getRandomNumberFromStream(ClassStream); // Get the amount of objects to spawn from parameters.
+                 
+                for (int i = 0; i < spawnAmount; i++) {
+                    parameters.remove(IntStream.class); // Remove the IntStream from the parameters. We don't need it anymore.
+                    
+                    if(parameters.size() == 0) { // If the parameters are empty, spawn the object without constructor parameters.
+                        spawnRandomObj(world, constructor.newInstance());
+                        continue;
+                    }
+                    spawnRandomObj(world, constructor.newInstance(parameters.get(key)));
+                }
+            } 
+        } catch (Exception e) {
+          System.out.println("Exception encountered invoking: " + e);
         }
 
         program.show();
     }
+
+     /**
+     * Returns a random number for a given type. 
+     * 
+     * The random number is in the range of the type. See {@link getTypeRange} for the range.
+     * 
+     * @throws IllegalArgumentException If the type does not exist.
+     * @param type - 
+     * @return int - The random number.
+     */
+    public static int getRandomNumberFromStream(IntStream stream){
+        // Returns a random number from the stream.
+        return stream.findAny().getAsInt();
+    }
+
 
     /**
      * Spawns a random object in the world.

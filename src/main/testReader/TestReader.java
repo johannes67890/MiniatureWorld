@@ -2,19 +2,18 @@ package main.testReader;
 
 import java.io.*;
 import java.util.ArrayList;
-import java.util.HashMap;
+import java.util.Stack;
 import java.util.stream.IntStream;
 import java.lang.Object;
 
 import itumulator.world.Location;
 
-
 /**
- * This class is used to read the file and return the content of the file.
+ * TestReader is used to read a test file and return the content.
  * 
  * @param filePath - The path to the file.
  * @param fileContent - The content of the file as a char array.
- * @param fileContentString - The content of the file as a string.
+ * @param fileContentString - The content of the file as a string.W
  * 
  * @throws IOException
  * @throws FileNotFoundException
@@ -22,6 +21,7 @@ import itumulator.world.Location;
 public class TestReader extends BufferedReader {
     private String filePath;
     private ArrayList<String[]> fileContentString;
+    private int worldSize;
 
     /**
      * Constructor for the TestReader class.
@@ -38,6 +38,8 @@ public class TestReader extends BufferedReader {
             wordList.add(line);
         }
         this.fileContentString = wordList.stream().map(s -> s.split(" ")).collect(ArrayList::new, ArrayList::add, ArrayList::addAll);
+        this.worldSize = Integer.parseInt(this.fileContentString.get(0)[0]); // Assign the world size.
+        fileContentString.remove(0); // Remove the first line of the file. (The world size)
         this.close();
     }
 
@@ -58,46 +60,56 @@ public class TestReader extends BufferedReader {
     }
 
     /**
-     * Method that returns the content of the file as a HashMap.
+     * getInstances reads each line of the files content and returns a Arraylist of each line with the stack of each objects within the line.
      * 
-     * The HashMap contains the type as a key (type String) and the values as a list of objects.
-     * 
-     * @return HashMap<String, ArrayList<Object>>
+     * The stacks first object is the class representing the world object. (Grass, Bush, Rabbit etc.) see {@link ClassTypes}. 
+     * @return ArrayList<Stack<Object>> - The list of lines, with the stacks of objects within the line.
+     * @throws Exception - If the type does not exist.
      */
-    public HashMap<String, ArrayList<Object>> getMap(){
-        HashMap<String, ArrayList<Object>> types = new HashMap<>();
+    public ArrayList<Stack<Object>> getInstances() throws Exception{
+        ArrayList<Stack<Object>> instances = new ArrayList<Stack<Object>>(); // The intances of the world objects.
+        Stack<Object> objects = new Stack<Object>(); // The object to the current instance.
+        Class<?> c = null; // The class of the current instance, on runtime.
 
-        String key = null;
-        ArrayList<Object> values = new ArrayList<>(); // This is the list of values for each type.
 
-        for (String[] object : this.fileContentString) {
-            for (String str : object) {
-                int index = 0;
+        for (String[] strings : fileContentString) {     
+            objects = new Stack<Object>();
+   
+            // If the first line of the file-line is a class.
+            if(getClass(strings[0]) instanceof Class<?>) {
+                c = getClass(strings[0]);
+                objects.push(c);        
+            } else if(!(getClass(strings[0]) instanceof Class<?>)) throw new IllegalArgumentException("The type " + strings[0] + " does not exist.");
+            
+            for (String str : strings) {
                 if(str.matches("\\((.*?)\\)")){ // If the string contains coordinates.
-                    if(values.stream().anyMatch(c -> c instanceof Location)) throw new IllegalArgumentException("Input contains more than one location. A location has already been set.");
-                    System.out.println(str);
-                    values.add(setCoordinates(str));
-                    types.put(key, values);
-                } else if(str.contains("-")){ // If the string contains an interval.
-                    values.add(str);
-                    types.put(key, values);
-                } else if(isNumeric(str) && key != null){ // If the key is not null, then we have found a type.
-                    values.add(Integer.parseInt(str));
-                    types.put(key, values);
-                } else if(isNumeric(str) && key == null){ // If the key is null, then we have not found a type yet.
-                    continue;
-                } else if(!isNumeric(str) && key != null){ // Reset the key and values. Ready for the next type.
-                    if(key.equals(str) || types.containsKey(str)) { // if there are mutible of the same type.
-                        key = str.concat("_" + (index + 1));
-                    } else key = str;
-                    values = new ArrayList<>(); 
+                    objects.push(setCoordinates(str));
+                } 
+                else if(str.contains("-") || isNumeric(str)){ // If the string contains an interval.
+                    objects.push(getTypeRange(str));
                 }
-                else { // If the key is null, then we have not found a type.
-                    key = str;
-                }
-            }
-        }
-        return types;
+            } 
+            instances.add(objects);
+        }   
+        return instances;
+    }
+
+    /**
+     * Returns the class of a given {@link ClassTypes}.
+     * @param ClassName - The class to return the type.
+     * @return Class<?>
+     */
+    public Class<?> getClass(ClassTypes ClassName){
+        return  ClassName.getType();
+    }
+
+    /**
+     * Returns the class of a given string.
+     * @param str - The string to return the type.
+     * @return Class<?>
+     */
+    public Class<?> getClass(String str){
+        return getClass(ClassTypes.valueOf(str));
     }
 
     /**
@@ -107,64 +119,26 @@ public class TestReader extends BufferedReader {
      * @param type - The type of the location.
      * @return IntStream - The stream of integers.
      */
-    public IntStream getTypeRange(String type){
-        if(!this.getMap().containsKey(type)) throw new IllegalArgumentException("The type " + type + " does not exist.");
-        Object value = this.getMap().get(type).get(0);
-
-        if(value instanceof Integer){
-            int val = Integer.parseInt(value.toString());
-            return IntStream.range(val, val + 1);
-        } else if(value instanceof String) {
-            String[] interval = ((String) value).split("-");
-            int min = Integer.parseInt(interval[0]);
-            int max = Integer.parseInt(interval[1]);
-            return IntStream.range(min, max + 1);
-        } else throw new IllegalArgumentException("The type " + type + " does not have a valid interval.");
+    public IntStream getTypeRange(String str){
+        if(isNumeric(str)) {
+            int numericVal = Integer.parseInt(str);
+            return IntStream.rangeClosed(numericVal, numericVal);
+        }
+        else if(str instanceof String){
+            String[] range = str.split("-");
+            int start = Integer.parseInt(range[0]);
+            int end = Integer.parseInt(range[1]);
+            return IntStream.rangeClosed(start, end);
+        } 
+        else return null;
     } 
-    
-    /**
-     * Returns the type without the type index.
-     * 
-     * Example: if the type is "wolf_1", then "wolf" is returned.
-     * 
-     * @param type - The type of the location.
-     * @return String - The type without the number.
-     */
-    public String filterType(String type){
-        return type.replaceAll("_\\d", "");
-    }
 
-    /**
-     * Returns a random number for a given type. 
-     * 
-     * The random number is in the range of the type. See {@link getTypeRange} for the range.
-     * 
-     * @throws IllegalArgumentException If the type does not exist.
-     * @param type - The type of the location.
-     * @return int - The random number.
-     */
-    public int getRandomNumberFromType(String type){
-        IntStream stream = this.getTypeRange(type);
-        return stream.findFirst().getAsInt();
-    }
-
-    /**
-     * Returns a random location for a given type. If the type does not have a location, null is returned.
-     * 
-     * @throws IllegalArgumentException If the type does not exist.
-     * @param type - The type of the location.
-     * @return Location - The random location.
-     */
-    public Location getLocation(String type){
-        return (Location) this.getMap().get(type).stream().filter(c -> c instanceof Location).findFirst().orElse(null);
-    }
-    
     /**
      * Returns the size of the world.
      * @return int
      */
     public int getWorldSize(){
-        return Integer.parseInt(this.fileContentString.get(0)[0]);
+        return worldSize;
     }
     
     /**
@@ -190,7 +164,7 @@ public class TestReader extends BufferedReader {
             return false;
         }
         try {
-            double d = Double.parseDouble(strNum);
+            Double.parseDouble(strNum);
         } catch (NumberFormatException nfe) {
             return false;
         }
