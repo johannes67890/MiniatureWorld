@@ -41,7 +41,7 @@ public class Rabbit extends Animal {
         world.getNonBlocking(world.getLocation(this)) instanceof Lair
       ) {
         Lair temp = (Lair) world.getNonBlocking(world.getLocation(this));
-        if (temp.getAnimals().getClass().isInstance(ClassTypes.rabbit)) {
+        if (temp.getAnimalsInLair().getClass().isInstance(ClassTypes.rabbit)) {
           home = temp;
         }
       }

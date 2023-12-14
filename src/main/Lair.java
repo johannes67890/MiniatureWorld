@@ -6,6 +6,7 @@ import itumulator.executable.DynamicDisplayInformationProvider;
 import itumulator.simulator.Actor;
 import itumulator.world.NonBlocking;
 import itumulator.world.World;
+import main.testReader.ClassTypes;
 
 /**
  * Lair class
@@ -16,12 +17,18 @@ import itumulator.world.World;
  */
 public class Lair implements Actor, NonBlocking, DynamicDisplayInformationProvider {
     private ArrayList<Animal> animals = new ArrayList<>();
+    private ClassTypes type = ClassTypes.rabbit;
 
     public void act(World world) {
         if (world.isDay()) {
             removeAnimals(world);
         }
     }
+
+    public void setType(ClassTypes type) {
+        this.type = type;
+    }
+
     /**
      * Adds an animal to the lair
      * @param animal - The animal to add
@@ -44,15 +51,15 @@ public class Lair implements Actor, NonBlocking, DynamicDisplayInformationProvid
         }
     }
 
-    public ArrayList<Animal> getAnimals() {
+    public ArrayList<Animal> getAnimalsInLair() {
         return animals;
     }
 
     @Override
     public DisplayInformation getInformation() {
-        if(this.getAnimals().getClass().isInstance(Rabbit.class)){
+        if(this.getAnimalsInLair().getClass().isInstance(Rabbit.class)){
             return new DisplayInformation(java.awt.Color.black, "hole-small");
-        }else if(this.getAnimals().getClass().isInstance(Wolf.class)){
+        }else if(this.getAnimalsInLair().getClass().isInstance(Wolf.class)){
             return new DisplayInformation(java.awt.Color.black, "hole");
         }
         return new DisplayInformation(java.awt.Color.black, "hole-small");
