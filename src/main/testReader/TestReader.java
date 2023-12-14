@@ -7,6 +7,7 @@ import java.util.stream.IntStream;
 import java.lang.Object;
 
 import itumulator.world.Location;
+import main.Carcass;
 
 /**
  * TestReader is used to read a test file and return the content.
@@ -87,7 +88,10 @@ public class TestReader extends BufferedReader {
                 } 
                 else if(str.contains("-") || isNumeric(str)){ // If the string contains an interval.
                     objects.push(getTypeRange(str));
-                }
+                } 
+                if(str.equals("fungi") && c == Carcass.class){
+                    objects.push(true);
+                } 
             } 
             instances.add(objects);
         }   
