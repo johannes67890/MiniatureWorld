@@ -6,7 +6,6 @@ import java.util.*;
 import java.util.stream.IntStream;
 import java.io.IOException;
 import java.lang.reflect.Constructor;
-import java.time.InstantSource;
 
 import itumulator.world.Location;
 import itumulator.world.NonBlocking;
@@ -30,40 +29,41 @@ public class Main {
         World world = program.getWorld();
         
         try {    
-        for (Stack<Object> Stacks : reader.getInstances()) {
-            Iterator<Object> iterator = Stacks.iterator();
-            Class<?> key = null;
-            Constructor<?> constructor = null;
-            HashMap<Class<?>, Object> parameters = new HashMap<Class<?>, Object>();
-            while (iterator.hasNext()) {
-                Object obj = iterator.next();
-                    if(obj instanceof Class<?>) {
-                        key = (Class<?>) obj;
+            for (Stack<Object> Stacks : reader.getInstances()) {
+                Iterator<Object> iterator = Stacks.iterator();
 
-                        Constructor<?>[] constructors = key.getDeclaredConstructors();
-                        for (Constructor<?> constr : constructors) {
-                            constr.setAccessible(true);
-                            Class<?>[] pTypes = constr.getParameterTypes();
-                            constructor = key.getDeclaredConstructor(pTypes);
-                        }
-                        System.out.println(constructor);
-                        continue;
-                    } 
-                    if(obj instanceof IntStream) {
-                        parameters.put(IntStream.class, obj);
-                    } else parameters.put(obj.getClass(), obj);
+                Class<?> key = null;
+                Constructor<?> constructor = null;
+
+                // HashMap that contains the parameters for the constructor of the runtime class.
+                HashMap<Class<?>, Object> parameters = new HashMap<Class<?>, Object>();
+
+                while (iterator.hasNext()) { // Iterate through the stack.
+                    Object obj = iterator.next();
+                        if(obj instanceof Class<?>) { // If the object is a class, set the key and constructor.
+                            key = (Class<?>) obj;
+
+                            Constructor<?>[] constructors = key.getDeclaredConstructors();
+                            for (Constructor<?> constr : constructors) { // Find the constructor of the class.
+                                constr.setAccessible(true);
+                                Class<?>[] pTypes = constr.getParameterTypes();
+                                constructor = key.getDeclaredConstructor(pTypes);
+                            }
+                            continue;
+                        } 
+                        if(obj instanceof IntStream) {
+                            parameters.put(IntStream.class, obj);
+                        } else parameters.put(obj.getClass(), obj);
                 }
                 IntStream ClassStream = (IntStream) parameters.get(IntStream.class);
-               
                 int spawnAmount = getRandomNumberFromStream(ClassStream);
-                 
                 for (int i = 0; i < spawnAmount; i++) {
                     parameters.remove(IntStream.class);
                     if(parameters.size() == 0) {
                         spawnRandomObj(world, constructor.newInstance());
                         continue;
                     }
-                    spawnRandomObj(world, constructor.newInstance(parameters.get(key)));
+                spawnRandomObj(world, constructor.newInstance(parameters.get(key)));
                 }
             }
         } catch (Exception e) {

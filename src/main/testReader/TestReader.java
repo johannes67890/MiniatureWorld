@@ -2,25 +2,18 @@ package main.testReader;
 
 import java.io.*;
 import java.util.ArrayList;
-import java.util.Collection;
-import java.util.HashMap;
 import java.util.Stack;
 import java.util.stream.IntStream;
 import java.lang.Object;
 
 import itumulator.world.Location;
-import itumulator.world.World;
-import main.Bear;
-
-import java.lang.reflect.*;
-
 
 /**
- * This class is used to read the file and return the content of the file.
+ * TestReader is used to read a test file and return the content.
  * 
  * @param filePath - The path to the file.
  * @param fileContent - The content of the file as a char array.
- * @param fileContentString - The content of the file as a string.
+ * @param fileContentString - The content of the file as a string.W
  * 
  * @throws IOException
  * @throws FileNotFoundException
@@ -66,16 +59,21 @@ public class TestReader extends BufferedReader {
         return this.fileContentString.toString();
     }
 
-
-
+    /**
+     * getInstances reads each line of the files content and returns a Arraylist of each line with the stack of each objects within the line.
+     * 
+     * The stacks first object is the class representing the world object. (Grass, Bush, Rabbit etc.) see {@link ClassTypes}. 
+     * @return ArrayList<Stack<Object>> - The list of lines, with the stacks of objects within the line.
+     * @throws Exception - If the type does not exist.
+     */
     public ArrayList<Stack<Object>> getInstances() throws Exception{
-        ArrayList<Stack<Object>> instances = new ArrayList<Stack<Object>>();
-        Stack<Object> objects = new Stack<Object>();
-        Class<?> c = null;
+        ArrayList<Stack<Object>> instances = new ArrayList<Stack<Object>>(); // The intances of the world objects.
+        Stack<Object> objects = new Stack<Object>(); // The object to the current instance.
+        Class<?> c = null; // The class of the current instance, on runtime.
 
 
         for (String[] strings : fileContentString) {        
-            objects = new Stack<Object>();
+            // If the first line of the file-line is a class.
             if(getClass(strings[0]) instanceof Class<?>) {
                 c = getClass(strings[0]);
                 objects.push(c);        
@@ -88,17 +86,26 @@ public class TestReader extends BufferedReader {
                 else if(str.contains("-") || isNumeric(str)){ // If the string contains an interval.
                     objects.push(getTypeRange(str));
                 }
-
             } 
             instances.add(objects);
         }   
         return instances;
     }
 
+    /**
+     * Returns the class of a given {@link ClassTypes}.
+     * @param ClassName - The class to return the type.
+     * @return Class<?>
+     */
     public Class<?> getClass(ClassTypes ClassName){
         return  ClassName.getType();
     }
 
+    /**
+     * Returns the class of a given string.
+     * @param str - The string to return the type.
+     * @return Class<?>
+     */
     public Class<?> getClass(String str){
         return getClass(ClassTypes.valueOf(str));
     }
