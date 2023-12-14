@@ -6,6 +6,7 @@ import itumulator.executable.DynamicDisplayInformationProvider;
 import itumulator.simulator.Actor;
 import itumulator.world.NonBlocking;
 import itumulator.world.World;
+import main.testReader.ClassTypes;
 
 /**
  * WolfPack class
@@ -30,7 +31,7 @@ public class WolfPack implements Actor, DynamicDisplayInformationProvider, NonBl
         // Set lair
         if (home == null) {
             if (!world.containsNonBlocking(world.getLocation(getLeader()))) {
-                home = new Lair("wolf");
+                home = new Lair();
                 world.setTile(world.getLocation(getLeader()), home);
             }
         }
