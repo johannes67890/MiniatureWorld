@@ -16,11 +16,6 @@ import itumulator.world.World;
  */
 public class Lair implements Actor, NonBlocking, DynamicDisplayInformationProvider {
     private ArrayList<Animal> animals = new ArrayList<>();
-    private String type;
-
-    public Lair(String type) {
-        this.type = type;
-    }
 
     public void act(World world) {
         if (world.isDay()) {
@@ -49,24 +44,18 @@ public class Lair implements Actor, NonBlocking, DynamicDisplayInformationProvid
         }
     }
 
-    public String getType(){
-        return type;
-    }
-
     public ArrayList<Animal> getAnimals() {
         return animals;
     }
 
     @Override
     public DisplayInformation getInformation() {
-        switch (type) {
-            case "rabbit":
-                return new DisplayInformation(java.awt.Color.black, "hole-small");
-            case "wolf":
-                return new DisplayInformation(java.awt.Color.black, "hole");
-            default:
-                return new DisplayInformation(java.awt.Color.black);
+        if(this.getAnimals().getClass().isInstance(Rabbit.class)){
+            return new DisplayInformation(java.awt.Color.black, "hole-small");
+        }else if(this.getAnimals().getClass().isInstance(Wolf.class)){
+            return new DisplayInformation(java.awt.Color.black, "hole");
         }
+        return new DisplayInformation(java.awt.Color.black, "hole-small");
 
     }
 }

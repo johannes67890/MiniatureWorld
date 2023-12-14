@@ -1,5 +1,0 @@
-10
-grass 2
-rabbit 6
-wolf 2
-

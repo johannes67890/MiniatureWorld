@@ -7,6 +7,7 @@ import static java.util.Arrays.asList;
 
 import java.util.ArrayList;
 import java.util.Random;
+import main.testReader.ClassTypes;
 
 /**
  * Wolf class
@@ -117,7 +118,7 @@ public class Wolf extends Predator {
       if (world.containsNonBlocking(location)) {
         if (world.getNonBlocking(location) instanceof Lair) {
           Lair temp = (Lair) world.getNonBlocking(location);
-          if (temp.getType() == "wolf" && !myPack.getHome(world).equals(temp)) {
+          if (temp.getAnimals().getClass().isInstance(Wolf.class) && !myPack.getHome(world).equals(temp)) {
             moveAway(location, world);
             System.out.println("Wolf moved away from other lair");
             return;

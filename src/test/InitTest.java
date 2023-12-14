@@ -1,16 +1,10 @@
 package test;
 import org.junit.*;
 import itumulator.executable.Program;
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.Random;
 
 import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertThrows;
 
 import java.io.IOException;
-import itumulator.world.Location;
-import itumulator.world.NonBlocking;
 import itumulator.world.World;
 import main.testReader.TestReader;
 import main.Distributer;
@@ -29,7 +23,7 @@ public class InitTest {
      * @throws IOException - if the file is not found
      */
     @Before
-    public static void init() throws IOException {
+    public void init() throws IOException {
         distributior = Distributer.test;
         reader = new TestReader(distributior.getUrl());
         size = reader.getWorldSize();
@@ -41,9 +35,7 @@ public class InitTest {
 
 
     @Test
-    public void testSpawnRandomObj() {
-        Object object = new Object();
-       
+    public void testSpawnRandomObj() {       
     }
 
     @Test

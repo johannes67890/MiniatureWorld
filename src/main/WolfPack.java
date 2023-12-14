@@ -29,7 +29,7 @@ public class WolfPack
     // Set lair
     if (home == null) {
       if (!world.containsNonBlocking(world.getLocation(getLeader()))) {
-        home = new Lair("wolf");
+        home = new Lair();
         world.setTile(world.getLocation(getLeader()), home);
       }
     }

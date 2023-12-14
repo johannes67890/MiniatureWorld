@@ -1,3 +1,4 @@
-1
+7
+bear 1 (2,4)
 rabbit 1
-grass 1
+bear 1 (2,3)

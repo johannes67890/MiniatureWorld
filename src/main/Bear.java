@@ -23,7 +23,7 @@ public class Bear extends Predator {
   private Set<Location> territory;
   private boolean isSleeping = false;
 
-  public Bear(Location territoryC, World world) {
+  public Bear(Location territoryC) {
     super(
       30,
       30,
@@ -32,7 +32,10 @@ public class Bear extends Predator {
       new ArrayList<>(asList("main.Carcass", "main.Bush")),
       8
     );
-    if (territoryC == null) {
+  }
+
+  public void setTerritory(Location territoryC, World world){
+        if (territoryC == null) {
       this.territoryC =
         new Location(
           new Random().nextInt(world.getSize()),
@@ -42,9 +45,9 @@ public class Bear extends Predator {
       this.territoryC = territoryC;
     }
     this.territory = world.getSurroundingTiles(this.territoryC, 2);
-  }
-
+    }
   public void act(World world) {
+    setTerritory(territoryC, world);
     //sleep at night
     isSleeping = world.isNight();
     if (isSleeping) {

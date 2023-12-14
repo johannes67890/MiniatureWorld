@@ -5,6 +5,8 @@ import static java.util.Arrays.asList;
 import itumulator.executable.DisplayInformation;
 import itumulator.world.Location;
 import itumulator.world.World;
+import main.testReader.ClassTypes;
+
 import java.util.ArrayList;
 import java.util.Random;
 
@@ -39,7 +41,7 @@ public class Rabbit extends Animal {
         world.getNonBlocking(world.getLocation(this)) instanceof Lair
       ) {
         Lair temp = (Lair) world.getNonBlocking(world.getLocation(this));
-        if (temp.getType() == "rabbit") {
+        if (temp.getAnimals().getClass().isInstance(ClassTypes.rabbit)) {
           home = temp;
         }
       }
@@ -100,8 +102,9 @@ public class Rabbit extends Animal {
 
   private boolean digBurrow(World world) {
     if (!world.containsNonBlocking(world.getLocation(this))) {
-      home = new Lair("rabbit");
+      home = new Lair();
       world.setTile(world.getLocation(this), home);
+      home.addAnimal(this, world);
       return true;
     }
     return false;
