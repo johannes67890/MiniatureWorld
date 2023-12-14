@@ -32,6 +32,7 @@ public class Bear extends Predator {
       new ArrayList<>(asList("main.Carcass", "main.Bush")),
       8
     );
+    this.territoryC = territoryC;
   }
 
   public void setTerritory(Location territoryC, World world){
@@ -46,6 +47,7 @@ public class Bear extends Predator {
     }
     this.territory = world.getSurroundingTiles(this.territoryC, 2);
     }
+
   public void act(World world) {
     setTerritory(territoryC, world);
     //sleep at night

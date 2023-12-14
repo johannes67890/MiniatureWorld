@@ -37,7 +37,7 @@ public class WolfPack
     // Reproduce in lair
     if (home != null) {
       int adultsInLair = 0;
-      for (Animal wolf : home.getAnimals()) {
+      for (Animal wolf : home.getAnimalsInLair()) {
         if (wolf.isAdult) {
           adultsInLair++;
         }

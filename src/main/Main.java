@@ -22,7 +22,7 @@ import main.testReader.TestReader;
  */
 public class Main {
     public static void main(String[] args) throws IOException {
-        Distributer distributior = Distributer.t2_4a;
+        Distributer distributior = Distributer.test;
         TestReader reader = new TestReader(distributior.getUrl());
         int size = reader.getWorldSize();
         int delay = 100;
