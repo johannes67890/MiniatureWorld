@@ -13,7 +13,7 @@ import itumulator.world.World;
  * 
  * @implNote Implements {@link Actor} and {@link DynamicDisplayInformationProvider}
  */
-public class Bush implements Actor, DynamicDisplayInformationProvider {
+public class Bush extends Eatable implements Actor, DynamicDisplayInformationProvider {
     private boolean hasBerries = true;
     private int regrowTime = 5;
     public void act(World world){
@@ -27,8 +27,9 @@ public class Bush implements Actor, DynamicDisplayInformationProvider {
         }
     }
 
-    public void eatBerries(){
+    public int getEaten(int bideSize, World world){
         hasBerries = false;
+        return 2;
     }
     
     public boolean getHasBerries(){

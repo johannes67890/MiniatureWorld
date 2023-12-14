@@ -10,13 +10,15 @@ import java.lang.reflect.Constructor;
 import itumulator.world.Location;
 import itumulator.world.NonBlocking;
 import itumulator.world.World;
+import java.util.HashMap;
+import java.util.Random;
 import main.testReader.TestReader;
 
 /**
  * Main class
- * 
+ *
  * The main class initializes the world and spawns the objects in the world.
- * 
+ *
  */
 public class Main {
     public static void main(String[] args) throws IOException {
@@ -83,9 +85,8 @@ public class Main {
         } catch (Exception e) {
           System.out.println("Exception encountered invoking: " + e);
         }
-
         program.show();
-    }
+      }
 
      /**
      * Returns a random number for a given type. 
@@ -101,44 +102,47 @@ public class Main {
         return stream.findAny().getAsInt();
     }
 
+  /**
+   * Spawns a random object in the world.
+   *
+   * @param world  - The world to spawn the object in.
+   * @param object - The object to spawn.
+   */
+  public static void spawnRandomObj(World world, Object object) {
+    if (isWorldFull(world)) throw new IllegalArgumentException(
+      "The world is full."
+    );
+    Location location = new Location(
+      new Random().nextInt(world.getSize()),
+      new Random().nextInt(world.getSize())
+    );
 
-    /**
-     * Spawns a random object in the world.
-     * 
-     * @param world  - The world to spawn the object in.
-     * @param object - The object to spawn.
-     */
-    public static void spawnRandomObj(World world, Object object) {
-        if (isWorldFull(world))
-            throw new IllegalArgumentException("The world is full.");
-        Location location = new Location(new Random().nextInt(world.getSize()), new Random().nextInt(world.getSize()));
-
-        if (object instanceof NonBlocking && !world.containsNonBlocking(location)) {
-            world.setTile(location, object);
-        } else if (!(object instanceof NonBlocking) && world.isTileEmpty(location)) {
-            world.setTile(location, object);
-        } else {
-            spawnRandomObj(world, object);
-        }
+    if (object instanceof NonBlocking && !world.containsNonBlocking(location)) {
+      world.setTile(location, object);
+    } else if (
+      !(object instanceof NonBlocking) && world.isTileEmpty(location)
+    ) {
+      world.setTile(location, object);
+    } else {
+      spawnRandomObj(world, object);
     }
+  }
 
-    /**
-     * This method checks if the world is full.
-     * 
-     * @param world - The world to check.
-     * @return boolean - True if the world is full, false otherwise.
-     */
-    public static boolean isWorldFull(World world) {
-        if (world.getSize() == 0)
-            return true;
-        for (int i = 0; i < world.getSize(); i++) {
-            for (int j = 0; j < world.getSize(); j++) {
-                if (world.isTileEmpty(new Location(i, j))) {
-                    return false;
-                }
-            }
+  /**
+   * This method checks if the world is full.
+   *
+   * @param world - The world to check.
+   * @return boolean - True if the world is full, false otherwise.
+   */
+  public static boolean isWorldFull(World world) {
+    if (world.getSize() == 0) return true;
+    for (int i = 0; i < world.getSize(); i++) {
+      for (int j = 0; j < world.getSize(); j++) {
+        if (world.isTileEmpty(new Location(i, j))) {
+          return false;
         }
-        return true;
+      }
     }
-
+    return true;
+  }
 }
