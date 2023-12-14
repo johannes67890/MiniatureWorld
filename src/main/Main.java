@@ -10,7 +10,6 @@ import java.lang.reflect.Constructor;
 import itumulator.world.Location;
 import itumulator.world.NonBlocking;
 import itumulator.world.World;
-import java.util.HashMap;
 import java.util.Random;
 import main.testReader.TestReader;
 
@@ -56,15 +55,20 @@ public class Main {
                         continue;
                     } 
                     if(key == Wolf.class){
-                        world.add(wolfPack);
-                        parameters.add(wolfPack);
-                        key = WolfPack.class;
+                      world.add(wolfPack);
+                      parameters.add(wolfPack);
+                      key = WolfPack.class;
+                    } 
+                    if(key == Carcass.class){
+                      if(!parameters.contains(Wolf.class)) parameters.add(new Wolf(new WolfPack()));
+                      if(obj instanceof Boolean) {
+                        parameters.add(obj);
+                        continue;
+                      }
                     }
                     if(obj instanceof IntStream) {
                       ClassStream = (IntStream) obj;
-                    }else parameters.add(obj);
-                    // set the parameters for the class constructor.
-                    
+                    }else parameters.add(obj);                    
                 }
                 //
                 // Spawn the object(s) in the world.
@@ -74,9 +78,6 @@ public class Main {
                 for (int i = 0; i < spawnAmount; i++) {
                     parameters.remove(IntStream.class); // Remove the IntStream from the parameters. We don't need it anymore.
                     
-                    if(key == Carcass.class){
-                      parameters.add(new Wolf(new WolfPack()));
-                    }
                     if(parameters.size() == 0 && key == Bear.class){ // If the bear has no set Location, spawn it at a random location. 
                       Location loc = null;
                         spawnRandomObj(world, constructor.newInstance(loc));
@@ -87,6 +88,7 @@ public class Main {
                     }
                     spawnRandomObj(world, constructor.newInstance(parameters.toArray()));
                 }
+                
             } 
         } catch (Exception e) {
           System.out.println("Exception encountered invoking: " + e);

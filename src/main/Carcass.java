@@ -17,7 +17,7 @@ public class Carcass
   private boolean hasFungus;
   private boolean shouldHaveFungus = false;
 
-  Carcass(Animal type, boolean shouldHaveFungus) {
+  Carcass(boolean shouldHaveFungus, Animal type) {
     this.shouldHaveFungus = shouldHaveFungus;
 
     if (type instanceof Rabbit) {
