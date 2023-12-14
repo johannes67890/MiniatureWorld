@@ -2,6 +2,7 @@ package main.testReader;
 
 import main.Bear;
 import main.Bush;
+import main.Carcass;
 import main.Grass;
 import main.Lair;
 import main.Rabbit;
@@ -17,7 +18,9 @@ public enum ClassTypes{
     bush(Bush.class),
     rabbit(Rabbit.class),
     wolf(Wolf.class),
-    bear(Bear.class);
+    bear(Bear.class),
+    carcass(Carcass.class);
+
 
     private Class<?> ReaderClass;
     ClassTypes(Class<?> key){

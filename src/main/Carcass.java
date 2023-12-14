@@ -14,7 +14,7 @@ public class Carcass
 
   private int mass;
   private Fungus myFungus = null;
-  private boolean hasFungus = false;
+  private boolean hasFungus;
 
   Carcass(Animal type, boolean shouldHaveFungus, World world) {
     if(shouldHaveFungus){
