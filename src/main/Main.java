@@ -60,6 +60,7 @@ public class Main {
                         parameters.put(WolfPack.class, wolfPack);
                         key = WolfPack.class;
                     }
+                    
                     if(obj instanceof IntStream) {
                         parameters.put(IntStream.class, obj);
                     }else parameters.put(obj.getClass(), obj);
@@ -75,7 +76,11 @@ public class Main {
                 for (int i = 0; i < spawnAmount; i++) {
                     parameters.remove(IntStream.class); // Remove the IntStream from the parameters. We don't need it anymore.
                     
-                    if(parameters.size() == 0) { // If the parameters are empty, spawn the object without constructor parameters.
+                    if(parameters.size() == 0 && key == Bear.class){ // If the bear has no set Location, spawn it at a random location. 
+                      Location loc = null;
+                        spawnRandomObj(world, constructor.newInstance(loc));
+                        continue;
+                    }else if(parameters.size() == 0) { // If the parameters are empty, spawn the object without constructor parameters.
                         spawnRandomObj(world, constructor.newInstance());
                         continue;
                     }
