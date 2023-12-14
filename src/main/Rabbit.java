@@ -22,7 +22,7 @@ public class Rabbit extends Animal {
   private Lair home = null;
 
   public Rabbit() {
-    super(10, 15, 2, 1, new ArrayList<>(asList("main.Grass")));
+    super(10, 15, 2, 1, new ArrayList<>(asList("Grass")));
   }
 
   public void act(World world) {
@@ -41,7 +41,7 @@ public class Rabbit extends Animal {
         world.getNonBlocking(world.getLocation(this)) instanceof Lair
       ) {
         Lair temp = (Lair) world.getNonBlocking(world.getLocation(this));
-        if (temp.getAnimalsInLair().getClass().isInstance(ClassTypes.rabbit)) {
+        if (temp.getType().equals("Rabbit")) {
           home = temp;
         }
       }
@@ -104,7 +104,6 @@ public class Rabbit extends Animal {
     if (!world.containsNonBlocking(world.getLocation(this))) {
       home = new Lair();
       world.setTile(world.getLocation(this), home);
-      home.addAnimal(this, world);
       return true;
     }
     return false;
@@ -141,9 +140,9 @@ public class Rabbit extends Animal {
         (
           (
             world.containsNonBlocking(location) &&
-            eats.contains(world.getNonBlocking(location).getClass().getName())
+            eats.contains(world.getNonBlocking(location).getClass().getSimpleName())
           ) ||
-          eats.contains(world.getTile(location).getClass().getName())
+          eats.contains(world.getTile(location).getClass().getSimpleName())
         )
       ) {
         moveTowards(location, world);

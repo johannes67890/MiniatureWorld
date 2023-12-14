@@ -29,7 +29,7 @@ abstract public class Predator extends Animal {
         !world.getTile(location).getClass().equals(this.getClass())
       ) {
         attack(location, world);
-        System.out.println(this.getClass().getName() + " Attack");
+        System.out.println(this.getClass().getSimpleName() + " Attack");
         return true;
       }
     }
@@ -39,7 +39,7 @@ abstract public class Predator extends Animal {
       if (world.getTile(location) instanceof Animal &&
         !world.getTile(location).getClass().equals(this.getClass())) {
         moveTowards(location, world);
-        System.out.println(this.getClass().getName() + " Move to attack");
+        System.out.println(this.getClass().getSimpleName() + " Move to attack");
         return true;
       }
     }

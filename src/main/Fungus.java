@@ -14,9 +14,9 @@ public class Fungus implements Actor, DynamicDisplayInformationProvider {
   private Carcass myCarcass;
   private Location location;
 
-  public Fungus(Carcass carcass, World world) {
+  public Fungus(Carcass carcass, Location location) {
     this.myCarcass = carcass;
-    this.location = world.getLocation(myCarcass);
+    this.location = location;
   }
 
   public void act(World world) {
