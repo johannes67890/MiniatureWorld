@@ -29,7 +29,7 @@ public class Bear extends Predator {
       30,
       2,
       6,
-      new ArrayList<>(asList("main.Carcass", "main.Bush")),
+      new ArrayList<>(asList("Carcass", "Bush")),
       8
     );
     this.territoryC = territoryC;
@@ -42,8 +42,6 @@ public class Bear extends Predator {
           new Random().nextInt(world.getSize()),
           new Random().nextInt(world.getSize())
         );
-    } else {
-      this.territoryC = territoryC;
     }
     this.territory = world.getSurroundingTiles(this.territoryC, 2);
     }

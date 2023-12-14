@@ -1,4 +1,2 @@
-7
-bear 1 (2,4)
+1
 rabbit 1
-bear 1 (2,3)

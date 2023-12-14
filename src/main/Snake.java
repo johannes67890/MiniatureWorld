@@ -13,7 +13,7 @@ public class Snake extends Predator {
   private boolean isSleeping = false;
 
   protected Snake() {
-    super(10, 20, 2, 50, new ArrayList<>(asList("main.Carcass")), 1);
+    super(10, 20, 2, 50, new ArrayList<>(asList("Carcass")), 1);
   }
 
   public void act(World world) {

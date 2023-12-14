@@ -55,7 +55,6 @@ public class GrassTest {
     }
 
     // Test if an animal can be on the same tile as grass
-    // Also covers k1-3b
     @Test
     public void k1_1d() {
         Location location = new Location(0, 0);

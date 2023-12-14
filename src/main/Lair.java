@@ -17,16 +17,12 @@ import main.testReader.ClassTypes;
  */
 public class Lair implements Actor, NonBlocking, DynamicDisplayInformationProvider {
     private ArrayList<Animal> animals = new ArrayList<>();
-    private ClassTypes type = ClassTypes.rabbit;
+    private String type = "Rabbit";
 
     public void act(World world) {
         if (world.isDay()) {
             removeAnimals(world);
         }
-    }
-
-    public void setType(ClassTypes type) {
-        this.type = type;
     }
 
     /**
@@ -53,6 +49,14 @@ public class Lair implements Actor, NonBlocking, DynamicDisplayInformationProvid
 
     public ArrayList<Animal> getAnimalsInLair() {
         return animals;
+    }
+
+    public String getType() {
+        return type;
+    }
+
+    public void setType(String type) {
+        this.type = type;
     }
 
     @Override
