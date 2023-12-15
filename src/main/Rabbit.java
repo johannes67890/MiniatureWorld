@@ -5,7 +5,6 @@ import static java.util.Arrays.asList;
 import itumulator.executable.DisplayInformation;
 import itumulator.world.Location;
 import itumulator.world.World;
-import main.testReader.ClassTypes;
 
 import java.util.ArrayList;
 import java.util.Random;

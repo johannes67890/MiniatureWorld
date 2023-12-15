@@ -60,6 +60,7 @@ public class Main {
                     }else parameters.add(obj);                    
                 }
 
+                // If there is no location in file, add a random location.
                 if(key == Bear.class){
                     if(!parameters.stream().anyMatch(o -> o instanceof Location)) {
                     parameters.add(new Location(
@@ -68,34 +69,23 @@ public class Main {
                     ));
                   }
                 }
-
+                // Add wolf to the wolfpack.
                 if(key == Wolf.class){
                     world.add(wolfPack);
                     parameters.add(wolfPack);
                     key = WolfPack.class;
                 }
-
+                
                 if(key == Carcass.class){
+                    // Set default carcass to wolf, if no carcass is given.
                       if(!parameters.stream().anyMatch(o -> o instanceof Wolf)) {
                         parameters.insertElementAt(new Wolf(new WolfPack()), 0); 
                       }
+                      // Set default carcass' fungus to false, if no fungi is given.
                       if(!parameters.stream().anyMatch(o -> o instanceof Boolean)) {
                         parameters.add(false); 
                       }
                 }
-                //     if(key == Bear.class){
-                //        if(!parameters.stream().anyMatch(o -> o instanceof Location)) {
-                //         parameters.add(new Location(
-                //           new Random().nextInt(world.getSize()),
-                //           new Random().nextInt(world.getSize())
-                //         ));
-                        
-                //        }else if(parameters.stream().anyMatch(o -> o instanceof Location)){
-                //           parameters.remove(Location.class);
-                //           parameters.add((Location) obj);
-                //        }
-                //     }
-             
 
                 //
                 // Spawn the object(s) in the world.

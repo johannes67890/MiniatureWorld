@@ -6,7 +6,6 @@ import itumulator.executable.DynamicDisplayInformationProvider;
 import itumulator.simulator.Actor;
 import itumulator.world.NonBlocking;
 import itumulator.world.World;
-import main.testReader.ClassTypes;
 
 /**
  * Lair class

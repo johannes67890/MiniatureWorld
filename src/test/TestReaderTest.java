@@ -2,8 +2,6 @@ package test;
 import java.io.IOException;
 
 import org.junit.*;
-
-import itumulator.world.Location;
 import main.testReader.TestReader;
 
 public class TestReaderTest {

@@ -7,7 +7,6 @@ import static java.util.Arrays.asList;
 
 import java.util.ArrayList;
 import java.util.Random;
-import main.testReader.ClassTypes;
 
 /**
  * Wolf class

@@ -1,9 +1,6 @@
 10
 grass 7-10 
-bear 1
-rabbit 1-3
-bear 1 (2,3)
+rabbit 6
 wolf 3
 carcass fungi 2
-carcass 3
 snake 3
