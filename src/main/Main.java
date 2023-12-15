@@ -54,35 +54,56 @@ public class Main {
                         }
                         continue;
                     } 
-                    if(key == Wolf.class){
-                      world.add(wolfPack);
-                      parameters.add(wolfPack);
-                      key = WolfPack.class;
-                    } 
-                    if(key == Carcass.class){
-                      if(!parameters.contains(Wolf.class)) parameters.add(new Wolf(new WolfPack()));
-                      if(obj instanceof Boolean) {
-                        parameters.add(obj);
-                        continue;
-                      }
-                    }
+
                     if(obj instanceof IntStream) {
                       ClassStream = (IntStream) obj;
                     }else parameters.add(obj);                    
                 }
+
+                if(key == Bear.class){
+                    if(!parameters.stream().anyMatch(o -> o instanceof Location)) {
+                    parameters.add(new Location(
+                      new Random().nextInt(world.getSize()),
+                      new Random().nextInt(world.getSize())
+                    ));
+                  }
+                }
+
+                if(key == Wolf.class){
+                    world.add(wolfPack);
+                    parameters.add(wolfPack);
+                    key = WolfPack.class;
+                }
+
+                if(key == Carcass.class){
+                      if(!parameters.stream().anyMatch(o -> o instanceof Wolf)) {
+                        parameters.insertElementAt(new Wolf(new WolfPack()), 0); 
+                      }
+                      if(!parameters.stream().anyMatch(o -> o instanceof Boolean)) {
+                        parameters.add(false); 
+                      }
+                }
+                //     if(key == Bear.class){
+                //        if(!parameters.stream().anyMatch(o -> o instanceof Location)) {
+                //         parameters.add(new Location(
+                //           new Random().nextInt(world.getSize()),
+                //           new Random().nextInt(world.getSize())
+                //         ));
+                        
+                //        }else if(parameters.stream().anyMatch(o -> o instanceof Location)){
+                //           parameters.remove(Location.class);
+                //           parameters.add((Location) obj);
+                //        }
+                //     }
+             
+
                 //
                 // Spawn the object(s) in the world.
                 //            
                 int spawnAmount = getRandomNumberFromStream(ClassStream); // Get the amount of objects to spawn from parameters.
                  
-                for (int i = 0; i < spawnAmount; i++) {
-                    parameters.remove(IntStream.class); // Remove the IntStream from the parameters. We don't need it anymore.
-                    
-                    if(parameters.size() == 0 && key == Bear.class){ // If the bear has no set Location, spawn it at a random location. 
-                      Location loc = null;
-                        spawnRandomObj(world, constructor.newInstance(loc));
-                        continue;
-                    } else if(parameters.size() == 0) { // If the parameters are empty, spawn the object without constructor parameters.
+                for (int i = 0; i < spawnAmount; i++) {                    
+                    if(parameters.size() == 0) { // If the parameters are empty, spawn the object without constructor parameters.
                         spawnRandomObj(world, constructor.newInstance());
                         continue;
                     }
