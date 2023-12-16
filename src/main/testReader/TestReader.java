@@ -149,7 +149,7 @@ public class TestReader extends BufferedReader {
      * @param str - The string to split.
      * @return Location
      */
-    private Location setCoordinates(String str){
+    public Location setCoordinates(String str){
         String[] coordinates = str.replaceAll("[()]", "").split(",");
         int x  = Integer.parseInt(coordinates[0]);
         int y = Integer.parseInt(coordinates[1]);

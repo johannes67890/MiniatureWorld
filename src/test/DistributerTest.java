@@ -10,7 +10,7 @@ import org.junit.Test;
 
 import main.Distributer;
 
-public class TestDistributer {
+public class DistributerTest {
     Set<Distributer> allEnums;
     @Before
     public void setUp() throws Exception{
