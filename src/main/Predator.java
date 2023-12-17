@@ -12,11 +12,11 @@ abstract public class Predator extends Animal {
     int hp,
     int maxAge,
     int vision,
-    int bideSize,
+    int biteSize,
     ArrayList<String> eats,
     int damage
   ) {
-    super(hp, maxAge, vision, bideSize, eats);
+    super(hp, maxAge, vision, biteSize, eats);
     this.damage = damage;
   }
 

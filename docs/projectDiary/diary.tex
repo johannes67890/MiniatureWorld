@@ -215,5 +215,27 @@ top=20mm,
     \subsection*{Testing}
     We experimented a bit with systematic testing, but mostly just tested cases as we went and discovered bugs. 
     We had a lot of issues with the wolf packs from the previous week. 
+    \newpage
+    \section*{Week 4.}
+    \subsection*{Resumé}
+    This week we focused a lot on unit testing and making sure the program works as intended. For this weeks requirements we decided to make a snake. We thought it would be 
+    interesting to have a non-mammal animal, that lays eggs. Overall we have just fixing bugs, and getting ready to hand in the project and the report. 
+    \subsection*{Design}
+    We decided that the snake class would be a subclass of the predator class, as it should mimic snakes in real life. It does not do as much damage as the wolf or bear, 
+    but it applies poison damage to the target. The target will take 1 damage every step for 5 steps. We also made the bite-size of the snake 50, as we wanted to mimic the way real 
+    life snakes eat their food in one big bite. 
+    Snakes also lay an egg when they reproduce. The egg will unlike other animal's babies not be born as a baby snake, but instead as a snake egg. When an egg is laid, it will 
+    hatch after 15 steps. The egg will hatch into a baby snake, that will grow up to be a normal snake, much like other animals. Like other animals, the snake will not reproduce 
+    if it is not in its reproductive age, which is 3 days, as all other animals. 
+    Although we have not made an explicit food chain, we think of the snake as not that far up the food chain, while still being a wildcard. There is a chance that it will attack 
+    any animal it enocunters, but a wolfpack or a bear i generally going to be stronger. 
+    \\
+    We again reworked our filereader, as we had to make sure it supported the format of the input files. 
+    It should now hopefully also be ready to support theoretical new requirements, although it is of course not needed for this specific project. 
+    \subsection*{Testing}
+    Our primary focus for a lot of the week was on unit testing. We decided to try to make tests to prove as many of the requirements as possible. 
+    We discovered a few bugs while doing this, and fixed them. We made seperate test files for the different classes, and tried to make a test for each requirement we 
+    figured would make sense and was possible to test. We labeled them after the names of the requirements, and explained what they were testing in the comments. 
+
 
 \end{document}
