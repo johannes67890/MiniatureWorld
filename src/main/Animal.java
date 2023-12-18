@@ -60,7 +60,7 @@ public abstract class Animal
   protected boolean life(World world) {
     hunger--;
 
-    // if age over 3
+    // if age over 1 the animal becomes adult
     isAdult = age >= 1;
 
     // if animal is poisoned take damage
