@@ -1,3 +1,4 @@
+
 package main;
 
 import itumulator.executable.DisplayInformation;
@@ -6,7 +7,9 @@ import itumulator.simulator.Actor;
 import itumulator.world.World;
 
 /**
- * Bush class
+ * The Bush Class
+ * 
+ * The bush can have berries and has a regrow time for the berries.
  * 
  * @param hasBerries - Whether the bush has berries or not
  * @param regrowTime - The time it takes for the bush to regrow berries
@@ -16,6 +19,7 @@ import itumulator.world.World;
 public class Bush extends Eatable implements Actor, DynamicDisplayInformationProvider {
     private boolean hasBerries = true;
     private int regrowTime = 5;
+
     public void act(World world){
         //regrows berries after some time
         if(!hasBerries && world.isDay()){
@@ -26,12 +30,19 @@ public class Bush extends Eatable implements Actor, DynamicDisplayInformationPro
             }
         }
     }
-
-    public int getEaten(int bideSize, World world){
+    /*
+     * Returns a amount of hunger gained after eating the berries. (The default return is 2)
+     */
+    public int getEaten(int biteSize, World world){
         hasBerries = false;
-        return 2;
+        if(biteSize <= 0) biteSize = 2;
+        else return biteSize;
+        return biteSize;
     }
     
+    /*
+     * Returns whether the bush has berries or not.
+     */
     public boolean getHasBerries(){
         return hasBerries;
     }
