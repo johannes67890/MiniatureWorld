@@ -53,7 +53,7 @@ public abstract class Animal
     hunger--;
 
     // if age over 3
-    isAdult = age >= 3;
+    isAdult = age >= 1;
 
     // if animal is poisoned take damage
     if (poison > 0) {
