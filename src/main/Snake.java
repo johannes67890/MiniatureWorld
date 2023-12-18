@@ -89,7 +89,7 @@ public class Snake extends Predator {
   protected void attack(Location location, World world) {
     Animal target = (Animal) world.getTile(location);
     target.takeDamage(damage);
-    target.poisen = 4;
+    target.poison = 4;
   }
 
   @Override

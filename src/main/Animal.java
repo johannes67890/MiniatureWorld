@@ -31,7 +31,7 @@ public abstract class Animal
   protected boolean isInLair = false;
   protected boolean starving = false;
   protected boolean hungry = false;
-  protected int poisen = 0;
+  protected int poison = 0;
 
   protected Animal(
       int hp,
@@ -56,9 +56,9 @@ public abstract class Animal
     isAdult = age >= 3;
 
     // if animal is poisoned take damage
-    if (poisen > 0) {
+    if (poison > 0) {
       hp--;
-      poisen--;
+      poison--;
     }
 
     // An animal age increases every 19 ticks
