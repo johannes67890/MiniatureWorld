@@ -3,7 +3,6 @@ package main;
 import itumulator.executable.DisplayInformation;
 import itumulator.executable.DynamicDisplayInformationProvider;
 import itumulator.simulator.Actor;
-import itumulator.world.NonBlocking;
 import itumulator.world.World;
 import java.util.ArrayList;
 
@@ -14,10 +13,10 @@ import java.util.ArrayList;
  * @param home - The lair of the pack
  * @param leader - The leader of the pack
  *
- * @implNote Implements {@link Actor}, {@link DynamicDisplayInformationProvider} and {@link NonBlocking}
+ * @implNote Implements {@link Actor} and {@link DynamicDisplayInformationProvider}
  */
 public class WolfPack
-  implements Actor, DynamicDisplayInformationProvider, NonBlocking {
+  implements Actor, DynamicDisplayInformationProvider {
 
   private ArrayList<Wolf> pack = new ArrayList<>();
   private Lair home = null;
