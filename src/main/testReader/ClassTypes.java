@@ -11,7 +11,6 @@ import main.Wolf;
 
 /*
  * Enum that contains the different types of classes that can be spawned.
- * 
  */
 public enum ClassTypes{
     grass(Grass.class),

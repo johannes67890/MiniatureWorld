@@ -38,9 +38,6 @@ public enum Distributer {
     tf3_1a("data\\T0.3\\tf3_1a.txt"),
     tf3_2a("data\\T0.3\\tf3_2a.txt"),
     tf3_3ab("data\\T0.3\\tf3_3ab.txt");
-    // Theme test files (Week 4.)
-
-
 
     private String url;
  

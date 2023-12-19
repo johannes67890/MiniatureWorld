@@ -14,10 +14,9 @@ import java.util.Random;
 import main.testReader.TestReader;
 
 /**
- * Main class
- *
- * The main class initializes the world and spawns the objects in the world.
- *
+ * Main execute point from the program.
+ * Uses {@link TestReader} to read the test file and {@link Distributer} to get the url of the test file.
+ * Then spawns objects in the world, using the {@link spawnRandomObj} method after gathering the objects from the test file.
  */
 public class Main {
     public static void main(String[] args) throws IOException {
@@ -29,7 +28,7 @@ public class Main {
         Program program = new Program(size, display_size, delay);
         World world = program.getWorld();
         
-        try {    
+      try {    
         for (Stack<Object> Stacks : reader.getInstances()) {
             Iterator<Object> iterator = Stacks.iterator();
             Class<?> key = null;
@@ -54,7 +53,7 @@ public class Main {
                         }
                         continue;
                     } 
-
+                    // Add the constructor parameters to the stack.
                     if(obj instanceof IntStream) {
                       ClassStream = (IntStream) obj;
                     }else parameters.add(obj);                    
@@ -107,19 +106,17 @@ public class Main {
         program.show();
       }
 
-     /**
-     * Returns a random number for a given type. 
-     * 
-     * The random number is in the range of the type. See {@link getTypeRange} for the range.
-     * 
-     * @throws IllegalArgumentException If the type does not exist.
-     * @param type - 
-     * @return int - The random number.
-     */
-    public static int getRandomNumberFromStream(IntStream stream){
-        // Returns a random number from the stream.
-        return stream.findAny().getAsInt();
-    }
+  /**
+  * Returns a random number from a stream.
+  * 
+  * The random number is in the range of the type. See {@link getTypeRange} for the range.
+  * @param stream - The stream to get the random number from.
+  * @return int - The random number.
+  */
+  public static int getRandomNumberFromStream(IntStream stream){
+      // Returns a random number from the stream.
+      return stream.findAny().getAsInt();
+  }
 
   /**
    * Spawns a random object in the world.

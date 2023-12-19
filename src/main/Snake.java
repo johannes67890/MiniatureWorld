@@ -1,13 +1,17 @@
 package main;
 
 import static java.util.Arrays.asList;
-
 import itumulator.executable.DisplayInformation;
 import itumulator.world.Location;
 import itumulator.world.World;
 import java.util.ArrayList;
 import java.util.Random;
 
+/**
+ * Snakes in the simulation world eat {@link Carcass} and can lay {@link SnakeEgg}s.
+ * Snakes are predators and can attack {@link Bear}s and {@link Wolf}s.
+ * @implNote extends {@link Predator}
+ */
 public class Snake extends Predator {
 
   private boolean isSleeping = false;

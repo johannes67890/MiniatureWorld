@@ -6,6 +6,10 @@ import itumulator.simulator.Actor;
 import itumulator.world.Location;
 import itumulator.world.World;
 
+/**
+ * SnakeEgg gets laid by {@link Snake} and hatch into a new {@link Snake}.
+ * @implNote Implements {@link Actor}, {@link Nonblocking} and {@link DynamicDisplayInformationProvider}
+ */
 public class SnakeEgg implements Actor, DynamicDisplayInformationProvider {
 
   private int age = 0;

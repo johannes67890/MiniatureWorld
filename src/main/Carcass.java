@@ -8,6 +8,16 @@ import itumulator.simulator.Actor;
 import itumulator.world.Location;
 import itumulator.world.World;
 
+/**
+ * Carcass is an object that represents a dead animal in the simulation world.
+ * It can be eaten by other animals and can spawn {@link Fungus}.
+ * 
+ * @param mass - The mass of the carcass.
+ * @param myFungus - The fungus that is growing inside the carcass.
+ * @param hasFungus - True if the carcass has a fungus, false otherwise.
+ * @param shouldHaveFungus - If the carcass should have fungus.
+ * @implNote Implements {@link Actor} and {@link DynamicDisplayInformationProvider}
+ */
 public class Carcass extends Eatable implements Actor, DynamicDisplayInformationProvider {
 
   private int mass;
@@ -24,6 +34,9 @@ public class Carcass extends Eatable implements Actor, DynamicDisplayInformation
   Carcass(Animal type, boolean shouldHaveFungus) {
     this.shouldHaveFungus = shouldHaveFungus;
 
+    //
+    //  Determine the mass of the carcass based on the animal type
+    //
     if (type instanceof Rabbit) {
       if (type.isAdult) {
         mass = 5;
