@@ -12,11 +12,12 @@ public class Snake extends Predator {
 
   private boolean isSleeping = false;
 
-  protected Snake() {
+  public Snake() {
     super(10, 20, 2, 50, new ArrayList<>(asList("Carcass")), 1);
   }
 
   public void act(World world) {
+    System.out.println(hunger);
     //sleep at night
     isSleeping = world.isNight();
     if (isSleeping) {
@@ -72,7 +73,7 @@ public class Snake extends Predator {
     System.out.println("Snake do nothing");
   }
 
-  private boolean reproduce(World world) {
+  public boolean reproduce(World world) {
     for (Location location : world.getSurroundingTiles()) {
       if (world.getTile(location) instanceof Snake) {
         Snake temp = (Snake) world.getTile(location);
@@ -86,10 +87,10 @@ public class Snake extends Predator {
   }
 
   @Override
-  protected void attack(Location location, World world) {
+  public void attack(Location location, World world) {
     Animal target = (Animal) world.getTile(location);
     target.takeDamage(damage);
-    target.poison = 4;
+    target.setPoison(4);
   }
 
   @Override

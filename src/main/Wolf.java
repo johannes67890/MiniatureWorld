@@ -101,17 +101,19 @@ public class Wolf extends Predator {
     for (Location location : world.getSurroundingTiles(vision)) {
       if (world.getTile(location) instanceof Wolf &&
           !myPack.isInPack((Wolf) world.getTile(location))) {
-        moveAway(location, world);
-        System.out.println("Wolf moved away from other wolf");
-        return;
+        if(moveAway(location, world)){
+          System.out.println("Wolf moved away from other wolf");
+          return;
+        }
       }
       if (world.containsNonBlocking(location)) {
         if (world.getNonBlocking(location) instanceof Lair) {
           Lair temp = (Lair) world.getNonBlocking(location);
           if (temp.getAnimalsInLair().getClass().isInstance(Wolf.class) && !myPack.getHome(world).equals(temp)) {
-            moveAway(location, world);
-            System.out.println("Wolf moved away from other lair");
-            return;
+            if(moveAway(location, world)){
+              System.out.println("Wolf moved away from other lair");
+              return;
+            }
           }
         }
       }
@@ -126,9 +128,9 @@ public class Wolf extends Predator {
     System.out.println("Wolf do nothing");
   }
 
-  // Predetars attack to get food
+  // Wolf attack to get food
   @Override
-  protected boolean attackForFood(World world) {
+  public boolean attackForFood(World world) {
     // if animal close attack
     for (Location location : world.getSurroundingTiles()) {
 
@@ -187,9 +189,10 @@ public class Wolf extends Predator {
   }
 
   @Override
-  public void hungerPlus(int amount) {
+  public int hungerPlus(int amount) {
     hunger += amount;
     myPack.packEat(this);
+    return amount;
   }
 
   @Override

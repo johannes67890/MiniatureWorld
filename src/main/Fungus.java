@@ -42,7 +42,7 @@ public class Fungus implements Actor, DynamicDisplayInformationProvider {
   }
 
   //fungus can spread
-  private void spread(World world) {
+  public void spread(World world) {
     for (Location location : world.getSurroundingTiles(location, reach)) {
       if (
         world.getTile(location) != null &&

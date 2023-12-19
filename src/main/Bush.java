@@ -18,7 +18,7 @@ import itumulator.world.World;
  */
 public class Bush extends Eatable implements Actor, DynamicDisplayInformationProvider {
     private boolean hasBerries = true;
-    private int regrowTime = 5;
+    private int regrowTime = 8;
 
     public void act(World world){
         //regrows berries after some time
@@ -26,7 +26,7 @@ public class Bush extends Eatable implements Actor, DynamicDisplayInformationPro
             regrowTime--;
             if(regrowTime <= 0){
                 hasBerries = true;
-                regrowTime = 5;
+                regrowTime = 8;
             }
         }
     }
@@ -34,10 +34,11 @@ public class Bush extends Eatable implements Actor, DynamicDisplayInformationPro
      * Returns a amount of hunger gained after eating the berries. (The default return is 2)
      */
     public int getEaten(int biteSize, World world){
-        hasBerries = false;
-        if(biteSize <= 0) biteSize = 2;
-        else return biteSize;
-        return biteSize;
+        if(hasBerries){
+            hasBerries = false;
+            return 3;
+        }
+        return 0;
     }
     
     /*

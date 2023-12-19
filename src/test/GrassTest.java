@@ -17,7 +17,7 @@ public class GrassTest {
 
     @Before
     public void setUp() {
-        program = new Program(1, 800, 100);
+        program = new Program(2, 800, 100);
         world = program.getWorld();
         grass = new Grass();
     }
@@ -26,32 +26,27 @@ public class GrassTest {
     // We decided the only way to do this, is to have a rabbit eat the grass.
     @Test
     public void k1_1b() {
-
         Location location = new Location(0, 0);
         world.setCurrentLocation(location);
         world.setTile(location, grass);
         Rabbit rabbit = new Rabbit();
         world.setTile(location, rabbit);
-        for (int i = 0; i < 5; i++) {
-            rabbit.act(world);
-        }
+        rabbit.food(world);
         assertEquals(false, world.containsNonBlocking(location));
     }
 
     // Test if the grass can spread
     @Test
     public void k1_1c() {
-        program = new Program(2, 800, 100);
-        world = program.getWorld();
-        grass = new Grass();
         Location location = new Location(0, 0);
         world.setCurrentLocation(location);
         world.setTile(location, grass);
-        for(int i = 0; i < 100; i++){
-            grass.act(world);
+        for(int i = 0; i < 3; i++){
+            grass.spread(world);
         }
+        //the grass should now cover the whole 2x2 area. We test to see if it is in one of those tiles
         location = new Location(0, 1);
-        assertEquals(true, world.containsNonBlocking(location));
+        assertEquals("Grass", world.getNonBlocking(location).getClass().getSimpleName());
     }
 
     // Test if an animal can be on the same tile as grass

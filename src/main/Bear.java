@@ -59,6 +59,7 @@ public class Bear extends Predator {
    * @param world - The world simmulation.
    */
   public void act(World world) {
+    System.out.println(hunger);
     setTerritory(territoryC, world); // set territory
     
     //sleep at night
@@ -82,26 +83,9 @@ public class Bear extends Predator {
       move(getRandomEmptySurroundingTile(world), world);
     }
 
-    // check around to attack if other animal is in terratory
-    for (Location location : territory) {
-      for (Location view : world.getSurroundingTiles()) {
-        if (location.equals(view) && world.getTile(view) instanceof Animal) {
-          attack(view, world);
-          System.out.println("Bear attack");
-          return;
-        }
-      }
-    }
-
-    // check territory and gotowards animal if in terratory
-    for (Location location : territory) {
-      for (Location view : world.getSurroundingTiles(vision)) {
-        if (location.equals(view) && world.getTile(view) instanceof Animal) {
-          moveTowards(view, world);
-          System.out.println("Bear move to attack");
-          return;
-        }
-      }
+    // protect territory
+    if (protectTerritory(world)) {
+      return;
     }
 
     //if hungry
@@ -124,6 +108,31 @@ public class Bear extends Predator {
     //move towards center
     moveTowards(territoryC, world);
     System.out.println("Bear move towards C");
+  }
+
+  public boolean protectTerritory(World world){
+    // check around to attack if other animal is in terratory
+    for (Location location : territory) {
+      for (Location view : world.getSurroundingTiles()) {
+        if (location.equals(view) && world.getTile(view) instanceof Animal) {
+          attack(view, world);
+          System.out.println("Bear attack to protect");
+          return true;
+        }
+      }
+    }
+
+    // check territory and gotowards animal if in terratory
+    for (Location location : territory) {
+      for (Location view : world.getSurroundingTiles(vision)) {
+        if (location.equals(view) && world.getTile(view) instanceof Animal) {
+          moveTowards(view, world);
+          System.out.println("Bear move to attack to protect");
+          return true;
+        }
+      }
+    }
+    return false;
   }
 
   @Override

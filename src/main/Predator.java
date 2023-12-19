@@ -20,8 +20,8 @@ abstract public class Predator extends Animal {
     this.damage = damage;
   }
 
-  //Predetars attack to get food
-  protected boolean attackForFood(World world) {
+  //Predators attack to get food
+  public boolean attackForFood(World world) {
     //if animal close attack
     for (Location location : world.getSurroundingTiles()) {
       if (

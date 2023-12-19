@@ -18,30 +18,31 @@ import itumulator.world.World;
 public class Grass extends Eatable implements Actor, DynamicDisplayInformationProvider, NonBlocking {
 
     public void act(World world) {
-       spread(world);
+        // if it is day, there is a 10% chance of spreading to other tiles
+        if(new Random().nextInt(10) == 0 && world.isDay()){
+            spread(world);
+        }
     }
     
     /**
      * Spreads the grass
      * This method is called in {@link #act} and is used to spread the grass to empty tiles, with a 10% chance of spreading.
      */
-    private void spread(World world) {
-         if (world.isDay() && new Random().nextInt(10) == 0) {
-            List<Location> availableTiles = new ArrayList<>();
-            for (Location location : world.getEmptySurroundingTiles()) {
-                if (!(world.getTile(location) instanceof NonBlocking)) { // If the tile is not non-blocking (No two non-blocking tiles can be on to each other)
-                    availableTiles.add(location);
-                }
+    public void spread(World world) {
+        List<Location> availableTiles = new ArrayList<>();
+        for (Location location : world.getEmptySurroundingTiles()) {
+            if (!(world.getTile(location) instanceof NonBlocking)) { // If the tile is not non-blocking (No two non-blocking tiles can be on to each other)
+                availableTiles.add(location);
             }
-            if (availableTiles.size() > 0) { 
-                Location place = availableTiles.get(new Random().nextInt(availableTiles.size()));
-                world.setTile(place, new Grass());
-            }
+        }
+        if (availableTiles.size() > 0) { 
+            Location place = availableTiles.get(new Random().nextInt(availableTiles.size()));
+            world.setTile(place, new Grass());
         }
     }
 
     
-    public int getEaten(int bideSize, World world) {
+    public int getEaten(int biteSize, World world) {
         world.delete(this);
         return 3;
     }

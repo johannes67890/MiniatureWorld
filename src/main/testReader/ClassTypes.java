@@ -16,7 +16,7 @@ import main.Wolf;
 public enum ClassTypes{
     grass(Grass.class),
     burrow(Lair.class),
-    bush(Bush.class),
+    berry(Bush.class),
     rabbit(Rabbit.class),
     wolf(Wolf.class),
     bear(Bear.class),

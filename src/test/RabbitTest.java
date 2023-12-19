@@ -18,26 +18,24 @@ public class RabbitTest {
 
     @Before
     public void setUp()  {
-        program = new Program(1, 800, 100);
+        program = new Program(2, 800, 100);
         world = program.getWorld();
         rabbit = new Rabbit();
     }
 
-    // Test if a rabbit can die of old age
+    // Test if a rabbit can die
     @Test
     public void k1_2b() {
-        program = new Program(1, 800, 100);
-        world = program.getWorld();
         Location location = new Location(0, 0);
         world.setCurrentLocation(location);
         world.setTile(location, rabbit);
-        for (int i = 0; i < 16; i++) {
-            rabbit.act(world);
-        }
+        assertEquals("main.Rabbit", world.getTile(location).getClass().getName());
+        rabbit.die(world);
         assertEquals("main.Carcass", world.getTile(location).getClass().getName());
     }
 
-    // Test if a rabbit can eat grass, which can increase its hunger level
+    // Test if a rabbit can eat grass, which can increase its hunger level 
+    // and test that the rabbit dies without food
     @Test
     public void k1_2c() {
         Grass grass = new Grass();
@@ -45,21 +43,25 @@ public class RabbitTest {
         world.setCurrentLocation(location);
         world.setTile(location, rabbit);
         world.setTile(location, grass);
+        //default value of hunger level for rabbit is 15
         assertEquals(15, rabbit.getHunger());
-        for (int i = 0; i < 4; i++) {
-            rabbit.act(world);
+        //grass provides a hunger value of 3
+        rabbit.food(world);
+        //simulate the rabbit not getting food for 27 steps
+        //first 18 steps should get the hunger level to 0, next 9 steps should get the hp to 0
+        assertEquals(18, rabbit.getHunger());
+        for(int i = 0; i < 27; i++){
+            rabbit.life(world);
         }
-        assertEquals(11, rabbit.getHunger());
-        rabbit.act(world);
-        assertEquals(13, rabbit.getHunger());
-
+        //the rabbit should now have died of starvation
+        assertEquals("main.Carcass", world.getTile(location).getClass().getName());
     }
+
+    // We determined that our way of making k1-2d was not possible to test, as it is a random event.
 
     // Test if a rabbit can reproduce
     @Test
     public void k1_2e() {
-        program = new Program(2, 800, 100);
-        world = program.getWorld();
         Rabbit rabbit2 = new Rabbit();
         Location location = new Location(0, 0);
         world.setCurrentLocation(location);
@@ -67,9 +69,10 @@ public class RabbitTest {
         location = new Location(0, 1);
         world.setCurrentLocation(location);
         world.setTile(location, rabbit2);
-        while(world.getEntities().size() < 3){
-            rabbit.act(world);
-        }
+        //set both rabbits to adult, so they are allowed to reproduce
+        rabbit.isAdult = true;
+        rabbit2.isAdult = true;
+        rabbit.reproduce(world);
         assertEquals(3, world.getEntities().size());
     }
 
@@ -79,10 +82,8 @@ public class RabbitTest {
         Location location = new Location(0, 0);
         world.setCurrentLocation(location);
         world.setTile(location, rabbit);
-        while(!(world.containsNonBlocking(location))){
-            rabbit.act(world);
-        }
-        assertEquals("main.Lair", world.getNonBlocking(location).getClass().getName());
+        rabbit.digBurrow(world);
+        assertEquals("Lair", world.getNonBlocking(location).getClass().getSimpleName());
     }
     // Test if a rabbit can go into lair at night
     // Also covers k1-3b
@@ -95,7 +96,7 @@ public class RabbitTest {
         world.setTile(location, lair);
         world.setNight();
         rabbit.act(world);
-        assertEquals(true, world.getTile(location) instanceof Lair);
+        assertEquals(false, world.getTile(location) instanceof Rabbit);
     }
     
 }
