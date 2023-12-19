@@ -11,6 +11,8 @@ import itumulator.world.Location;
 import itumulator.world.NonBlocking;
 import itumulator.world.World;
 import java.util.Random;
+
+import main.testReader.Distributer;
 import main.testReader.TestReader;
 
 /**

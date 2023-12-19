@@ -14,7 +14,7 @@ import itumulator.world.World;
  * @param hasBerries - Whether the bush has berries or not
  * @param regrowTime - The time it takes for the bush to regrow berries
  * 
- * @implNote Implements {@link Actor} and {@link DynamicDisplayInformationProvider}
+ * @implNote extends {@link Eatable}, Implements {@link Actor} and {@link DynamicDisplayInformationProvider}
  */
 public class Bush extends Eatable implements Actor, DynamicDisplayInformationProvider {
     private boolean hasBerries = true;

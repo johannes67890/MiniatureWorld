@@ -1,4 +1,4 @@
-package main;
+package main.testReader;
 /*
  * This enum is used to store the paths to the test files.
  */

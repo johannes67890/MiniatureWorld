@@ -6,7 +6,7 @@ import org.junit.Before;
 
 import itumulator.executable.Program;
 import itumulator.world.World;
-import main.Distributer;
+import main.testReader.Distributer;
 import main.testReader.TestReader;
 
 public class MainTest {
