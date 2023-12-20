@@ -31,7 +31,7 @@ public class Carcass extends Eatable implements Actor, DynamicDisplayInformation
    * @param type the animal type of the carcass
    * @param shouldHaveFungus true if the carcass should have a fungus, false otherwise
    */
-  Carcass(Animal type, boolean shouldHaveFungus) {
+  public Carcass(Animal type, boolean shouldHaveFungus) {
     this.shouldHaveFungus = shouldHaveFungus;
 
     //
@@ -107,6 +107,10 @@ public class Carcass extends Eatable implements Actor, DynamicDisplayInformation
     return hasFungus;
   }
 
+  public int getMass() {
+    return mass;
+  }
+
   /**
    * Gets the amount of the carcass that is eaten by another animal.
    * Updates the mass of the carcass accordingly.
@@ -117,7 +121,7 @@ public class Carcass extends Eatable implements Actor, DynamicDisplayInformation
   public int getEaten(int biteSize, World world) {
     int tempMass = mass;
     mass -= biteSize;
-    if (tempMass - biteSize < 0) {
+    if (tempMass - biteSize <= 0) {
       return tempMass;
     } else {
       return biteSize;
@@ -133,6 +137,10 @@ public class Carcass extends Eatable implements Actor, DynamicDisplayInformation
     myFungus = new Fungus(this, location);
     hasFungus = true;
     world.add(myFungus);
+  }
+
+  public Fungus getFungus() {
+    return myFungus;
   }
 
   @Override

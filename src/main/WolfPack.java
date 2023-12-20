@@ -28,14 +28,24 @@ public class WolfPack
 
     // Set lair
     if (home == null) {
-      if (!world.containsNonBlocking(world.getLocation(getLeader()))) {
+      makeLair(world);
+    }
+
+    // Reproduce in lair
+    if(world.getCurrentTime() == 18){
+      reproduce(world);
+    }
+  }
+
+  public void makeLair(World world){
+    if (!world.containsNonBlocking(world.getLocation(getLeader()))) {
         home = new Lair();
         home.setType("Wolf");
         world.setTile(world.getLocation(getLeader()), home);
       }
-    }
+  }
 
-    // Reproduce in lair
+  public void reproduce(World world){
     if (home != null) {
       int adultsInLair = 0;
       for (Animal wolf : home.getAnimalsInLair()) {
@@ -43,7 +53,7 @@ public class WolfPack
           adultsInLair++;
         }
       }
-      if (world.getCurrentTime() == 18 && adultsInLair >= 2) {
+      if (adultsInLair >= 2) {
         Wolf newWolf = new Wolf(this);
         world.add(newWolf);
         home.addAnimal(newWolf, world);

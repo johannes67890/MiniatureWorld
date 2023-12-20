@@ -60,6 +60,7 @@ public class Fungus implements Actor, DynamicDisplayInformationProvider {
     }
   }
 
+
   /**
    * Spreads the fungus to nearby carcasses in the world.
    * @param world the world in which the fungus exists

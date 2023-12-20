@@ -57,7 +57,7 @@ public abstract class Animal
    * @param world - The world the animal is in
    * @return true if the animal dies
    */
-  protected boolean life(World world) {
+  public boolean life(World world) {
     hunger--;
 
     // if age over 1 the animal becomes adult
@@ -70,7 +70,7 @@ public abstract class Animal
     }
 
     // An animal age increases every 19 ticks
-    if (world.getCurrentTime() % 19 == 0) {
+    if (world.getCurrentTime() % 19 == 0 && world.getCurrentTime() != 0) {
       age++;
     }
 
@@ -109,7 +109,7 @@ public abstract class Animal
    * @param world world
    * @return true if food is found
    */
-  protected boolean food(World world) {
+  public boolean food(World world) {
     //
     // try to eat around itself.
     //
@@ -125,8 +125,9 @@ public abstract class Animal
       if (world.getTile(location) != null &&
         eats.contains(world.getTile(location).getClass().getSimpleName())) {
         Eatable food = (Eatable) world.getTile(location);
-        hungerPlus(food.getEaten(biteSize, world));
-        return true;
+        if(hungerPlus(food.getEaten(biteSize, world)) > 0){
+          return true;
+        }
       }
     }
     //
@@ -148,7 +149,7 @@ public abstract class Animal
    * 
    * @param world - The world the animal is in
    */
-  protected void die(World world) {
+  public void die(World world) {
     Location deadLocation = world.getLocation(this);
     world.delete(this);
     world.setTile(deadLocation, new Carcass(this, false));
@@ -206,7 +207,10 @@ public abstract class Animal
    *
    * @param location - The location to move towards
    */
-  protected void moveAway(Location location, World world) {
+  protected boolean moveAway(Location location, World world) {
+    if(world.getSurroundingTiles().size() < 8){
+      return false;
+    }
     int targetX = location.getX();
     int targetY = location.getY();
     int thisX = world.getLocation(this).getX();
@@ -228,10 +232,12 @@ public abstract class Animal
     } else if (targetX < thisX && targetY == thisY) {
       move(new Location(thisX + 1, thisY), world);
     }
+    return true;
   }
 
-  public void hungerPlus(int amount) {
+  public int hungerPlus(int amount) {
     hunger += amount;
+    return amount;
   }
 
   /**
@@ -250,8 +256,16 @@ public abstract class Animal
     return hunger;
   }
 
-  public void setAge(int age){
-    this.age = age;
+  public int getHp() {
+    return hp;
+  }
+
+  public void setPoison(int poison){
+    this.poison = poison;
+  }
+
+  public int getPoison(){
+    return poison;
   }
 
   @Override

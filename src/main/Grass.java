@@ -27,7 +27,10 @@ public class Grass extends Eatable implements Actor, DynamicDisplayInformationPr
      * @param world the world in which the grass exists
      */
     public void act(World world) {
-       spread(world);
+        // if it is day, there is a 10% chance of spreading to other tiles
+        if(new Random().nextInt(10) == 0 && world.isDay()){
+            spread(world);
+        }
     }
     
     /**
@@ -37,20 +40,19 @@ public class Grass extends Eatable implements Actor, DynamicDisplayInformationPr
      * 
      * @param world the world in which the grass exists
      */
-    private void spread(World world) {
-         if (world.isDay() && new Random().nextInt(10) == 0) {
-            List<Location> availableTiles = new ArrayList<>();
-            for (Location location : world.getEmptySurroundingTiles()) {
-                if (!(world.getTile(location) instanceof NonBlocking)) { // If the tile is not non-blocking (No two non-blocking tiles can be on to each other)
-                    availableTiles.add(location);
-                }
-            }
-            if (availableTiles.size() > 0) { 
-                Location place = availableTiles.get(new Random().nextInt(availableTiles.size()));
-                world.setTile(place, new Grass());
+    public void spread(World world) {
+        List<Location> availableTiles = new ArrayList<>();
+        for (Location location : world.getEmptySurroundingTiles()) {
+            if (!(world.getTile(location) instanceof NonBlocking)) { // If the tile is not non-blocking (No two non-blocking tiles can be on to each other)
+                availableTiles.add(location);
             }
         }
+        if (availableTiles.size() > 0) { 
+            Location place = availableTiles.get(new Random().nextInt(availableTiles.size()));
+            world.setTile(place, new Grass());
+        }
     }
+
 
     /**
      * Gets the food value when the grass is eaten.
@@ -62,6 +64,7 @@ public class Grass extends Eatable implements Actor, DynamicDisplayInformationPr
      * @return the food value of the grass
      */
     public int getEaten(int bideSize, World world) {
+
         world.delete(this);
         return 3;
     }

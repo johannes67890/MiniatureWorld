@@ -52,6 +52,13 @@ public class Rabbit extends Animal {
       return;
     }
 
+    // if starving eat
+    if (starving) {
+      if (food(world)) {
+        return;
+      }
+    }
+
     // if night move towards home
     if (world.isNight() && home != null) {
       if (world.getLocation(this).equals(world.getLocation(home))) {
@@ -63,13 +70,8 @@ public class Rabbit extends Animal {
     }
 
     // move away from predator
-    if (world.getSurroundingTiles().size() == 8) {
-      for (Location location : world.getSurroundingTiles(vision)) {
-        if (world.getTile(location) instanceof Predator) {
-          moveAway(location, world);
-          return;
-        }
-      }
+    if(moveAwayFromPredator(world)){
+      return;
     }
 
     // eat
@@ -100,7 +102,18 @@ public class Rabbit extends Animal {
     }
   }
 
-  private boolean digBurrow(World world) {
+  public boolean moveAwayFromPredator(World world) {
+      for (Location location : world.getSurroundingTiles(vision)) {
+        if (world.getTile(location) instanceof Predator) {
+          if(moveAway(location, world)){
+            return true;
+          }
+        }
+      }
+    return false;
+  }
+
+  public boolean digBurrow(World world) {
     if (!world.containsNonBlocking(world.getLocation(this))) {
       home = new Lair();
       world.setTile(world.getLocation(this), home);
@@ -109,7 +122,7 @@ public class Rabbit extends Animal {
     return false;
   }
 
-  private boolean reproduce(World world) {
+  public boolean reproduce(World world) {
     for (Location location : world.getSurroundingTiles()) {
       if (world.getTile(location) instanceof Rabbit) {
         Rabbit temp = (Rabbit) world.getTile(location);
@@ -123,7 +136,7 @@ public class Rabbit extends Animal {
   }
 
   @Override
-  protected boolean food(World world) {
+  public boolean food(World world) {
     //try to eat grass
     if (world.containsNonBlocking(world.getLocation(this))) {
       if (world.getNonBlocking(world.getLocation(this)) instanceof Grass) {
