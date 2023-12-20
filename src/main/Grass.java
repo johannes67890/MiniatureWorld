@@ -66,7 +66,7 @@ public class Grass extends Eatable implements Actor, DynamicDisplayInformationPr
     public int getEaten(int bideSize, World world) {
 
         world.delete(this);
-        return 3;
+        return 4;
     }
 
     /**

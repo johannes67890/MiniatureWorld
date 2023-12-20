@@ -94,8 +94,8 @@ public class Rabbit extends Animal {
       }
     }
 
-    // reproduce
-    if (new Random().nextInt(5) == 0 && isAdult) {
+    // 25% chance to reproduce
+    if (new Random().nextInt(4) == 0 && isAdult) {
       if (reproduce(world)) {
         return;
       }
