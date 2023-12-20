@@ -21,6 +21,12 @@ public class Snake extends Predator {
   }
 
   public void act(World world) {
+
+    // Increases age when the current time is 19
+    if (world.getCurrentTime() == 19) {
+      age++;
+    }
+    
     System.out.println(hunger);
     //sleep at night
     isSleeping = world.isNight();

@@ -27,8 +27,8 @@ public class Grass extends Eatable implements Actor, DynamicDisplayInformationPr
      * @param world the world in which the grass exists
      */
     public void act(World world) {
-        // if it is day, there is a 10% chance of spreading to other tiles
-        if(new Random().nextInt(10) == 0 && world.isDay()){
+        // if it is day, there is a 16.6% chance of spreading to other tiles
+        if(new Random().nextInt(6) == 0 && world.isDay()){
             spread(world);
         }
     }

@@ -26,6 +26,12 @@ public class Rabbit extends Animal {
   }
 
   public void act(World world) {
+
+    // Increases age when the current time is 19
+    if (world.getCurrentTime() == 19) {
+      age++;
+    }
+
     if (isInLair) {
       return;
     }
@@ -95,8 +101,8 @@ public class Rabbit extends Animal {
       }
     }
 
-    // 50% for random move 50% for no move
-    if (new Random().nextBoolean()) {
+    // 66.6% for random move 33.3% for no move
+    if (new Random().nextInt(3) != 0) {
       move(getRandomEmptySurroundingTile(world), world);
       return;
     }

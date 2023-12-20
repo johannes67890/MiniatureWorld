@@ -69,11 +69,6 @@ public abstract class Animal
       poison--;
     }
 
-    // An animal age increases every 19 ticks
-    if (world.getCurrentTime() % 19 == 0 && world.getCurrentTime() != 0) {
-      age++;
-    }
-
     // An animal loses hp if it is hungry and gains hp if it is full
     if (hunger <= 0) {
       hp--;

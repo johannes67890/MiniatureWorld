@@ -59,6 +59,12 @@ public class Bear extends Predator {
    * @param world - The world simmulation.
    */
   public void act(World world) {
+
+    // Increases age when the current time is 19
+    if (world.getCurrentTime() == 19) {
+      age++;
+    }
+
     System.out.println(hunger);
     setTerritory(territoryC, world); // set territory
     
