@@ -45,9 +45,11 @@ abstract public class Predator extends Animal {
     for (Location location : world.getSurroundingTiles(vision)) {
       if (world.getTile(location) instanceof Animal &&
         !world.getTile(location).getClass().equals(this.getClass())) {
-        moveTowards(location, world);
-        System.out.println(this.getClass().getSimpleName() + " Move to attack");
-        return true;
+        if(moveTowards(location, world)){
+          moveTowards(location, world);
+          System.out.println(this.getClass().getSimpleName() + " Move to attack");
+          return true;
+        } else return false;
       }
     }
     return false;

@@ -49,9 +49,14 @@ public class Wolf extends Predator {
         System.out.println("Wolf enters home");
         return;
       }
-      moveTowards(world.getLocation(myPack.getHome(world)), world);
-      System.out.println("Wolf move to home");
-      return;
+      if(moveTowards(world.getLocation(myPack.getHome(world)), world)){
+        System.out.println("Wolf moved towards home");
+        return;
+      } else {
+        move(getRandomEmptySurroundingTile(world), world);
+        System.out.println("Wolf move random because could not get to home");
+        return;
+      }
     }
 
     // if starving
@@ -77,9 +82,14 @@ public class Wolf extends Predator {
           }
         }
         if (!closeToLeader) {
-          moveTowards(world.getLocation(myPack.getLeader()), world);
-          System.out.println("Wolf moved closer to leader");
-          return;
+          if(moveTowards(world.getLocation(myPack.getLeader()), world)){
+            System.out.println("Wolf moved closer to leader");
+            return;
+          } else {
+            move(getRandomEmptySurroundingTile(world), world);
+            System.out.println("Wolf move random because could not get to leader");
+            return;
+          }
         }
       }
     }

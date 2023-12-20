@@ -175,7 +175,7 @@ public abstract class Animal
    *
    * @param location - The location to move towards
    */
-  protected void moveTowards(Location location, World world) {
+  protected boolean moveTowards(Location location, World world) {
     int targetX = location.getX();
     int targetY = location.getY();
     int thisX = world.getLocation(this).getX();
@@ -197,6 +197,9 @@ public abstract class Animal
     } else if (targetX < thisX && targetY == thisY) {
       move(new Location(thisX - 1, thisY), world);
     }
+    if(world.getTile(location) != world.getLocation(this)){
+      return true;
+    } else return false;
   }
 
   /**
