@@ -87,6 +87,7 @@ public class Bear extends Predator {
         return;
       }
       move(getRandomEmptySurroundingTile(world), world);
+      return;
     }
 
     // protect territory

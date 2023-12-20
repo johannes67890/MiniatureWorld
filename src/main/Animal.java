@@ -122,6 +122,8 @@ public abstract class Animal
         Eatable food = (Eatable) world.getTile(location);
         if(hungerPlus(food.getEaten(biteSize, world)) > 0){
           return true;
+        } else {
+          return false;
         }
       }
     }
