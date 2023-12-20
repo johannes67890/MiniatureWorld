@@ -8,9 +8,10 @@ import itumulator.world.NonBlocking;
 import itumulator.world.World;
 
 /**
- * Lair class
+ * Lair is a class that represents a burrow in the world. A lair can contain {@link Animal}'s. and is used by {@link Wolf} lairs and {@link Rabbit} burrows.
  * 
  * @param animals - ArrayList of {@link Animal}'s that is in the lair.
+ * @param  type - The type of animal that is in the lair. (default: Rabbit)
  * 
  * @implNote Implements {@link Actor}, {@link NonBlocking} and {@link DynamicDisplayInformationProvider}
  */
@@ -45,15 +46,17 @@ public class Lair implements Actor, NonBlocking, DynamicDisplayInformationProvid
             animals.remove(0);
         }
     }
-
+    // Get current animals in lair
     public ArrayList<Animal> getAnimalsInLair() {
         return animals;
     }
 
+    // get current aniaml type in lair
     public String getType() {
         return type;
     }
 
+    // set current animal type in lair
     public void setType(String type) {
         this.type = type;
     }

@@ -6,8 +6,8 @@ import static org.junit.Assert.assertEquals;
 
 import java.io.IOException;
 import itumulator.world.World;
+import main.testReader.Distributer;
 import main.testReader.TestReader;
-import main.Distributer;
 import main.Main;
 
 public class InitTest {

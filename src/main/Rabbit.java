@@ -10,10 +10,11 @@ import java.util.ArrayList;
 import java.util.Random;
 
 /**
- * Rabbit class
+ * Rabbits in the simulation world eat {@link Grass}, dig burrows/{@link Lair}'s and can reproduce.
+ * Rabbits are lowers in the foodchain in the world and can be eaten by {@link Wolf}s.
  *
  * @param adultAge - The age at which the rabbit is considered an adult (used for DisplayInformation see {@link #getInformation})
- * @param home - The lair of the rabbit
+ * @param home - The {@link Lair} of the rabbit
  * @implNote extends {@link Animal}
  */
 public class Rabbit extends Animal {

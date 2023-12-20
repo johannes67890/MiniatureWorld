@@ -9,12 +9,13 @@ import java.util.ArrayList;
 import java.util.Random;
 
 /**
- * Wolf class
+ * The {@link Wolf} is a predator that hunts {@link Rabbit}s, {@link Snake}s and {@link Bear}s in packs. 
+ * It eats the {@link Carcass}s from the dead animals. The wolf is a pack animal and will try to stay close to its pack and its leader.
+ * If a wolf from another pack is to close it will attack it.
  *
- * @param damage - The damage the wolf does
  * @param myPack - The {@link Wolfpack} the wolf belongs to
  *
- * @implNote Implements {@link Predator} and extends {@link Animal}
+ * @implNote extends {@link Predator} 
  */
 public class Wolf extends Predator {
   private WolfPack myPack;

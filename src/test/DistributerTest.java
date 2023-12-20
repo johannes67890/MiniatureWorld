@@ -8,7 +8,7 @@ import java.util.Set;
 import org.junit.Before;
 import org.junit.Test;
 
-import main.Distributer;
+import main.testReader.Distributer;
 
 public class DistributerTest {
     Set<Distributer> allEnums;

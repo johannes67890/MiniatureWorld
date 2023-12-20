@@ -7,7 +7,8 @@ import itumulator.world.World;
 import java.util.ArrayList;
 
 /**
- * WolfPack class
+ * The WolfPack class represents a pack of wolves in the world.
+ * A pack of wolves can reproduce and all hide in a lair together.
  *
  * @param pack - The pack of wolves
  * @param home - The lair of the pack
@@ -61,10 +62,18 @@ public class WolfPack
     }
   }
 
+  /**
+   * Adds a wolf to the pack
+   * @param wolf - The wolf to add
+   */
   public void addWolf(Wolf wolf) {
     pack.add(wolf);
   }
 
+  /**
+   * Gets the pack of wolves
+   * @return - The pack of wolves (ArrayList)
+   */
   public ArrayList<Wolf> getPack() {
     return pack;
   }
@@ -83,6 +92,10 @@ public class WolfPack
     return strongest;
   }
 
+  /**
+   * Gets the current leader of the pack
+   * @return The Wolf leader of the pack
+   */
   public Wolf getLeader() {
     if (leader == null) {
       return pack.get(0);
@@ -90,10 +103,20 @@ public class WolfPack
     return leader;
   }
 
+  /**
+   * Adds a wolf to the lair
+   * @param wolf - The wolf to add
+   * @param world - The simulation world
+   */
   public void addToHome(Wolf wolf, World world) {
     home.addAnimal(wolf, world);
   }
 
+  /**
+   * Checks if a wolf is in the pack
+   * @param wolf - The wolf to check
+   * @return - Retruns true if the wolf is in the pack
+   */
   public boolean isInPack(Wolf wolf) {
     if (pack.contains(wolf)) {
       return true;
@@ -101,6 +124,10 @@ public class WolfPack
     return false;
   }
 
+  /**
+   * Wolfs in the pack eat
+   * @param mySelf - The wolf that is eating.
+   */
   public void packEat(Wolf mySelf) {
     for (Wolf wolf : pack) {
       if (!wolf.equals(mySelf)) {
@@ -109,6 +136,11 @@ public class WolfPack
     }
   }
 
+  /**
+   * Gets the lair of the pack
+   * @param world - The simulation world
+   * @return - The lair of the pack
+   */
   public Lair getHome(World world) {
     return home;
   }

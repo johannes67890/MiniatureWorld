@@ -18,6 +18,7 @@ import main.Carcass;
  * 
  * @throws IOException
  * @throws FileNotFoundException
+ * @implNote Extends {@link BufferedReader}
  */
 public class TestReader extends BufferedReader {
     private String filePath;
