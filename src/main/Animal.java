@@ -31,7 +31,7 @@ public abstract class Animal
   protected boolean isInLair = false;
   protected boolean starving = false;
   protected boolean hungry = false;
-  protected int poisen = 0;
+  protected int poison = 0;
 
   protected Animal(
       int hp,
@@ -43,22 +43,30 @@ public abstract class Animal
     this.hp = hp;
     this.maxHp = hp;
     this.maxAge = maxAge;
-    this.vision = vision;
+    this.vision = vision; // The vision-radius of the animal (used to look further than surrounding tiles)
     this.hunger = 15;
-    this.biteSize = biteSize;
-    this.eats = eats;
+    this.biteSize = biteSize; // The amount of hunger the animal gets from eating
+    this.eats = eats; // The types of food the animal eats
   }
 
+  /**
+   * The generel life cycle of an animal in the simmulation. 
+   * The animal loses hp if it is hungry, poisened and gains hp if it eats. 
+   * An animal dies if it is too old or has no hp.
+   * An animals age increases after one night and day (19 ticks).
+   * @param world - The world the animal is in
+   * @return true if the animal dies
+   */
   protected boolean life(World world) {
     hunger--;
 
-    // if age over 3
-    isAdult = age >= 3;
+    // if age over 1 the animal becomes adult
+    isAdult = age >= 1;
 
     // if animal is poisoned take damage
-    if (poisen > 0) {
+    if (poison > 0) {
       hp--;
-      poisen--;
+      poison--;
     }
 
     // An animal age increases every 19 ticks
@@ -94,30 +102,36 @@ public abstract class Animal
   }
 
   /**
-   * Finds food and eats it
+   * Animals find and eat food in the simmulaiton. An animal can eat food around itself or move towards food. 
+   * The animal moves towwords food if it is in its vision radius.
+   * The animal checks if the food that surrounds the animal is eatable from the "eats" list.
    * 
    * @param world world
    * @return true if food is found
    */
-
   protected boolean food(World world) {
-    // try to eat around itself
+    //
+    // try to eat around itself.
+    //
     for (Location location : world.getSurroundingTiles()) {
+      // if there is food around itself, that is can eat.
       if (world.containsNonBlocking(location)) {
         if (eats.contains(world.getNonBlocking(location).getClass().getSimpleName())) {
           Eatable food = (Eatable) world.getNonBlocking(location);
-          hungerPlus(food.getEaten(biteSize, world));
+          hungerPlus(food.getEaten(biteSize, world)); // eat the food & update animal stats
           return true;
         }
       }
       if (world.getTile(location) != null &&
-          eats.contains(world.getTile(location).getClass().getSimpleName())) {
+        eats.contains(world.getTile(location).getClass().getSimpleName())) {
         Eatable food = (Eatable) world.getTile(location);
         hungerPlus(food.getEaten(biteSize, world));
         return true;
       }
     }
-    // Go towards food
+    //
+    // Go towards food, within vision radius.
+    //
     for (Location location : world.getSurroundingTiles(vision)) {
       if (world.getTile(location) != null && ((world.containsNonBlocking(location)
           && eats.contains(world.getNonBlocking(location).getClass().getSimpleName()))
@@ -130,9 +144,9 @@ public abstract class Animal
   }
 
   /**
-   * Entity dies
+   * Animal dies and get deleted from the world. Afterward a carcass is placed on the tile where the animal died.
    * 
-   * @param world
+   * @param world - The world the animal is in
    */
   protected void die(World world) {
     Location deadLocation = world.getLocation(this);

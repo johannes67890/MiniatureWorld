@@ -8,18 +8,35 @@ import itumulator.simulator.Actor;
 import itumulator.world.Location;
 import itumulator.world.World;
 
-public class Carcass
-  extends Eatable
-  implements Actor, DynamicDisplayInformationProvider {
+/**
+ * Carcass is an object that represents a dead animal in the simulation world.
+ * It can be eaten by other animals and can spawn {@link Fungus}.
+ * 
+ * @param mass - The mass of the carcass.
+ * @param myFungus - The fungus that is growing inside the carcass.
+ * @param hasFungus - True if the carcass has a fungus, false otherwise.
+ * @param shouldHaveFungus - If the carcass should have fungus.
+ * @implNote Implements {@link Actor} and {@link DynamicDisplayInformationProvider}
+ */
+public class Carcass extends Eatable implements Actor, DynamicDisplayInformationProvider {
 
   private int mass;
   private Fungus myFungus = null;
   private boolean hasFungus;
   private boolean shouldHaveFungus = false;
 
+  /**
+   * Constructs a Carcass object with the specified animal type and whether it should have a fungus.
+   * The mass of the carcass is determined based on the animal type and whether it is an adult or not.
+   * @param type the animal type of the carcass
+   * @param shouldHaveFungus true if the carcass should have a fungus, false otherwise
+   */
   Carcass(Animal type, boolean shouldHaveFungus) {
     this.shouldHaveFungus = shouldHaveFungus;
 
+    //
+    //  Determine the mass of the carcass based on the animal type
+    //
     if (type instanceof Rabbit) {
       if (type.isAdult) {
         mass = 5;
@@ -50,20 +67,23 @@ public class Carcass
     }
   }
 
+  /**
+   * Performs the actions of the carcass in the simulation world.
+   * This includes decaying, spawning fungus, and handling the carcass's death.
+   * @param world the simulation world
+   */
   public void act(World world) {
-if(shouldHaveFungus){
-      addFungus(world);
+    if (shouldHaveFungus) {
+      addFungus(world.getLocation(this), world);
       shouldHaveFungus = false;
     }
 
-
-
-    //theres a 20% chance the carcass decays
-    if(new Random().nextInt(5)==0){
-        mass--;
+    // There's a 20% chance the carcass decays
+    if (new Random().nextInt(5) == 0) {
+      mass--;
     }
 
-    //if no mass decay totally
+    // If no mass, decay totally
     if (mass <= 0) {
       Location deadLocation = world.getLocation(this);
       world.delete(this);
@@ -72,17 +92,28 @@ if(shouldHaveFungus){
       }
     }
 
-    //change for a fungus to spawn inside carcass
-    if(!hasFungus && new Random().nextInt(5)==0){
-        addFungus(world);
-        System.out.println("Fungus spawned in carcass");
+    // Chance for a fungus to spawn inside the carcass
+    if (!hasFungus && new Random().nextInt(5) == 0) {
+      addFungus(world.getLocation(this), world);
+      System.out.println("Fungus spawned in carcass");
     }
   }
 
-  public boolean hasFungus(){
+  /**
+   * Checks if the carcass has a fungus growing inside it.
+   * @return true if the carcass has a fungus, false otherwise
+   */
+  public boolean hasFungus() {
     return hasFungus;
   }
 
+  /**
+   * Gets the amount of the carcass that is eaten by another animal.
+   * Updates the mass of the carcass accordingly.
+   * @param biteSize the size of the bite taken by the animal
+   * @param world the simulation world
+   * @return the actual amount of the carcass that is eaten
+   */
   public int getEaten(int biteSize, World world) {
     int tempMass = mass;
     mass -= biteSize;
@@ -93,18 +124,22 @@ if(shouldHaveFungus){
     }
   }
 
-  public void addFungus(World world) {
-    myFungus = new Fungus(this, world.getLocation(this));
+  /**
+   * Adds a fungus to the carcass at the specified location in the simulation world.
+   * @param location the location where the fungus should be added
+   * @param world the simulation world
+   */
+  public void addFungus(Location location, World world) {
+    myFungus = new Fungus(this, location);
     hasFungus = true;
     world.add(myFungus);
   }
 
   @Override
   public DisplayInformation getInformation() {
-    if (mass <= 5) return new DisplayInformation(
-      java.awt.Color.black,
-      "carcass-small"
-    );
+    if (mass <= 5) {
+      return new DisplayInformation(java.awt.Color.black, "carcass-small");
+    }
     return new DisplayInformation(java.awt.Color.black, "carcass");
   }
 }

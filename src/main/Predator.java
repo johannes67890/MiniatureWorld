@@ -4,6 +4,13 @@ import itumulator.world.Location;
 import itumulator.world.World;
 import java.util.ArrayList;
 
+/**
+ * The abstract class Predator determins the general behaviour of predators in the world.
+ * A predator is an animal that eats other animals. Predators is used by {@link Wolf} and {@link Bear}.
+ * 
+ * @param damage - The damage the predator does when attacking.
+ * @implNote extends {@link Animal} 
+ */
 abstract public class Predator extends Animal {
 
   protected int damage;
@@ -12,11 +19,11 @@ abstract public class Predator extends Animal {
     int hp,
     int maxAge,
     int vision,
-    int bideSize,
+    int biteSize,
     ArrayList<String> eats,
     int damage
   ) {
-    super(hp, maxAge, vision, bideSize, eats);
+    super(hp, maxAge, vision, biteSize, eats);
     this.damage = damage;
   }
 

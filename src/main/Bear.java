@@ -1,3 +1,4 @@
+
 package main;
 
 import static java.util.Arrays.asList;
@@ -10,12 +11,13 @@ import java.util.Random;
 import java.util.Set;
 
 /**
- * Bear class
+ * The Bear class represents a bear in the simulation.
+ * It is a predator that hunts other animals for food.
+ * It has a territory that the bear garuds.
  * 
  * @param territoryC - The center of the territory
  * @param territory - The territory of the bear
- * @implNote Implements {@link Predator} adn extends {@link Animal}
-
+ * @implNote Implements {@link Predator} and extends {@link Animal}.
  */
 public class Bear extends Predator {
 
@@ -35,6 +37,11 @@ public class Bear extends Predator {
     this.territoryC = territoryC;
   }
 
+  /**
+   * Sets the territory of the bear.
+   * @param territoryC - The center of the territory (Location)
+   * @param world - The simmulation world
+   */
   public void setTerritory(Location territoryC, World world){
         if (territoryC == null) {
       this.territoryC =
@@ -46,19 +53,25 @@ public class Bear extends Predator {
     this.territory = world.getSurroundingTiles(this.territoryC, 2);
     }
 
+  /**
+   * The Bear actions and behaviour.
+   * 
+   * @param world - The world simmulation.
+   */
   public void act(World world) {
-    setTerritory(territoryC, world);
+    setTerritory(territoryC, world); // set territory
+    
     //sleep at night
     isSleeping = world.isNight();
     if (isSleeping) {
       return;
     }
-
+    // if dead
     if (life(world)) {
       return;
     }
 
-    // if starving
+    // if starving, find ot attack for food. Else move randomly to find food
     if (starving) {
       if (food(world)) {
         return;
@@ -67,7 +80,6 @@ public class Bear extends Predator {
         return;
       }
       move(getRandomEmptySurroundingTile(world), world);
-      System.out.println("Bear move cuz starving");
     }
 
     // check around to attack if other animal is in terratory

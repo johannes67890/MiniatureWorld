@@ -8,9 +8,9 @@ import java.util.Set;
 import org.junit.Before;
 import org.junit.Test;
 
-import main.Distributer;
+import main.testReader.Distributer;
 
-public class TestDistributer {
+public class DistributerTest {
     Set<Distributer> allEnums;
     @Before
     public void setUp() throws Exception{
