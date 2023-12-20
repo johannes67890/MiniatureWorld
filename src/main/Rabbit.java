@@ -51,6 +51,13 @@ public class Rabbit extends Animal {
       return;
     }
 
+    // if starving eat
+    if (starving) {
+      if (food(world)) {
+        return;
+      }
+    }
+
     // if night move towards home
     if (world.isNight() && home != null) {
       if (world.getLocation(this).equals(world.getLocation(home))) {
