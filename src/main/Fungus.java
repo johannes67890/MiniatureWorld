@@ -65,7 +65,7 @@ public class Fungus implements Actor, DynamicDisplayInformationProvider {
    * Spreads the fungus to nearby carcasses in the world.
    * @param world the world in which the fungus exists
    */
-  private void spread(World world) {
+  public void spread(World world) {
     for (Location location : world.getSurroundingTiles(location, reach)) {
       if (
         world.getTile(location) != null &&
