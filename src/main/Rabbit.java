@@ -116,11 +116,9 @@ public class Rabbit extends Animal {
       for (Location location : world.getSurroundingTiles(vision)) {
         if (world.getTile(location) instanceof Predator) {
           if(moveAway(location, world)){
-            System.out.println("Rabbit move away from predator");
             return true;
           } else {
             move(getRandomEmptySurroundingTile(world), world);
-            System.out.println("Rabbit move random");
             return true;
           }
         }

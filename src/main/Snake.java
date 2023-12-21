@@ -27,37 +27,30 @@ public class Snake extends Predator {
       age++;
     }
     
-    System.out.println(hunger);
     //sleep at night
     isSleeping = world.isNight();
     if (isSleeping) {
-      System.out.println("Snake sleeping");
       return;
     }
 
     if (life(world)) {
-      System.out.println("Snake dead");
       return;
     }
 
     // if starving
     if (starving) {
       if (food(world)) {
-        System.out.println("Snake starving, food");
         return;
       }
       if (attackForFood(world)) {
-        System.out.println("Snake starving, attack for food");
         return;
       }
       move(getRandomEmptySurroundingTile(world), world);
-      System.out.println("Snake move cuz starving");
     }
 
     //try to reproduce
     if (new Random().nextInt(10) == 0 && isAdult) {
       if (reproduce(world)) {
-        System.out.println("Snake reproduce");
         return;
       }
     }
@@ -65,11 +58,9 @@ public class Snake extends Predator {
     // if hungry
     if (hungry) {
       if (food(world)) {
-        System.out.println("Snake hungry, food");
         return;
       }
       if (attackForFood(world)) {
-        System.out.println("Snake hungry, attack for food");
         return;
       }
     }
@@ -77,10 +68,8 @@ public class Snake extends Predator {
     // 50% for random move 50% for no move
     if (new Random().nextBoolean()) {
       move(getRandomEmptySurroundingTile(world), world);
-      System.out.println("Snake move random");
       return;
     }
-    System.out.println("Snake do nothing");
   }
 
   public boolean reproduce(World world) {

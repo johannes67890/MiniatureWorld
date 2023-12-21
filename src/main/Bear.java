@@ -65,7 +65,6 @@ public class Bear extends Predator {
       age++;
     }
 
-    System.out.println(hunger);
     setTerritory(territoryC, world); // set territory
     
     //sleep at night
@@ -108,13 +107,11 @@ public class Bear extends Predator {
     //move from center
     if (world.getLocation(this).equals(territoryC)) {
       move(getRandomEmptySurroundingTile(world), world);
-      System.out.println("Bear move from C");
       return;
     }
 
     //move towards center
     moveTowards(territoryC, world);
-    System.out.println("Bear move towards C");
   }
 
   public boolean protectTerritory(World world){
@@ -123,7 +120,6 @@ public class Bear extends Predator {
       for (Location view : world.getSurroundingTiles()) {
         if (location.equals(view) && world.getTile(view) instanceof Animal) {
           attack(view, world);
-          System.out.println("Bear attack to protect");
           return true;
         }
       }
@@ -134,7 +130,6 @@ public class Bear extends Predator {
       for (Location view : world.getSurroundingTiles(vision)) {
         if (location.equals(view) && world.getTile(view) instanceof Animal) {
           moveTowards(view, world);
-          System.out.println("Bear move to attack to protect");
           return true;
         }
       }
