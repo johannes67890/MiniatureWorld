@@ -116,11 +116,9 @@ public class Rabbit extends Animal {
       for (Location location : world.getSurroundingTiles(vision)) {
         if (world.getTile(location) instanceof Predator) {
           if(moveAway(location, world)){
-            System.out.println("Rabbit move away from predator");
             return true;
           } else {
             move(getRandomEmptySurroundingTile(world), world);
-            System.out.println("Rabbit move random");
             return true;
           }
         }
@@ -139,7 +137,7 @@ public class Rabbit extends Animal {
 
   public boolean reproduce(World world) {
     for (Location location : world.getSurroundingTiles()) {
-      if (world.getTile(location) instanceof Rabbit) {
+      if (world.getTile(location) instanceof Rabbit && world.getTile(location) != this) {
         Rabbit temp = (Rabbit) world.getTile(location);
         if (temp.isAdult && world.getEmptySurroundingTiles().size() != 0) {
           world.setTile(getRandomEmptySurroundingTile(world), new Rabbit());

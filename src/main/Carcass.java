@@ -96,7 +96,6 @@ public class Carcass extends Eatable implements Actor, DynamicDisplayInformation
     // Chance for a fungus to spawn inside the carcass
     if (!hasFungus && new Random().nextInt(5) == 0) {
       addFungus(world.getLocation(this), world);
-      System.out.println("Fungus spawned in carcass");
     }
   }
 

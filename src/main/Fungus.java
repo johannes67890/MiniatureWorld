@@ -74,7 +74,6 @@ public class Fungus implements Actor, DynamicDisplayInformationProvider {
         Carcass carcass = (Carcass) world.getTile(location);
         if (!carcass.hasFungus()) {
           carcass.addFungus(world.getLocation(carcass), world);
-          System.out.println("Fungus spread");
         }
       }
     }

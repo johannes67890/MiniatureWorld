@@ -33,7 +33,6 @@ public class Wolf extends Predator {
       age++;
     }
 
-    System.out.println(hunger);
     // if in lair dont do anything
     if (isInLair) {
       return;
@@ -46,15 +45,12 @@ public class Wolf extends Predator {
     if (world.isNight() && myPack.getHome(world) != null) {
       if (world.getLocation(this).equals(world.getLocation(myPack.getHome(world)))) {
         myPack.addToHome(this, world);
-        System.out.println("Wolf enters home");
         return;
       }
       if(moveTowards(world.getLocation(myPack.getHome(world)), world)){
-        System.out.println("Wolf moved towards home");
         return;
       } else {
         move(getRandomEmptySurroundingTile(world), world);
-        System.out.println("Wolf move random because could not get to home");
         return;
       }
     }
@@ -68,7 +64,6 @@ public class Wolf extends Predator {
         return;
       }
       move(getRandomEmptySurroundingTile(world), world);
-      System.out.println("Wolf move cuz starving");
     }
 
     // If far way from leader, go towards leader
@@ -83,11 +78,9 @@ public class Wolf extends Predator {
         }
         if (!closeToLeader) {
           if(moveTowards(world.getLocation(myPack.getLeader()), world)){
-            System.out.println("Wolf moved closer to leader");
             return;
           } else {
             move(getRandomEmptySurroundingTile(world), world);
-            System.out.println("Wolf move random because could not get to leader");
             return;
           }
         }
@@ -109,7 +102,6 @@ public class Wolf extends Predator {
       if (world.getTile(location) instanceof Wolf &&
           !myPack.isInPack((Wolf) world.getTile(location))) {
         attack(location, world);
-        System.out.println("Wolf attacked wolf");
         return;
       }
     }
@@ -119,7 +111,6 @@ public class Wolf extends Predator {
       if (world.getTile(location) instanceof Wolf &&
           !myPack.isInPack((Wolf) world.getTile(location))) {
         if(moveAway(location, world)){
-          System.out.println("Wolf moved away from other wolf");
           return;
         }
       }
@@ -128,7 +119,6 @@ public class Wolf extends Predator {
           Lair temp = (Lair) world.getNonBlocking(location);
           if (temp.getAnimalsInLair().getClass().isInstance(Wolf.class) && !myPack.getHome(world).equals(temp)) {
             if(moveAway(location, world)){
-              System.out.println("Wolf moved away from other lair");
               return;
             }
           }
@@ -139,10 +129,8 @@ public class Wolf extends Predator {
     // 50% for random move 50% for no move
     if (new Random().nextBoolean()) {
       move(getRandomEmptySurroundingTile(world), world);
-      System.out.println("Wolf move random");
       return;
     }
-    System.out.println("Wolf do nothing");
   }
 
   // Wolf attack to get food
@@ -162,13 +150,11 @@ public class Wolf extends Predator {
         // If theres is atleast 2 other wolfs nearby attack the bear
         if (otherWolfs >= 2) {
           attack(location, world);
-          System.out.println(this.getClass().getSimpleName() + " Attacked bear");
           return true;
         }
       } else if (world.getTile(location) instanceof Animal &&
           !world.getTile(location).getClass().equals(this.getClass())) {
         attack(location, world);
-        System.out.println(this.getClass().getSimpleName() + " Attack");
         return true;
       }
     }
@@ -187,14 +173,12 @@ public class Wolf extends Predator {
         // If theres is atleast 2 other wolfs nearby go towards the bear
         if (otherWolfs >= 2) {
           moveTowards(location, world);
-          System.out.println(this.getClass().getSimpleName() + " Move to bear to attack");
           return true;
         }
       }
       else if (world.getTile(location) instanceof Animal &&
           !world.getTile(location).getClass().equals(this.getClass())) {
         moveTowards(location, world);
-        System.out.println(this.getClass().getSimpleName() + " Move to attack");
         return true;
       }
     }
