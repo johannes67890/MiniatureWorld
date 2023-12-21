@@ -137,7 +137,7 @@ public class Rabbit extends Animal {
 
   public boolean reproduce(World world) {
     for (Location location : world.getSurroundingTiles()) {
-      if (world.getTile(location) instanceof Rabbit) {
+      if (world.getTile(location) instanceof Rabbit && world.getTile(location) != this) {
         Rabbit temp = (Rabbit) world.getTile(location);
         if (temp.isAdult && world.getEmptySurroundingTiles().size() != 0) {
           world.setTile(getRandomEmptySurroundingTile(world), new Rabbit());

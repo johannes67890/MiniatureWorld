@@ -74,7 +74,7 @@ public class Snake extends Predator {
 
   public boolean reproduce(World world) {
     for (Location location : world.getSurroundingTiles()) {
-      if (world.getTile(location) instanceof Snake) {
+      if (world.getTile(location) instanceof Snake && world.getTile(location) != this) {
         Snake temp = (Snake) world.getTile(location);
         if (temp.isAdult && world.getEmptySurroundingTiles().size()!=0) {
           world.setTile(getRandomEmptySurroundingTile(world), new SnakeEgg());
