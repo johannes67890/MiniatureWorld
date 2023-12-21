@@ -26,6 +26,12 @@ public class Rabbit extends Animal {
   }
 
   public void act(World world) {
+
+    // Increases age when the current time is 19
+    if (world.getCurrentTime() == 19) {
+      age++;
+    }
+
     if (isInLair) {
       return;
     }
@@ -65,8 +71,12 @@ public class Rabbit extends Animal {
         home.addAnimal(this, world);
         return;
       }
-      moveTowards(world.getLocation(home), world);
-      return;
+      if(moveTowards(world.getLocation(home), world)){
+        return;
+      } else {
+        move(getRandomEmptySurroundingTile(world), world);
+        return;
+      }
     }
 
     // move away from predator
@@ -88,15 +98,15 @@ public class Rabbit extends Animal {
       }
     }
 
-    // reproduce
-    if (new Random().nextInt(5) == 0 && isAdult) {
+    // 25% chance to reproduce
+    if (new Random().nextInt(4) == 0 && isAdult) {
       if (reproduce(world)) {
         return;
       }
     }
 
-    // 50% for random move 50% for no move
-    if (new Random().nextBoolean()) {
+    // 66.6% for random move 33.3% for no move
+    if (new Random().nextInt(3) != 0) {
       move(getRandomEmptySurroundingTile(world), world);
       return;
     }
@@ -106,6 +116,9 @@ public class Rabbit extends Animal {
       for (Location location : world.getSurroundingTiles(vision)) {
         if (world.getTile(location) instanceof Predator) {
           if(moveAway(location, world)){
+            return true;
+          } else {
+            move(getRandomEmptySurroundingTile(world), world);
             return true;
           }
         }
@@ -124,7 +137,7 @@ public class Rabbit extends Animal {
 
   public boolean reproduce(World world) {
     for (Location location : world.getSurroundingTiles()) {
-      if (world.getTile(location) instanceof Rabbit) {
+      if (world.getTile(location) instanceof Rabbit && world.getTile(location) != this) {
         Rabbit temp = (Rabbit) world.getTile(location);
         if (temp.isAdult && world.getEmptySurroundingTiles().size() != 0) {
           world.setTile(getRandomEmptySurroundingTile(world), new Rabbit());

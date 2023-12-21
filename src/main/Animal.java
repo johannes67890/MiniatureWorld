@@ -69,11 +69,6 @@ public abstract class Animal
       poison--;
     }
 
-    // An animal age increases every 19 ticks
-    if (world.getCurrentTime() % 19 == 0 && world.getCurrentTime() != 0) {
-      age++;
-    }
-
     // An animal loses hp if it is hungry and gains hp if it is full
     if (hunger <= 0) {
       hp--;
@@ -127,6 +122,8 @@ public abstract class Animal
         Eatable food = (Eatable) world.getTile(location);
         if(hungerPlus(food.getEaten(biteSize, world)) > 0){
           return true;
+        } else {
+          return false;
         }
       }
     }
@@ -178,7 +175,7 @@ public abstract class Animal
    *
    * @param location - The location to move towards
    */
-  protected void moveTowards(Location location, World world) {
+  protected boolean moveTowards(Location location, World world) {
     int targetX = location.getX();
     int targetY = location.getY();
     int thisX = world.getLocation(this).getX();
@@ -200,6 +197,9 @@ public abstract class Animal
     } else if (targetX < thisX && targetY == thisY) {
       move(new Location(thisX - 1, thisY), world);
     }
+    if(world.getTile(location) != world.getLocation(this)){
+      return true;
+    } else return false;
   }
 
   /**

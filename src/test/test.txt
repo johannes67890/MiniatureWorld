@@ -1,6 +1,10 @@
-10
-grass 1-1 
+18
+grass 24
 bear 1 (2,3)
-wolf 1
+wolf 3
+carcass 1
 carcass fungi 1
-snake 1
+snake 3
+wolf 3
+rabbit 16
+berry 4

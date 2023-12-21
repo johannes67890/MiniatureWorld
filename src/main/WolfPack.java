@@ -57,7 +57,6 @@ public class WolfPack
         Wolf newWolf = new Wolf(this);
         world.add(newWolf);
         home.addAnimal(newWolf, world);
-        System.out.println("Pack reproduced");
       }
     }
   }

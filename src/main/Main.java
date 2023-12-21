@@ -25,8 +25,8 @@ public class Main {
         Distributer distributior = Distributer.test;
         TestReader reader = new TestReader(distributior.getUrl());
         int size = reader.getWorldSize();
-        int delay = 100;
-        int display_size = 800;
+        int delay = 250;
+        int display_size = 1000;
         Program program = new Program(size, display_size, delay);
         World world = program.getWorld();
         
